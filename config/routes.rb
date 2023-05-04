@@ -3,4 +3,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+
+  # Temporary route to check the app can connect to the database in AWS. This can
+  # be deleted once we've added some real routes.
+  get "/check_database", to: "application#check_database"
 end
