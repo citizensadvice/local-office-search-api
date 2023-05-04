@@ -3,11 +3,11 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  username: <%= ENV['DB_USER'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  host: <%= ENV['DB_HOST'] %>
-  port: <%= ENV.fetch('DB_PORT', 5432).to_i %>
-  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['SEARCH_DB_USER'] %>
+  password: <%= ENV['SEARCH_DB_PASSWORD'] %>
+  host: <%= ENV['SEARCH_DB_HOST'] %>
+  port: <%= ENV.fetch('SEARCH_DB_PORT', 5432).to_i %>
+  database: <%= ENV['SEARCH_DB_NAME'] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
