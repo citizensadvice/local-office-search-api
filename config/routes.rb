@@ -6,5 +6,5 @@ Rails.application.routes.draw do
 
   # Temporary route to check the app can connect to the database in AWS. This can
   # be deleted once we've added some real routes.
-  get "/check_database", to: "application#check_database"
+  get "/check-database", to: "application#check_database"
 end
