@@ -40,6 +40,8 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # preload_app!
 
 activate_control_app
+plugin :yabeda
+plugin :yabeda_prometheus
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
