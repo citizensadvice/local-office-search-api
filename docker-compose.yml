@@ -1,13 +1,13 @@
 version: "3.2"
 services:
-  content-api:
+  search-api:
     build:
       context: .
       cache_from:
-        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/content-api:develop
-        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/content-api${SEARCH_API_PR_TAG}
-        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/content-api${SEARCH_API_VERSION_TAG}
-    image: content-api${SEARCH_API_VERSION_TAG}
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/search-api:develop
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/search-api${SEARCH_API_PR_TAG}
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/search-api${SEARCH_API_VERSION_TAG}
+    image: search-api${SEARCH_API_VERSION_TAG}
     container_name: search-api.test
     command: rails server -b 0.0.0.0
     labels:
