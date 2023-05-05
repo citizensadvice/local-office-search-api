@@ -1,3 +1,6 @@
-task :check_database do
-  puts "Hello Rails"
+task check_database: :environment do
+  puts "Running example rake task to check Jenkins config"
+
+  db_version = ActiveRecord::Base.connection.select_value("SELECT VERSION()")
+  puts db_version
 end
