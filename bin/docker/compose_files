@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+COMPOSE_FILES=(-f docker-compose.yml)
+
+if [[ "$PRODUCTION" != "true" ]]; then
+  COMPOSE_FILES+=(-f docker-compose.dev.yml)
+fi
+
+if [[ "$CI_TEST" == "true" ]]; then
+  COMPOSE_FILES+=( -f docker-compose.test.yml)
+fi
