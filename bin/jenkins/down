@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+CI_TEST="true"
+
+echo "Stopping environment"
+source bin/docker/down --remove-orphans
+echo "Environment stopped"
