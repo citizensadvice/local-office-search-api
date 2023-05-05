@@ -15,6 +15,13 @@ gem "pg", "~> 1.5"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 
+# Monitoring
+gem "ddtrace", "~> 1.10.1"
+gem "rails_semantic_logger", "~> 4.12"
+gem "yabeda-prometheus", "~> 0.8"
+gem "yabeda-puma-plugin", "~> 0.7"
+gem "yabeda-rails", "~> 0.8"
+
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
