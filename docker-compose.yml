@@ -1,0 +1,53 @@
+version: "3.2"
+services:
+  content-api:
+    build:
+      context: .
+      cache_from:
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/content-api:develop
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/content-api${LOCAL_OFFICE_SEARCH_API_PR_TAG}
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/content-api${LOCAL_OFFICE_SEARCH_API_VERSION_TAG}
+    image: content-api${LOCAL_OFFICE_SEARCH_API_VERSION_TAG}
+    container_name: search-api.test
+    command: rails server -b 0.0.0.0
+    labels:
+      traefik.port: 3060
+      traefik.backend: search-api
+      traefik.frontend.rule: 'Host: search-api.test'
+      traefik.enable: true
+    links:
+      - api-proxy
+    tmpfs: /app/tmp
+    user: root
+    ports:
+      - 3060
+    environment:
+      - SEARCH_DB_HOST=db
+      - SEARCH_DB_USER=postgres
+      - SEARCH_DB_PASSWORD=test
+    env_file:
+      - docker/default.env
+    volumes:
+      - .:/app
+      - ~/.aws:/home/ruby/.aws
+    depends_on:
+      - db
+
+  api-proxy:
+    image: traefik:alpine
+    command: --configFile=/traefik.toml
+    container_name: api-proxy.test
+    ports:
+      - "3060:3060"
+      - "8181:8181"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+
+  db:
+    image: "postgres:10-alpine"
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_PASSWORD=test
+
