@@ -92,7 +92,7 @@ GEM
       libddwaf (~> 1.6.2.0.0)
       msgpack
     debase-ruby_core_source (3.2.0)
-    debug (1.7.2)
+    debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
     dry-initializer (3.1.1)
@@ -185,7 +185,7 @@ GEM
     rake (13.0.6)
     redis (4.8.1)
     regexp_parser (2.8.0)
-    reline (0.3.3)
+    reline (0.3.4)
       io-console (~> 0.5)
     rexml (3.2.5)
     ruby-next-core (0.15.3)
