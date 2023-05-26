@@ -20,11 +20,11 @@ development:
 # but can be overridden when running in CI
 test:
   <<: *default
-  username: <%= ENV.fetch('SEARCH_DB_USER', 'local_office_search_api') %>
-  password: <%= ENV.fetch('SEARCH_DB_PASSWORD', 'testing') %>
-  host: <%= ENV.fetch('SEARCH_DB_HOST', 'localhost') %>
-  port: <%= ENV.fetch('SEARCH_DB_PORT', 5462).to_i %>
-  database: <%= ENV.fetch('SEARCH_DB_NAME', 'local_office_search_api_testing') %>
+  username: <%= ENV.fetch('SEARCH_TEST_DB_USER', 'local_office_search_api') %>
+  password: <%= ENV.fetch('SEARCH_TEST_DB_PASSWORD', 'testing') %>
+  host: <%= ENV.fetch('SEARCH_TEST_DB_HOST', 'localhost') %>
+  port: <%= ENV.fetch('SEARCH_TEST_DB_PORT', 5462).to_i %>
+  database: <%= ENV.fetch('SEARCH_TEST_DB_NAME', 'local_office_search_api_testing') %>
 
 production:
   <<: *default

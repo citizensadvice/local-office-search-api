@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task check_database: :environment do
   puts "Running example rake task to check Jenkins config"
 

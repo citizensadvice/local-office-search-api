@@ -13,6 +13,19 @@ version with `bundle config build.pg --with-pg-config=/opt/homebrew/opt/libpq/bi
 You can now run `bundle` to have a copy of your dependencies available in
 your local environment.
 
+If you would like to run commands locally, then it's worth creating a `.env`
+file with the correct environment variables set:
+
+```shell
+cat >.env <<EOF
+SEARCH_DB_HOST=localhost
+SEARCH_DB_PORT=5460
+SEARCH_DB_USER=local_office_search_api
+SEARCH_DB_PASSWORD=develop
+SEARCH_DB_NAME=local_office_search_api
+EOF
+```
+
 Finally, you must now add the following to your hosts file:
 
 ```
@@ -26,8 +39,12 @@ The easiest way to start a local copy of the app is to use Docker. First, run
 <kbd>C</kbd> to quit it. Now you can run `docker-compose start` to start them
 in the background where they're not in your way!
 
-You should then be able to hit the app at http://local-office-search-api.test:3060/.
+You should then be able to visit the app at http://local-office-search-api.test:3060/.
 
 ## Running tests
 
-TBC
+This repo uses Rails' Minitest framework. To quickly run all the tests:
+`bundle exec rake test`.
+
+Linting is also available, and this is done using Rubocop, following
+[Citizens' Advice code style](https://github.com/citizensadvice/citizens-advice-style-ruby).
