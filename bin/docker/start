@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+source bin/docker/compose_files
+
+echo "Starting application..."
+docker-compose ${COMPOSE_FILES[@]} up -d $@
+echo "Application started..."

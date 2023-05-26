@@ -79,8 +79,12 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "citizens-advice-style", github: "citizensadvice/citizens-advice-style-ruby", tag: "v10.0.1"
-  gem "rubocop", require: false
   gem "selenium-webdriver"
   gem "webdrivers"
+
+  gem "simplecov", require: false
+  gem "simplecov-rcov", require: false
+
+  gem "citizens-advice-style", github: "citizensadvice/citizens-advice-style-ruby", tag: "v10.0.1"
+  gem "rubocop", require: false
 end

@@ -26,6 +26,18 @@ SEARCH_DB_NAME=local_office_search_api
 EOF
 ```
 
+If you're not on the Citizens Advice network, you should add the following
+
+```yaml
+version: '3'
+
+services:
+  local-office-search-api:
+    build:
+      args:
+        cab_gem_mirror: 'false'
+```
+
 Finally, you must now add the following to your hosts file:
 
 ```
@@ -34,10 +46,9 @@ Finally, you must now add the following to your hosts file:
 
 ## Starting a local copy
 
-The easiest way to start a local copy of the app is to use Docker. First, run
-`docker-compose up` to initialise all the containers, and then <kbd>Ctrl</kbd>
-<kbd>C</kbd> to quit it. Now you can run `docker-compose start` to start them
-in the background where they're not in your way!
+The easiest way to start a local copy of the app is to use Docker. Run
+`bin/docker/start` to do this. Once you're done, `bin/docker/stop` does ends
+the application!
 
 You should then be able to visit the app at http://local-office-search-api.test:3060/.
 

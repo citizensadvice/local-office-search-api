@@ -23,9 +23,15 @@ services:
       - 3060
     environment:
       - SEARCH_DB_HOST=db
+      - SEARCH_DB_PORT=5432
       - SEARCH_DB_USER=local_office_search_api
       - SEARCH_DB_PASSWORD=develop
       - SEARCH_DB_NAME=local_office_search_api
+      - SEARCH_TEST_DB_HOST=testdb
+      - SEARCH_TEST_DB_PORT=5432
+      - SEARCH_TEST_DB_USER=local_office_search_api
+      - SEARCH_TEST_DB_PASSWORD=testing
+      - SEARCH_TEST_DB_NAME=local_office_search_api_testing
     env_file:
       - docker/default.env
     volumes:
@@ -33,6 +39,7 @@ services:
       - ~/.aws:/home/ruby/.aws
     depends_on:
       - db
+      - testdb
 
   api-proxy:
     image: traefik:alpine
@@ -54,7 +61,7 @@ services:
       - POSTGRES_USER=local_office_search_api
       - POSTGRES_PASSWORD=develop
 
-  test_db:
+  testdb:
     image: "postgis/postgis:14-3.2"
     ports:
       - "5462:5432" # expose on a port so our IDE etc can run tests against the db

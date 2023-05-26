@@ -1,0 +1,29 @@
+version: '3.2'
+
+services:
+  local-office-search-api:
+    container_name: local-office-search-api
+    image: "local-office-search-api${SEARCH_API_VERSION_TAG}"
+    command: rails server -p 3060 -b 0.0.0.0
+    tmpfs: /app/tmp
+    user: root
+    ports:
+      - 3060
+    environment:
+      - SEARCH_TEST_DB_HOST=db
+      - SEARCH_TEST_DB_PORT=5432
+    env_file:
+      - ./docker/test.env
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    image: "postgis/postgis:14-3.2"
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_DB=local_office_search_api_testing
+      - POSTGRES_USER=local_office_search_api
+      - POSTGRES_PASSWORD=testing

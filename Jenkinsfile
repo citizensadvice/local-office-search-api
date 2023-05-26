@@ -7,10 +7,10 @@ dockerRegistryUrl = "https://${dockerRegistryDomain}"
 ecrCredentialId = 'ecr:eu-west-1:cita-devops'
 BUILD_STAGE = 'Build'
 
-isRelease = env.BRANCH_NAME == 'master'
+deployBranches = ['develop','qa']
+isRelease = deployBranches.contains(env.BRANCH_NAME)
 def tagPrefix = isRelease ? '' : 'dev_'
 dockerTag = "${tagPrefix}${env.BUILD_TAG}"
-deployBranches = ['develop','qa']
 global_environment_variables = [
   "SEARCH_API_VERSION_TAG=:${dockerTag}",
   "SEARCH_API_PR_TAG=:${env.BRANCH_NAME}"

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+PRODUCTION="true"
+
+source bin/docker/lint
