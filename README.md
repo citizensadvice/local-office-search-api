@@ -26,7 +26,8 @@ SEARCH_DB_NAME=local_office_search_api
 EOF
 ```
 
-If you're not on the Citizens Advice network, you should add the following
+If you're not on the Citizens Advice network, you should create a
+`docker-compose.override.yml` file containing the following:
 
 ```yaml
 version: '3'
@@ -47,10 +48,11 @@ Finally, you must now add the following to your hosts file:
 ## Starting a local copy
 
 The easiest way to start a local copy of the app is to use Docker. Run
-`bin/docker/start` to do this. Once you're done, `bin/docker/stop` does ends
-the application!
+`bin/docker/start` to do this.
 
 You should then be able to visit the app at http://local-office-search-api.test:3060/.
+
+Once you're done, `bin/docker/stop` does ends the application!
 
 ## Running tests
 
@@ -59,3 +61,7 @@ This repo uses Rails' Minitest framework. To quickly run all the tests:
 
 Linting is also available, and this is done using Rubocop, following
 [Citizens' Advice code style](https://github.com/citizensadvice/citizens-advice-style-ruby).
+IDE integration is best for this, alternatively, you can run `bundle exec rubocop`.
+
+You can also run these in Docker if there are any environmental issues
+locally using `bin/docker/lint` and `bin/docker/test`.

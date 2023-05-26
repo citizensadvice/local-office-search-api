@@ -2,6 +2,6 @@
 
 set -e
 
-PRODUCTION="true"
+CI_TEST="true"
 
 source bin/docker/lint
