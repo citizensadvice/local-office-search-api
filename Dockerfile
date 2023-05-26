@@ -3,10 +3,11 @@ FROM ruby:3.1.2-alpine3.16
 # bash is required for build scripts
 # tzdata is a runtime dependency for ActiveSupport
 # postgresql-libs is a runtime dependency for the database
+# gcompat is needed for Nokogiri pre-built gems to work
 
 RUN gem install bundler -v '~>2.3' && \
     bundle config --global frozen 1 && \
-    apk add --no-cache coreutils bash tzdata postgresql-libs && \
+    apk add --no-cache coreutils bash tzdata postgresql-libs gcompat && \
     truncate -s 0 /var/log/*log
 
 WORKDIR /app

@@ -1,19 +1,19 @@
 version: "3.2"
 services:
-  search-api:
+  local-office-search-api:
     build:
       context: .
       cache_from:
-        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/search-api:develop
-        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/search-api${SEARCH_API_PR_TAG}
-        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/search-api${SEARCH_API_VERSION_TAG}
-    image: search-api${SEARCH_API_VERSION_TAG}
-    container_name: search-api.test
-    command: rails server -b 0.0.0.0
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/local-office-search-api:develop
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/local-office-search-api${SEARCH_API_PR_TAG}
+        - ${DOCKER_REGISTRY_DOMAIN:-979633842206.dkr.ecr.eu-west-1.amazonaws.com}/local-office-search-api${SEARCH_API_VERSION_TAG}
+    image: local-office-search-api${SEARCH_API_VERSION_TAG}
+    container_name: local-office-search-api.test
+    command: rails server -b 0.0.0.0 -p 3060
     labels:
       traefik.port: 3060
-      traefik.backend: search-api
-      traefik.frontend.rule: 'Host: search-api.test'
+      traefik.backend: local-office-search-api
+      traefik.frontend.rule: 'Host: local-office-search-api.test'
       traefik.enable: true
     links:
       - api-proxy
@@ -23,8 +23,9 @@ services:
       - 3060
     environment:
       - SEARCH_DB_HOST=db
-      - SEARCH_DB_USER=postgres
-      - SEARCH_DB_PASSWORD=test
+      - SEARCH_DB_USER=local_office_search_api
+      - SEARCH_DB_PASSWORD=develop
+      - SEARCH_DB_NAME=local_office_search_api
     env_file:
       - docker/default.env
     volumes:
@@ -45,9 +46,20 @@ services:
       - ./traefik.toml:/traefik.toml
 
   db:
-    image: "postgres:10-alpine"
+    image: "postgis/postgis:14-3.2"
     ports:
-      - "5432"
+      - "5460:5432" # expose on a port so we can run things locally
     environment:
-      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=local_office_search_api
+      - POSTGRES_USER=local_office_search_api
+      - POSTGRES_PASSWORD=develop
+
+  test_db:
+    image: "postgis/postgis:14-3.2"
+    ports:
+      - "5462:5432" # expose on a port so our IDE etc can run tests against the db
+    environment:
+      - POSTGRES_DB=local_office_search_api_testing
+      - POSTGRES_USER=local_office_search_api
+      - POSTGRES_PASSWORD=testing
 
