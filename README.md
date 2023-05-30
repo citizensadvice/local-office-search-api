@@ -52,12 +52,12 @@ The easiest way to start a local copy of the app is to use Docker. Run
 
 You should then be able to visit the app at http://local-office-search-api.test:3060/.
 
-Once you're done, `bin/docker/stop` does ends the application!
+Once you're done, `bin/docker/stop` ends the application!
 
 ## Running tests
 
-This repo uses Rails' Minitest framework. To quickly run all the tests:
-`bundle exec rake test`.
+This repo uses RSpec for testing. To quickly run all the tests:
+`bundle exec rake spec`.
 
 Linting is also available, and this is done using Rubocop, following
 [Citizens' Advice code style](https://github.com/citizensadvice/citizens-advice-style-ruby).
