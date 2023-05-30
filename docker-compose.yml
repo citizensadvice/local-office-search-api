@@ -32,8 +32,6 @@ services:
       - SEARCH_TEST_DB_USER=local_office_search_api
       - SEARCH_TEST_DB_PASSWORD=testing
       - SEARCH_TEST_DB_NAME=local_office_search_api_testing
-    env_file:
-      - docker/default.env
     volumes:
       - .:/app
       - ~/.aws:/home/ruby/.aws
