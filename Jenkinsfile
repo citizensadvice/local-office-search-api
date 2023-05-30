@@ -11,10 +11,6 @@ deployBranches = ['develop','qa']
 isRelease = deployBranches.contains(env.BRANCH_NAME)
 def tagPrefix = isRelease ? '' : 'dev_'
 dockerTag = "${tagPrefix}${env.BUILD_TAG}"
-global_environment_variables = [
-  "SEARCH_API_VERSION_TAG=:${dockerTag}",
-  "SEARCH_API_PR_TAG=:${env.BRANCH_NAME}"
-]
 
 node('docker && awsaccess') {
   cleanWs()
@@ -23,7 +19,10 @@ node('docker && awsaccess') {
   currentBuild.displayName = "${env.BUILD_NUMBER}: ${dockerTag}"
 
   withDockerRegistry(registry: [credentialsId: 'docker_hub']) {
-    withEnv(global_environment_variables) {
+    withEnv([
+      "SEARCH_API_VERSION_TAG=:${dockerTag}",
+      "SEARCH_API_PR_TAG=:${env.BRANCH_NAME}"
+    ]) {
       dockerBuild(context: pwd(), tag: dockerImageId())
     }
   }
