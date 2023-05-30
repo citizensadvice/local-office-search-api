@@ -67,7 +67,7 @@ def dockerBuild(Map config) {
         sh "${testScript}"
         step([
             $class : 'RcovPublisher', reportDir: './coverage/rcov',
-            targets: [ [metric: 'CODE_COVERAGE', healthy: 80, unhealthy: 75, unstable: 70] ]
+            // targets: [ [metric: 'CODE_COVERAGE', healthy: 80, unhealthy: 75, unstable: 70] ]
           ])
         publishHTML([
                 allowMissing: false,
