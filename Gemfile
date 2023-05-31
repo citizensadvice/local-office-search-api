@@ -53,7 +53,6 @@ group :test do
   gem "rspec-rails", "~> 6.0.0"
 
   gem "simplecov", require: false
-  gem "simplecov-rcov", require: false
 
   gem "citizens-advice-style", github: "citizensadvice/citizens-advice-style-ruby", tag: "v10.0.1"
   gem "rubocop", require: false

@@ -65,15 +65,11 @@ def dockerBuild(Map config) {
 
       if (fileExists("${config.context}/${testScript}")) {
         sh "${testScript}"
-        step([
-            $class : 'RcovPublisher', reportDir: './coverage/rcov',
-            // targets: [ [metric: 'CODE_COVERAGE', healthy: 80, unhealthy: 75, unstable: 70] ]
-          ])
         publishHTML([
                 allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
-                reportDir: './coverage/rcov',
+                reportDir: './coverage',
                 reportFiles: 'index.html',
                 reportName: 'Test Report'
               ])
