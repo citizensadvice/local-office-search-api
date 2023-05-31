@@ -14,13 +14,6 @@ WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
 
-ARG cab_gem_mirror=true
-
-RUN if [ "$cab_gem_mirror" = "true" ]; then \
-    bundle config mirror.https://rubygems.org https://nexus.devops.citizensadvice.org.uk/repository/rubygems-proxy && \
-    bundle config mirror.https://rubygems.org.fallback_timeout 1; \
-    fi
-
 # Temporarily add the dev packages required for to install bundles (and remove the build cache afterwards )
 RUN apk add --no-cache --virtual .gem-installdeps build-base git postgresql-dev && \
       bundle install -j6 && \

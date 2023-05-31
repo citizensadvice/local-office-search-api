@@ -26,19 +26,6 @@ SEARCH_DB_NAME=local_office_search_api
 EOF
 ```
 
-If you're not on the Citizens Advice network, you should create a
-`docker-compose.override.yml` file containing the following:
-
-```yaml
-version: '3'
-
-services:
-  local-office-search-api:
-    build:
-      args:
-        cab_gem_mirror: 'false'
-```
-
 Finally, you must now add the following to your hosts file:
 
 ```
