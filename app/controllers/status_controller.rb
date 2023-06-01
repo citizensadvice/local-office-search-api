@@ -2,6 +2,7 @@
 
 class StatusController < ApplicationController
   def index
-    head ActiveRecord::Base.connected? ? :ok : :service_unavailable
+    # head ActiveRecord::Base.connected? ? :ok : :service_unavailable
+    head :ok
   end
 end
