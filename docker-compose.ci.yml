@@ -10,8 +10,8 @@ services:
     ports:
       - 3060
     environment:
-      - SEARCH_TEST_DB_HOST=db
-      - SEARCH_TEST_DB_PORT=5432
+      - LOCAL_OFFICE_SEARCH_TEST_DB_HOST=db
+      - LOCAL_OFFICE_SEARCH_TEST_DB_PORT=5432
     volumes:
       - .:/app
     depends_on:

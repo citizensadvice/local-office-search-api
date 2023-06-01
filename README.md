@@ -18,11 +18,11 @@ file with the correct environment variables set:
 
 ```shell
 cat >.env <<EOF
-SEARCH_DB_HOST=localhost
-SEARCH_DB_PORT=5460
-SEARCH_DB_USER=local_office_search_api
-SEARCH_DB_PASSWORD=develop
-SEARCH_DB_NAME=local_office_search_api
+LOCAL_OFFICE_SEARCH_DB_HOST=localhost
+LOCAL_OFFICE_SEARCH_DB_PORT=5460
+LOCAL_OFFICE_SEARCH_DB_USER=local_office_search_api
+LOCAL_OFFICE_SEARCH_DB_PASSWORD=develop
+LOCAL_OFFICE_SEARCH_DB_NAME=local_office_search_api
 EOF
 ```
 

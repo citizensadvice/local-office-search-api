@@ -3,11 +3,11 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  username: <%= ENV['SEARCH_DB_USER'] %>
-  password: <%= ENV['SEARCH_DB_PASSWORD'] %>
-  host: <%= ENV['SEARCH_DB_HOST'] %>
-  port: <%= ENV.fetch('SEARCH_DB_PORT', 5432).to_i %>
-  database: <%= ENV['SEARCH_DB_NAME'] %>
+  username: <%= ENV['LOCAL_OFFICE_SEARCH_DB_USER'] %>
+  password: <%= ENV['LOCAL_OFFICE_SEARCH_DB_PASSWORD'] %>
+  host: <%= ENV['LOCAL_OFFICE_SEARCH_DB_HOST'] %>
+  port: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_DB_PORT', 5432).to_i %>
+  database: <%= ENV['LOCAL_OFFICE_SEARCH_DB_NAME'] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
@@ -20,11 +20,11 @@ development:
 # but can be overridden when running in CI
 test:
   <<: *default
-  username: <%= ENV.fetch('SEARCH_TEST_DB_USER', 'local_office_search_api') %>
-  password: <%= ENV.fetch('SEARCH_TEST_DB_PASSWORD', 'testing') %>
-  host: <%= ENV.fetch('SEARCH_TEST_DB_HOST', 'localhost') %>
-  port: <%= ENV.fetch('SEARCH_TEST_DB_PORT', 5462).to_i %>
-  database: <%= ENV.fetch('SEARCH_TEST_DB_NAME', 'local_office_search_api_testing') %>
+  username: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_USER', 'local_office_search_api') %>
+  password: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_PASSWORD', 'testing') %>
+  host: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_HOST', 'localhost') %>
+  port: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_PORT', 5462).to_i %>
+  database: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_NAME', 'local_office_search_api_testing') %>
 
 production:
   <<: *default

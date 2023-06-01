@@ -22,16 +22,16 @@ services:
     ports:
       - 3060
     environment:
-      - SEARCH_DB_HOST=db
-      - SEARCH_DB_PORT=5432
-      - SEARCH_DB_USER=local_office_search_api
-      - SEARCH_DB_PASSWORD=develop
-      - SEARCH_DB_NAME=local_office_search_api
-      - SEARCH_TEST_DB_HOST=testdb
-      - SEARCH_TEST_DB_PORT=5432
-      - SEARCH_TEST_DB_USER=local_office_search_api
-      - SEARCH_TEST_DB_PASSWORD=testing
-      - SEARCH_TEST_DB_NAME=local_office_search_api_testing
+      - LOCAL_OFFICE_SEARCH_DB_HOST=db
+      - LOCAL_OFFICE_SEARCH_DB_PORT=5432
+      - LOCAL_OFFICE_SEARCH_DB_USER=local_office_search_api
+      - LOCAL_OFFICE_SEARCH_DB_PASSWORD=develop
+      - LOCAL_OFFICE_SEARCH_DB_NAME=local_office_search_api
+      - LOCAL_OFFICE_SEARCH_TEST_DB_HOST=testdb
+      - LOCAL_OFFICE_SEARCH_TEST_DB_PORT=5432
+      - LOCAL_OFFICE_SEARCH_TEST_DB_USER=local_office_search_api
+      - LOCAL_OFFICE_SEARCH_TEST_DB_PASSWORD=testing
+      - LOCAL_OFFICE_SEARCH_TEST_DB_NAME=local_office_search_api_testing
     volumes:
       - .:/app
       - ~/.aws:/home/ruby/.aws
