@@ -12,6 +12,9 @@ gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 gem "activerecord-postgis-adapter"
 gem "pg", "~> 1.5"
 
+# use the time of day gem to represent opening times in the database
+gem "tod"
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 

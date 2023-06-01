@@ -1,4 +1,4 @@
-### https://pganalyze.com/blog/custom-postgres-data-types-ruby-rails
+# frozen_string_literal: true
 
 class CreateOffices < ActiveRecord::Migration[7.0]
   def change

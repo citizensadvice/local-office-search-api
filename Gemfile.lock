@@ -235,7 +235,7 @@ GEM
       rubocop-ast (>= 1.28.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.28.1)
+    rubocop-ast (1.29.0)
       parser (>= 3.2.1.0)
     rubocop-capybara (2.18.0)
       rubocop (~> 1.41)
@@ -261,6 +261,7 @@ GEM
     simplecov_json_formatter (0.1.4)
     thor (1.2.2)
     timeout (0.3.2)
+    tod (3.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
@@ -311,6 +312,7 @@ DEPENDENCIES
   rspec-rails (~> 6.0.0)
   rubocop
   simplecov
+  tod
   tzinfo-data
   web-console
   yabeda-prometheus (~> 0.8)
