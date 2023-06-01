@@ -58,8 +58,8 @@ def dockerBuild(Map config) {
     stage("Test ${config.tag}") {
       BUILD_STAGE = "Test ${config.tag}"
 
-      // make sure rails boots ok
-      sh "docker run --rm  ${config.tag} timeout --preserve-status -s 1 15 rails s"
+      // make sure rails boots ok in production mode
+      sh "docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=smoketest --rm  ${config.tag} timeout --preserve-status -s 1 15 rails s"
 
       def testScript = 'bin/jenkins/test'
 
