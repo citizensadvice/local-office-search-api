@@ -7,14 +7,10 @@ dockerRegistryUrl = "https://${dockerRegistryDomain}"
 ecrCredentialId = 'ecr:eu-west-1:cita-devops'
 BUILD_STAGE = 'Build'
 
-isRelease = env.BRANCH_NAME == 'master'
+deployBranches = ['develop','qa']
+isRelease = deployBranches.contains(env.BRANCH_NAME)
 def tagPrefix = isRelease ? '' : 'dev_'
 dockerTag = "${tagPrefix}${env.BUILD_TAG}"
-deployBranches = ['develop','qa']
-global_environment_variables = [
-  "SEARCH_API_VERSION_TAG=:${dockerTag}",
-  "SEARCH_API_PR_TAG=:${env.BRANCH_NAME}"
-]
 
 node('docker && awsaccess') {
   cleanWs()
@@ -23,7 +19,10 @@ node('docker && awsaccess') {
   currentBuild.displayName = "${env.BUILD_NUMBER}: ${dockerTag}"
 
   withDockerRegistry(registry: [credentialsId: 'docker_hub']) {
-    withEnv(global_environment_variables) {
+    withEnv([
+      "SEARCH_API_VERSION_TAG=:${dockerTag}",
+      "SEARCH_API_PR_TAG=:${env.BRANCH_NAME}"
+    ]) {
       dockerBuild(context: pwd(), tag: dockerImageId())
     }
   }
@@ -66,15 +65,11 @@ def dockerBuild(Map config) {
 
       if (fileExists("${config.context}/${testScript}")) {
         sh "${testScript}"
-        step([
-            $class : 'RcovPublisher', reportDir: './coverage/rcov',
-            targets: [ [metric: 'CODE_COVERAGE', healthy: 80, unhealthy: 75, unstable: 70] ]
-          ])
         publishHTML([
                 allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
-                reportDir: './coverage/rcov',
+                reportDir: './coverage',
                 reportFiles: 'index.html',
                 reportName: 'Test Report'
               ])

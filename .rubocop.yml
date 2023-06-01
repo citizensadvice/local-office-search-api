@@ -1,0 +1,14 @@
+inherit_gem:
+  citizens-advice-style:
+    - default.yml
+    - default-rails.yml
+
+AllCops:
+  SuggestExtensions: false
+
+Metrics/BlockLength:
+  Exclude:
+    # routes.rb is a large block by design so exclude it
+    - config/routes.rb
+    # These config files generally contain lots of lines which trigger this metric, so we're excluding them
+    - config/environments/*.rb

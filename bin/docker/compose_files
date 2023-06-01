@@ -4,10 +4,10 @@ set -e
 
 COMPOSE_FILES=(-f docker-compose.yml)
 
-if [[ "$PRODUCTION" != "true" ]]; then
-  COMPOSE_FILES+=(-f docker-compose.dev.yml)
+if [[ "$CI_TEST" == "true" ]]; then
+  COMPOSE_FILES=(-f docker-compose.ci.yml)
 fi
 
-if [[ "$CI_TEST" == "true" ]]; then
-  COMPOSE_FILES+=( -f docker-compose.test.yml)
+if [[ -f "docker-compose.override.yml" ]]; then
+  COMPOSE_FILES+=( -f docker-compose.override.yml)
 fi

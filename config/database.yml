@@ -3,23 +3,28 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  username: <%= ENV['SEARCH_DB_USER'] %>
-  password: <%= ENV['SEARCH_DB_PASSWORD'] %>
-  host: <%= ENV['SEARCH_DB_HOST'] %>
-  port: <%= ENV.fetch('SEARCH_DB_PORT', 5432).to_i %>
-  database: <%= ENV['SEARCH_DB_NAME'] %>
+  username: <%= ENV['LOCAL_OFFICE_SEARCH_DB_USER'] %>
+  password: <%= ENV['LOCAL_OFFICE_SEARCH_DB_PASSWORD'] %>
+  host: <%= ENV['LOCAL_OFFICE_SEARCH_DB_HOST'] %>
+  port: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_DB_PORT', 5432).to_i %>
+  database: <%= ENV['LOCAL_OFFICE_SEARCH_DB_NAME'] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
-  database: search-api_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
+# This defaults as if it was running locally against a Docker database
+# but can be overridden when running in CI
 test:
   <<: *default
-  database: search-api_test
+  username: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_USER', 'local_office_search_api') %>
+  password: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_PASSWORD', 'testing') %>
+  host: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_HOST', 'localhost') %>
+  port: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_PORT', 5462).to_i %>
+  database: <%= ENV.fetch('LOCAL_OFFICE_SEARCH_TEST_DB_NAME', 'local_office_search_api_testing') %>
 
 production:
   <<: *default
