@@ -7,7 +7,7 @@ FROM ruby:3.1.2-alpine3.16
 
 RUN gem install bundler -v '~>2.3' && \
     bundle config --global frozen 1 && \
-    apk add --no-cache coreutils bash tzdata postgresql-libs gcompat && \
+    apk add --no-cache coreutils bash tzdata postgresql-libs postgresql14-client gcompat && \
     truncate -s 0 /var/log/*log
 
 WORKDIR /app
