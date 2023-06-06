@@ -108,12 +108,28 @@ RSpec.describe LssLoader do
     expect_single_record id: "0014K00000PcCA6QAN", name: "Citizens Advice Bristol", office_type: "member"
   end
 
-  it "sets up parent/child hierarchy correctly"
+  it "sets up parent/child hierarchy correctly" do
+    load_from_fixtures "basic_hierarchy", "empty"
+
+    expect_basic_hierarchy
+  end
+
+  it "handles when a child is defined before a parent in the CSV files" do
+    load_from_fixtures "backwards_hierarchy", "empty"
+
+    expect_basic_hierarchy
+  end
+
+  it "makes a dangling parent ID null" do
+    load_from_fixtures "dangling_hierarchy", "empty"
+
+    expect(Office.find("0014K00000an3g3QAA").parent_id).to be_nil
+  end
 
   it "does not crash when loading a full dump" do
     load_from_fixtures "full", "full"
 
-    expect(Office.count).to eq 1866
+    expect(Office.count).to eq 1865
   end
 
   def create_a_single_office
@@ -167,5 +183,11 @@ RSpec.describe LssLoader do
     }.update(vals)
 
     expect(Office.first.as_json.symbolize_keys).to eq vals.as_json.symbolize_keys
+  end
+
+  def expect_basic_hierarchy
+    expect(Office.find("0014K00000PcCBSQA3").parent_id).to be_nil
+    expect(Office.find("0014K000009EMQ2QAO").parent_id).to eq "0014K00000PcCBSQA3"
+    expect(Office.find("0014K00000fFpE2QAK").parent_id).to eq "0014K000009EMQ2QAO"
   end
 end

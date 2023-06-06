@@ -12,8 +12,7 @@ class LssLoader
     ActiveRecord::Base.transaction do
       validate_csv_headers!
       ActiveRecord::Base.connection.truncate(Office.table_name)
-      offices = build_office_records
-      offices.each_value(&:save!)
+      save_offices_by_tier! build_office_records
     end
   end
 
@@ -41,15 +40,17 @@ class LssLoader
     end
 
     @opening_hours_csv.each do |row|
-      apply_opening_hours offices, row
+      apply_opening_hours! offices, row
     end
 
+    nullify_dangling_parent_ids! offices
     offices
   end
 
   # rubocop:disable Metrics/AbcSize
   def office_from_row(row)
     Office.new id: row["Id"],
+               parent_id: str_or_nil(row["ParentId"]),
                name: row["Name"],
                office_type: record_type_id_to_office_type(row["RecordTypeId"]),
                legacy_id: str_or_nil(row["Serial_Number__c"]),
@@ -67,7 +68,7 @@ class LssLoader
   end
   # rubocop:enable Metrics/AbcSize
 
-  def apply_opening_hours(offices, row)
+  def apply_opening_hours!(offices, row)
     return unless row["Type__c"] != "null" && offices.key?(row["Parent_Account__c"])
 
     offices[row["Parent_Account__c"]].write_attribute column_from_row(row), shift_from_row(row)
@@ -127,6 +128,23 @@ class LssLoader
     else
       raise LssLoadError, "Unrecognised RecordTypeId #{record_type_id}"
     end
+  end
+
+  def nullify_dangling_parent_ids!(offices)
+    orphaned_offices = offices.values.select { |office| !office.parent_id.nil? && !offices.key?(office.parent_id) }
+    orphaned_offices.each do |office|
+      office.parent_id = nil
+    end
+  end
+
+  # because we can see offices in any order (e.g., outreach before the branch) we need to make
+  # sure that the parent object already exists before we commit it. One way to do this is to
+  # commit each layer of the hierarchy in order
+  def save_offices_by_tier!(offices)
+    tiers = offices.values.group_by(&:office_type)
+    tiers.fetch("member", []).map(&:save!)
+    tiers.fetch("office", []).map(&:save!)
+    tiers.fetch("outreach", []).map(&:save!)
   end
 
   class LssLoadError < StandardError

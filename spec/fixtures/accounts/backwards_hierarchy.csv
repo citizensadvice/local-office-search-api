@@ -1,0 +1,8 @@
+Id,Name,ParentId,Serial_Number__c,RecordTypeId,About_our_advice_service__c,Access_details__c,BillingStreet,BillingCity,BillingPostalCode,BillingLatitude,BillingLongitude,Email__c,Website,Phone,Closing_Date__c,Reopening_Date__c,Closed__c,Recruiting_volunteers__c,Select_the_roles_you_re_recruiting_for__c,Volunteer_Recruitment_Email__c,Membership_Number__c,Local_Office_Opening_Hours_Information__c,Telephone_Advice_Hours_Information__c
+0014K00000fFpE2QAK,Citizens Advice Borough (Armthorpe),0014K000009EMQ2QAO,null,0124K0000000qqUQAQ,null,null,"Community Centre
+20 Church Street
+Armthorpe",Doncaster,DN3 3AG,53.53514721,-1.053327547,null,https://www.cadoncasterborough.org,01302 243057,null,null,FALSE,null,null,null,null,null,null
+0014K000009EMQ2QAO,Citizens Advice Doncaster Borough (Doncaster),0014K00000PcCBSQA3,571330,0124K0000000qqTQAQ,null,Wheelchair accessible;Wheelchair access - interview room;Wheelchair - toilet;Internet advice access;Internal and external doors;Internal handrails;External handrails;Documents in accessible formats;Accessible signage;Office,"Civic Office
+Waterdale",Doncaster,DN1 3BU,53.51961,-1.13251,null,https://www.cadoncasterborough.org,01302 243057,null,null,FALSE,Yes,Admin and customer service;Giving information advice and client support;Media;Researching and campaigning;Trustee;Volunteer recruitment and support,office@citizensadvice-doncasterborough.org,25/0044,null,null
+0014K00000PcCBSQA3,Citizens Advice Doncaster Borough,null,100566,0124K000000HyUGQA0,null,null,"Civic Office
+Waterdale",Doncaster,DN1 3BU,53.51961,-1.13251,null,citizensadvice-doncasterborough.org/citizensadvicedoncasterborough/home,null,null,null,FALSE,null,null,null,25/0044,null,null
