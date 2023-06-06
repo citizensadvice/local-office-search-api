@@ -64,8 +64,57 @@ RSpec.describe LssLoader do
     expect(Office.first.location).to eq RGeo::Cartesian.preferred_factory.point(1.18184, 51.07988)
   end
 
-  it "loads in accessibility information as list"
-  it "correctly assigns telephone and opening hour numbers"
+  it "loads in accessibility information as list" do
+    load_from_fixtures "has_access_information", "empty"
+
+    expect(Office.first.accessibility_information).to eq ["Wheelchair accessible", "Wheelchair access - interview room",
+                                                          "Wheelchair - toilet", "Induction loop", "Internet advice access"]
+  end
+
+  # rubocop:disable RSpec/ExampleLength
+  it "correctly assigns telephone and opening hours" do
+    nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
+    load_from_fixtures "minimal", "minimal"
+
+    expect_single_record id: "0014K00000PcCA6QAN",
+                         name: "Citizens Advice Bristol",
+                         office_type: "member",
+                         opening_hours_monday: nil,
+                         opening_hours_tuesday: nil,
+                         opening_hours_wednesday: nil,
+                         opening_hours_thursday: nil,
+                         opening_hours_friday: nil,
+                         opening_hours_saturday: nine_to_five,
+                         opening_hours_sunday: nine_to_five,
+                         telephone_advice_hours_monday: nine_to_five,
+                         telephone_advice_hours_tuesday: nine_to_five,
+                         telephone_advice_hours_wednesday: nine_to_five,
+                         telephone_advice_hours_thursday: nine_to_five,
+                         telephone_advice_hours_friday: nine_to_five,
+                         telephone_advice_hours_saturday: nil,
+                         telephone_advice_hours_sunday: nil
+  end
+  # rubocop:enable RSpec/ExampleLength
+
+  it "ignores opening hours which do not belong to a LCA" do
+    load_from_fixtures "minimal", "includes_nulls"
+
+    expect_single_record id: "0014K00000PcCA6QAN", name: "Citizens Advice Bristol", office_type: "member"
+  end
+
+  it "ignores opening hours where it closes before it opens" do
+    load_from_fixtures "minimal", "includes_time_travel"
+
+    expect_single_record id: "0014K00000PcCA6QAN", name: "Citizens Advice Bristol", office_type: "member"
+  end
+
+  it "sets up parent/child hierarchy correctly"
+
+  it "does not crash when loading a full dump" do
+    load_from_fixtures "full", "full"
+
+    expect(Office.count).to eq 1866
+  end
 
   def create_a_single_office
     id = SecureRandom.hex(9)
@@ -117,6 +166,6 @@ RSpec.describe LssLoader do
       telephone_advice_hours_sunday: nil
     }.update(vals)
 
-    expect(Office.first.attributes.symbolize_keys).to eq vals
+    expect(Office.first.as_json.symbolize_keys).to eq vals.as_json.symbolize_keys
   end
 end
