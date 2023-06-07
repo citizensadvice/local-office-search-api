@@ -12,3 +12,5 @@ Metrics/BlockLength:
     - config/routes.rb
     # These config files generally contain lots of lines which trigger this metric, so we're excluding them
     - config/environments/*.rb
+    # Migrations tend to be long as they create lots of fields
+    - db/migrate/*.rb

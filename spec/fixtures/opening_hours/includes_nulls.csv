@@ -1,0 +1,9 @@
+Id,Parent_Account__c,RecordTypeId,Weekday__c,Start_Time__c,End_Time__c,Type__c
+a014K00000Kn1u7QAB,0014K00000PcCA6QAN,0124K0000000qqYQAQ,Sunday,null,null,null
+a014K00000Kn1v3QAB,null,0124K0000000qqYQAQ,Monday,10:00:00.000Z,16:00:00.000Z,Local office opening hours
+a014K00000Kn1v4QAB,null,0124K0000000qqYQAQ,Tuesday,null,null,Local office opening hours
+a014K00000Kn1v5QAB,null,0124K0000000qqYQAQ,Wednesday,10:00:00.000Z,16:00:00.000Z,Local office opening hours
+a014K00000Kn1v6QAB,null,0124K0000000qqYQAQ,Thursday,null,null,Local office opening hours
+a014K00000Kn1v7QAB,null,0124K0000000qqYQAQ,Friday,10:00:00.000Z,16:00:00.000Z,Local office opening hours
+a014K00000Kn1v8QAB,null,0124K0000000qqYQAQ,Saturday,null,null,Local office opening hours
+a014K00000Kn1v9QAB,null,0124K0000000qqYQAQ,Sunday,null,null,Local office opening hours

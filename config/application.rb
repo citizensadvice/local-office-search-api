@@ -16,6 +16,10 @@ module LocalOfficeSearchApi
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    # We use some Postgres features that Rails doesn't quite know about
+    # so use the SQL dumping format
+    config.active_record.schema_format = :sql
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

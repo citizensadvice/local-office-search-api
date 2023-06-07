@@ -1,0 +1,2 @@
+Id,Parent_Account__c,RecordTypeId,Weekday__c,Start_Time__c,End_Time__c,Type__c
+a014K00000J8xAQQAZ,0014K00000PcCA6QAN,0124K0000000qqYQAQ,Monday,09:00:00.000Z,03:00:00.000Z,Local office opening hours
