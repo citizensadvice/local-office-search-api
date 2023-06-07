@@ -24,6 +24,11 @@ class CreateOffices < ActiveRecord::Migration[7.0]
 
     create_enum :office_type, %w[member office outreach]
 
+    # because the load process from LSS that populates this table truncates and recreates each record
+    # every time, we don't want timestamps on this table because they don't represent what the create
+    # or modified time of the actual record is, just when the importer was last run. Rather than have
+    # the fields have surprising values, and given we don't have a use for them, we're going to skip
+    # having timestamps in this model.
     # rubocop:disable Rails/CreateTableWithTimestamps
     create_table :offices, id: "char(18)" do |t|
       # this corresponds to the Resource Directory ID to maintain URLs from the old system

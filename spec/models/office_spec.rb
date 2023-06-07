@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Office do
-  it "can round trip to the database a minimal example" do
+  it "can save and fetch a minimal example" do
     id = SecureRandom.hex(9)
     described_class.create! id:, name: "Testtown Citizens Advice", office_type: "member"
     fetched_office = described_class.find id
