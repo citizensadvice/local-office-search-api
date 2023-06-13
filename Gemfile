@@ -11,6 +11,7 @@ gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 # Use PostgreSQL as the database for Active Record
 gem "activerecord-postgis-adapter"
 gem "pg", "~> 1.5"
+gem "rgeo-geojson"
 
 # use the time of day gem to represent opening times in the database
 gem "tod"
@@ -24,9 +25,6 @@ gem "rails_semantic_logger", "~> 4.12"
 gem "yabeda-prometheus", "~> 0.8"
 gem "yabeda-puma-plugin", "~> 0.7"
 gem "yabeda-rails", "~> 0.8"
-
-# Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
 
 # Use Swagger to document our APIs
 gem "rswag-api"
