@@ -18,7 +18,8 @@ RSpec.describe "Lookup Local Office API" do
             type: { type: :string, enum: ["Point"] },
             coordinates: { type: :array, items: { type: :number }, minItems: 2, maxItems: 2 }
           },
-          required: %w[type coordinates]
+          required: %w[type coordinates],
+          additionalProperties: false
         }
 
         time_of_day = {
@@ -29,7 +30,8 @@ RSpec.describe "Lookup Local Office API" do
         time_range = {
           type: :object,
           properties: { opens: time_of_day, closes: time_of_day },
-          required: %w[opens closes]
+          required: %w[opens closes],
+          additionalProperties: false
         }
         nullable_time_range = [:null, time_range]
 
@@ -45,7 +47,8 @@ RSpec.describe "Lookup Local Office API" do
             saturday: { type: nullable_time_range },
             sunday: { type: nullable_time_range }
           },
-          required: %w[information monday tuesday wednesday thursday friday saturday sunday]
+          required: %w[information monday tuesday wednesday thursday friday saturday sunday],
+          additionalProperties: false
         }
 
         schema "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -68,7 +71,8 @@ RSpec.describe "Lookup Local Office API" do
                  telephone_advice_hours: opening_hours_specification
                },
                required: %i[id member_id name about_text accessibility_information street city postcode location email website phone
-                            opening_hours telephone_advice_hours]
+                            opening_hours telephone_advice_hours],
+               additionalProperties: false
 
         let(:parent) do
           Office.create({ id: generate_salesforce_id, office_type: :member, name: "Testtown CAB" })
@@ -146,6 +150,38 @@ RSpec.describe "Lookup Local Office API" do
           }.as_json)
         end
         # rubocop:enable RSpec/ExampleLength
+      end
+
+      response "302", "Allows you to look up an office by its resource directory ID and redirect to canonical ID" do
+        let(:office) do
+          Office.create({ id: generate_salesforce_id, office_type: :office, name: "Testtown CAB", legacy_id: 1234 })
+        end
+        let(:id) { office.legacy_id }
+
+        run_test! do |response|
+          expect(response.location).to eq("http://www.example.com/api/v1/offices/#{office.id}")
+        end
+      end
+
+      json_problem_schema = {
+        "$schema": "https://json-schema.org/draft/2019-09/schema",
+        "$id": "https://www.rfc-editor.org/rfc/rfc7807",
+        type: :object,
+        properties: {
+          type: { type: :string, format: :uri },
+          title: { type: :string },
+          status: { type: :number }
+        },
+        required: [:type],
+        additionalProperties: false
+      }
+
+      response "404", "No office with this ID" do
+        schema json_problem_schema
+
+        let(:id) { generate_salesforce_id }
+
+        run_test!
       end
     end
   end

@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get "/offices/:id", to: "office#show"
+      get "/offices/:id", to: "office#show", as: :office
     end
   end
 end
