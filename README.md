@@ -52,3 +52,12 @@ IDE integration is best for this, alternatively, you can run `bundle exec ruboco
 
 You can also run these in Docker if there are any environmental issues
 locally using `bin/docker/lint` and `bin/docker/test`.
+
+## API documentation
+
+This repo uses [RSwag](https://github.com/rswag/rswag) to produce Swagger API
+documentation from tests which have been written against an endpoint.
+
+In order to edit the API documentation, you should write appropriate tests in
+`spec/requests/` folder, and once they are green, run `bin/rails rswag` to
+update the documentation files.

@@ -14,3 +14,28 @@ Metrics/BlockLength:
     - config/environments/*.rb
     # Migrations tend to be long as they create lots of fields
     - db/migrate/*.rb
+
+# rswag defined tests end up more deeply nested than usually allowed
+RSpec/NestedGroups:
+  Exclude:
+    - spec/requests/**/*_spec.rb
+
+# This is required to pick up the RSwag defined tests, the bundled config in the Gem doesn't
+# appear to be working, so manually adding this: https://github.com/rswag/rswag/blob/master/rswag-specs/.rubocop_rspec_alias_config.yml
+RSpec:
+  Language:
+    ExampleGroups:
+      Regular:
+        - path
+        - response
+        - get
+        - post
+        - patch
+        - put
+        - delete
+        - head
+        - options
+        - trace
+    Examples:
+      Regular:
+        - run_test!

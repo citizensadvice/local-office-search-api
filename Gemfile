@@ -28,6 +28,10 @@ gem "yabeda-rails", "~> 0.8"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# Use Swagger to document our APIs
+gem "rswag-api"
+gem "rswag-ui"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
@@ -40,6 +44,9 @@ group :development, :test do
 
   # use .env files for local overrides
   gem "dotenv-rails"
+
+  # Use RSwag to assist in running tests
+  gem "rswag-specs"
 end
 
 group :development do
