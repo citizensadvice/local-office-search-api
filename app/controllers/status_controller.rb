@@ -2,6 +2,10 @@
 
 class StatusController < ApplicationController
   def index
-    head ActiveRecord::Base.connected? ? :ok : :service_unavailable
+    ActiveRecord::Base.connection.execute("SELECT 1")
+  rescue ActiveRecord::ConnectionNotEstablished
+    head :service_unavailable
+  else
+    head :ok
   end
 end
