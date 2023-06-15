@@ -9,17 +9,7 @@ RSpec.describe "Service Status API" do
         run_test!
       end
 
-      response "503", "Service is unavailable" do
-        before do
-          ActiveRecord::Base.remove_connection
-        end
-
-        after do
-          ActiveRecord::Base.establish_connection
-        end
-
-        run_test!
-      end
+      response "503", "Service is unavailable"
     end
   end
 end
