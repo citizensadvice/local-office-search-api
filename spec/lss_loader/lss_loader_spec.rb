@@ -182,7 +182,7 @@ RSpec.describe LssLoader do
       telephone_advice_hours_sunday: nil
     }.update(vals)
 
-    expect(Office.first.as_json.symbolize_keys).to eq vals.as_json.symbolize_keys
+    expect(Office.first.serializable_hash.symbolize_keys).to eq vals
   end
 
   def expect_basic_hierarchy
