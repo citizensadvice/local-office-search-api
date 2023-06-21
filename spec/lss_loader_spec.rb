@@ -139,8 +139,8 @@ RSpec.describe LssLoader do
   end
 
   def load_from_fixtures(account_csv, opening_hours_csv)
-    lss_loader = LssLoader.new File.expand_path("../fixtures/accounts/#{account_csv}.csv", File.dirname(__FILE__)),
-                               File.expand_path("../fixtures/opening_hours/#{opening_hours_csv}.csv", File.dirname(__FILE__))
+    lss_loader = LssLoader.new File.expand_path("fixtures/accounts/#{account_csv}.csv", File.dirname(__FILE__)),
+                               File.expand_path("fixtures/opening_hours/#{opening_hours_csv}.csv", File.dirname(__FILE__))
     lss_loader.load!
   end
 
