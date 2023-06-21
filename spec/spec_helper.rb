@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "simplecov"
+require_relative "./support/id_generator"
 
 # Use default Rails profile
 SimpleCov.start "rails" do
@@ -8,6 +9,8 @@ SimpleCov.start "rails" do
 end
 
 RSpec.configure do |config|
+  config.include IdGenerator
+
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
