@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class LssLoader
-  # @param [CSV::Table] account_csv
-  # @param [CSV::Table] opening_hours_csv
   def initialize(account_csv, opening_hours_csv)
-    @account_csv = account_csv
-    @opening_hours_csv = opening_hours_csv
+    @account_csv = CSV.open account_csv, headers: true, return_headers: true
+    @opening_hours_csv = CSV.open opening_hours_csv, headers: true, return_headers: true
+    initialise_csv_headers!
   end
 
   def load!
@@ -17,6 +16,11 @@ class LssLoader
   end
 
   private
+
+  def initialise_csv_headers!
+    @account_csv.shift if @account_csv.headers == true
+    @opening_hours_csv.shift if @opening_hours_csv.headers == true
+  end
 
   def validate_csv_headers!
     raise LssLoadError, "Accounts CSV file was not in expected format" unless accounts_csv_has_expected_headers?
