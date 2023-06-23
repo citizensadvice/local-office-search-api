@@ -14,7 +14,7 @@ class LssLoader
   def load!
     ActiveRecord::Base.transaction do
       validate_csv_headers!
-      ActiveRecord::Base.connection.truncate(Office.table_name)
+      Office.delete_all
       save_offices_by_tier! build_office_records
     end
   end
