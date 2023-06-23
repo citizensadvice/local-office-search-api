@@ -34,6 +34,7 @@ LOCAL_OFFICE_SEARCH_DB_PASSWORD=develop
 LOCAL_OFFICE_SEARCH_DB_NAME=local_office_search_api
 LOCAL_OFFICE_SEARCH_EPISERVER_USER=episerver
 LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD=development
+LSS_DATA_BUCKET=test-network-data-advice-locations-raw-eu-west-1
 EOF
 ```
 
@@ -63,6 +64,13 @@ IDE integration is best for this, alternatively, you can run `bundle exec ruboco
 
 You can also run these in Docker if there are any environmental issues
 locally using `bin/docker/lint` and `bin/docker/test`.
+
+## Loading data in
+
+You will need to have [AWS set up and be authorised locally](https://github.com/citizensadvice/ca-dev-setup).
+
+If you are logged in as ContentPlatformDeveloper you should now be able to run `bin/docker/rake sync_database`,
+or `bin/rake sync_database` to load data in from the data science buckets.
 
 ## API documentation
 

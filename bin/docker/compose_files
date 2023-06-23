@@ -11,3 +11,19 @@ fi
 if [[ -f "docker-compose.override.yml" ]]; then
   COMPOSE_FILES+=( -f docker-compose.override.yml)
 fi
+
+# rebuild docker container if Gemfile.lock has changed
+function rebuild_if_gem_changed() {
+    [ "$CI_TEST" == "true" ] && return
+    last_gemlock_date=$(date -r Gemfile.lock +%s)
+    if [ "$(docker images -q local-office-search-api${SEARCH_API_VERSION_TAG} 2>/dev/null)" == "" ] ; then
+      last_build_date="0"
+    else
+      last_build_date=$(date -f '%Y-%m-%dT%H:%M:%S' -j $(docker image inspect --format='{{.Created}}' local-office-search-api${SEARCH_API_VERSION_TAG} | cut -d. -f1)  +%s)
+    fi
+
+    if [ "$last_gemlock_date" -gt "$last_build_date" ] ; then
+      echo "Rebuilding image to update Gems"
+      docker-compose build
+    fi
+}

@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-require_relative "csv_helpers"
+require "csv"
+require "csv_helpers"
 
 class LssLoader
   include CsvHelpers
 
   def initialize(account_csv, opening_hours_csv)
-    @account_csv = CSV.open account_csv, headers: true, return_headers: true
-    @opening_hours_csv = CSV.open opening_hours_csv, headers: true, return_headers: true
+    @account_csv = CSV.new account_csv, headers: true, return_headers: true
+    @opening_hours_csv = CSV.new opening_hours_csv, headers: true, return_headers: true
     initialise_csv_headers!
   end
 
