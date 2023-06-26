@@ -148,6 +148,16 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: local_authorities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.local_authorities (
+    id character(9) NOT NULL,
+    name text NOT NULL
+);
+
+
+--
 -- Name: offices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -186,12 +196,51 @@ CREATE TABLE public.offices (
 
 
 --
+-- Name: postcodes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.postcodes (
+    id bigint NOT NULL,
+    canonical character varying(8) NOT NULL,
+    normalised character varying(7) GENERATED ALWAYS AS (lower(replace((canonical)::text, ' '::text, ''::text))) STORED,
+    location public.geometry(Point) NOT NULL,
+    local_authority_id character(9) NOT NULL
+);
+
+
+--
+-- Name: postcodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.postcodes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: postcodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.postcodes_id_seq OWNED BY public.postcodes.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
+
+
+--
+-- Name: postcodes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postcodes ALTER COLUMN id SET DEFAULT nextval('public.postcodes_id_seq'::regclass);
 
 
 --
@@ -203,11 +252,27 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: local_authorities local_authorities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.local_authorities
+    ADD CONSTRAINT local_authorities_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: offices offices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.offices
     ADD CONSTRAINT offices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: postcodes postcodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postcodes
+    ADD CONSTRAINT postcodes_pkey PRIMARY KEY (id);
 
 
 --
@@ -226,6 +291,28 @@ CREATE INDEX index_offices_on_parent_id ON public.offices USING btree (parent_id
 
 
 --
+-- Name: index_postcodes_on_local_authority_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_postcodes_on_local_authority_id ON public.postcodes USING btree (local_authority_id);
+
+
+--
+-- Name: index_postcodes_on_normalised; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_postcodes_on_normalised ON public.postcodes USING btree (normalised);
+
+
+--
+-- Name: postcodes fk_rails_7ab3384eab; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postcodes
+    ADD CONSTRAINT fk_rails_7ab3384eab FOREIGN KEY (local_authority_id) REFERENCES public.local_authorities(id) DEFERRABLE;
+
+
+--
 -- Name: offices fk_rails_b381f08761; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -237,9 +324,10 @@ ALTER TABLE ONLY public.offices
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public, topology, tiger;
+SET search_path TO "$user", public, topology;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20230531135320');
+('20230531135320'),
+('20230621151704');
 
 

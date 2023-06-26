@@ -1,22 +1,30 @@
 # frozen_string_literal: true
 
+require_relative "./csv_helpers"
+
 class LssLoader
-  # @param [CSV::Table] account_csv
-  # @param [CSV::Table] opening_hours_csv
+  include CsvHelpers
+
   def initialize(account_csv, opening_hours_csv)
-    @account_csv = account_csv
-    @opening_hours_csv = opening_hours_csv
+    @account_csv = CSV.open account_csv, headers: true, return_headers: true
+    @opening_hours_csv = CSV.open opening_hours_csv, headers: true, return_headers: true
+    initialise_csv_headers!
   end
 
   def load!
     ActiveRecord::Base.transaction do
       validate_csv_headers!
-      ActiveRecord::Base.connection.truncate(Office.table_name)
+      Office.delete_all
       save_offices_by_tier! build_office_records
     end
   end
 
   private
+
+  def initialise_csv_headers!
+    @account_csv.shift if @account_csv.headers == true
+    @opening_hours_csv.shift if @opening_hours_csv.headers == true
+  end
 
   def validate_csv_headers!
     raise LssLoadError, "Accounts CSV file was not in expected format" unless accounts_csv_has_expected_headers?
@@ -99,30 +107,6 @@ class LssLoader
     beginning = tod_from_val(row["Start_Time__c"])
     ending = tod_from_val(row["End_Time__c"])
     Tod::Shift.new(beginning, ending) unless beginning > ending
-  end
-
-  def tod_from_val(val)
-    match = /^(?<h>\d{2}):(?<m>\d{2}):(?<s>\d{2}).(?<ms>\d{3})Z$/.match(val)
-
-    Tod::TimeOfDay.new match[:h].to_i, match[:m].to_i, match[:s].to_i + (match[:ms].to_i / 1000.0)
-  end
-
-  def str_or_nil(val)
-    return nil if val == "null"
-
-    val
-  end
-
-  def point_wkt_or_nil(latitude, longitude)
-    return nil if latitude.nil? || longitude.nil?
-
-    "POINT(#{longitude} #{latitude})"
-  end
-
-  def array_from_value(val)
-    return [] if val == "null"
-
-    val.split ";"
   end
 
   def record_type_id_to_office_type(record_type_id)
