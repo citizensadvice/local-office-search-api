@@ -17,7 +17,7 @@ gem "rgeo-geojson"
 gem "tod"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.0"
+gem "puma", "~> 6.3"
 
 # Monitoring
 gem "ddtrace", "~> 1.10.1"
