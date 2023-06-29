@@ -4,6 +4,12 @@ info:
   title: Local Office Search API
   version: v1
 paths:
+  "/status":
+    get:
+      summary: Checks system status
+      responses:
+        '200':
+          description: Service is available
   "/api/v1/offices/{id}":
     get:
       summary: Retrieves a single office
@@ -365,14 +371,6 @@ paths:
                 required:
                 - type
                 additionalProperties: false
-  "/status":
-    get:
-      summary: Checks system status
-      responses:
-        '200':
-          description: Service is available
-        '503':
-          description: Service is unavailable
 servers:
 - url: https://{defaultHost}
   variables:

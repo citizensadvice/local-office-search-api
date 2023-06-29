@@ -2,7 +2,7 @@
 
 module Api
   module V0
-    class MemberController < ::ApplicationController
+    class MemberController < BaseController
       def get
         head :not_implemented
       end

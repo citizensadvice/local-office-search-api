@@ -2,6 +2,7 @@
 
 require "simplecov"
 require_relative "./support/id_generator"
+require_relative "./support/v0_auth_helper"
 
 # Use default Rails profile
 SimpleCov.start "rails" do

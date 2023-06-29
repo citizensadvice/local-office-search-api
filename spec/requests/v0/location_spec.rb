@@ -3,9 +3,12 @@
 require "swagger_helper"
 
 RSpec.describe "Bureau Details legacy API - Locations", swagger_doc: "v0/swagger.yaml" do
+  include_context "with episerver credentials"
+
   path "/api/v0/location/id/{serial_number}" do
     get "Show full details for a location" do
       produces "application/json"
+      security [basic_auth: []]
       parameter name: :serial_number, in: :path, type: :string, description: "{serial_number} is the locations serial number."
 
       response "501", "is a deprecated API which has not been reimplemented" do
@@ -19,6 +22,7 @@ RSpec.describe "Bureau Details legacy API - Locations", swagger_doc: "v0/swagger
   path "/api/v0/location/list" do
     get "List members" do
       produces "application/json"
+      security [basic_auth: []]
       parameter name: :near, in: :query, type: :string, required: false,
                 description: <<~DESCRIPTION.squish
                   If near is provided then the nearest locations to the value are returned. Locations are ordered so those

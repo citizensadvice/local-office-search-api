@@ -12,6 +12,8 @@ services:
     environment:
       - LOCAL_OFFICE_SEARCH_TEST_DB_HOST=db
       - LOCAL_OFFICE_SEARCH_TEST_DB_PORT=5432
+      - LOCAL_OFFICE_SEARCH_EPISERVER_USER=unittest
+      - LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD=ci
     volumes:
       - .:/app
     depends_on:

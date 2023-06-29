@@ -3,9 +3,12 @@
 require "swagger_helper"
 
 RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger.yaml" do
+  include_context "with episerver credentials"
+
   path "/api/v0/vacancy/id/{id}" do
     get "Shows full details for a member" do
       produces "application/json"
+      security [basic_auth: []]
       parameter name: :id, in: :path, type: :string
 
       response "501", "Is not yet implemented" do
@@ -19,6 +22,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
   path "/api/v0/vacancy/list" do
     get "List members" do
       produces "application/json"
+      security [basic_auth: []]
       parameter name: :near, in: :query, type: :string, required: false,
                 description: "If near is provided then the nearest vacancies to {location} are returned."
       parameter name: :roles, in: :query, type: :string, required: false,
