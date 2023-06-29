@@ -1,0 +1,116 @@
+---
+openapi: 3.0.1
+info:
+  title: Bureau Details API (legacy)
+  version: v0
+paths:
+  "/api/v0/location/id/{serial_number}":
+    get:
+      summary: Show full details for a location
+      parameters:
+      - name: serial_number
+        in: path
+        description: "{serial_number} is the locations serial number."
+        required: true
+        schema:
+          type: string
+      responses:
+        '501':
+          description: is a deprecated API which has not been reimplemented
+  "/api/v0/location/list":
+    get:
+      summary: List members
+      parameters:
+      - name: near
+        in: query
+        required: false
+        description: If near is provided then the nearest locations to the value are
+          returned. Locations are ordered so those in the same local authority of
+          are promoted.
+        schema:
+          type: string
+      - name: bureau
+        in: query
+        required: false
+        default: true
+        description: If bureau is set to false then locations of type bureau will
+          not be returned.
+        schema:
+          type: boolean
+      - name: outlet
+        in: query
+        required: false
+        default: false
+        description: If outlet is set to true then outreaches will also be returned.
+        schema:
+          type: boolean
+      responses:
+        '501':
+          description: is a deprecated API which has not been reimplemented
+  "/api/v0/member/id/{id}":
+    get:
+      summary: Shows full details for a member
+      parameters:
+      - name: id
+        in: path
+        description: "{id} can be a serial number, eg 100002, or a membership number,
+          eg 70/0023"
+        required: true
+        schema:
+          type: string
+      responses:
+        '501':
+          description: Is not yet implemented
+  "/api/v0/member/list":
+    get:
+      summary: List members
+      parameters:
+      - name: near
+        in: query
+        required: false
+        description: Without near all members will be show in alphabetical order.
+          If near is provided then the nearest members to the parameter will be returned.
+        schema:
+          type: string
+      responses:
+        '501':
+          description: is a deprecated API which has not been reimplemented
+  "/api/v0/vacancy/id/{id}":
+    get:
+      summary: Shows full details for a member
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '501':
+          description: Is not yet implemented
+  "/api/v0/vacancy/list":
+    get:
+      summary: List members
+      parameters:
+      - name: near
+        in: query
+        required: false
+        description: If near is provided then the nearest vacancies to {location}
+          are returned.
+        schema:
+          type: string
+      - name: roles
+        in: query
+        required: false
+        description: If roles is provided then the role types are filtered to match
+          the list of roles (comma separated) provided. e.g roles=trustee,receptionist
+          finds all trustee or receptionist vacancies.
+        schema:
+          type: string
+      responses:
+        '501':
+          description: Is not yet implemented
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com

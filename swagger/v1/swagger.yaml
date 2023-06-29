@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.1
 info:
-  title: API V1
+  title: Local Office Search API
   version: v1
 paths:
   "/api/v1/offices/{id}":
