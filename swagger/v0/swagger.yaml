@@ -59,8 +59,602 @@ paths:
         schema:
           type: string
       responses:
-        '501':
-          description: Is not yet implemented
+        '200':
+          description: fetches all data for a member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      address:
+                        type: string
+                      town:
+                        type: string
+                      county:
+                        type:
+                        - string
+                        - 'null'
+                      postcode:
+                        type:
+                        - string
+                        - 'null'
+                      onsDistrictCode:
+                        type: string
+                      localAuthority:
+                        type: string
+                      latLong:
+                        type: array
+                        items:
+                          type: number
+                        minItems: 2
+                        maxItems: 2
+                    required:
+                    - address
+                    - town
+                    - county
+                    - postcode
+                    - latLong
+                    additionalProperties: false
+                  membershipNumber:
+                    type: string
+                  name:
+                    type: string
+                  serialNumber:
+                    type: string
+                  charityNumber:
+                    type: string
+                  notes:
+                    type:
+                    - string
+                    - 'null'
+                  services:
+                    type: object
+                    properties:
+                      bureaux:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            address:
+                              type: object
+                              properties:
+                                address:
+                                  type: string
+                                town:
+                                  type: string
+                                county:
+                                  type:
+                                  - string
+                                  - 'null'
+                                postcode:
+                                  type:
+                                  - string
+                                  - 'null'
+                                onsDistrictCode:
+                                  type: string
+                                localAuthority:
+                                  type: string
+                                latLong:
+                                  type: array
+                                  items:
+                                    type: number
+                                  minItems: 2
+                                  maxItems: 2
+                              required:
+                              - address
+                              - town
+                              - county
+                              - postcode
+                              - latLong
+                              additionalProperties: false
+                            membershipNumber:
+                              type: string
+                            name:
+                              type: string
+                            serialNumber:
+                              type: string
+                            inVCC:
+                              type: boolean
+                            isBureau:
+                              type: boolean
+                            isOutlet:
+                              type: boolean
+                            features:
+                              type: array
+                              items:
+                                type: string
+                            notes:
+                            - string
+                            - 'null'
+                            openingTimes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  day:
+                                    type: string
+                                    enum:
+                                    - Monday
+                                    - Tuesday
+                                    - Wednesday
+                                    - Thursday
+                                    - Friday
+                                    - Saturday
+                                    - Sunday
+                                  start1:
+                                  - string
+                                  - 'null'
+                                  end1:
+                                  - string
+                                  - 'null'
+                                  start2:
+                                  - string
+                                  - 'null'
+                                  end2:
+                                  - string
+                                  - 'null'
+                                  notes:
+                                  - string
+                                  - 'null'
+                                required:
+                                - day
+                                - start1
+                                - end1
+                                - start2
+                                - end2
+                                - notes
+                                additionalProperties: false
+                            publicContacts:
+                              type: object
+                              properties:
+                                email:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                fax:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                minicom:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                telephone:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                website:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                              required:
+                              - email
+                              - fax
+                              - minicom
+                              - telephone
+                              - website
+                              additionalProperties: false
+                            telephoneTimes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  day:
+                                    type: string
+                                    enum:
+                                    - Monday
+                                    - Tuesday
+                                    - Wednesday
+                                    - Thursday
+                                    - Friday
+                                    - Saturday
+                                    - Sunday
+                                  start1:
+                                  - string
+                                  - 'null'
+                                  end1:
+                                  - string
+                                  - 'null'
+                                  start2:
+                                  - string
+                                  - 'null'
+                                  end2:
+                                  - string
+                                  - 'null'
+                                  notes:
+                                  - string
+                                  - 'null'
+                                required:
+                                - day
+                                - start1
+                                - end1
+                                - start2
+                                - end2
+                                - notes
+                                additionalProperties: false
+                          required:
+                          - address
+                          - membershipNumber
+                          - name
+                          - serialNumber
+                          - inVCC
+                          - isBureau
+                          - isOutlet
+                          - features
+                          - notes
+                          - openingTimes
+                          - publicContacts
+                          - telephoneTimes
+                          additionalProperties: false
+                      outlets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            address:
+                              type: object
+                              properties:
+                                address:
+                                  type: string
+                                town:
+                                  type: string
+                                county:
+                                  type:
+                                  - string
+                                  - 'null'
+                                postcode:
+                                  type:
+                                  - string
+                                  - 'null'
+                                onsDistrictCode:
+                                  type: string
+                                localAuthority:
+                                  type: string
+                                latLong:
+                                  type: array
+                                  items:
+                                    type: number
+                                  minItems: 2
+                                  maxItems: 2
+                              required:
+                              - address
+                              - town
+                              - county
+                              - postcode
+                              - latLong
+                              additionalProperties: false
+                            membershipNumber:
+                              type: string
+                            name:
+                              type: string
+                            serialNumber:
+                              type: string
+                            inVCC:
+                              type: boolean
+                            isBureau:
+                              type: boolean
+                            isOutlet:
+                              type: boolean
+                            features:
+                              type: array
+                              items:
+                                type: string
+                            notes:
+                            - string
+                            - 'null'
+                            openingTimes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  day:
+                                    type: string
+                                    enum:
+                                    - Monday
+                                    - Tuesday
+                                    - Wednesday
+                                    - Thursday
+                                    - Friday
+                                    - Saturday
+                                    - Sunday
+                                  start1:
+                                  - string
+                                  - 'null'
+                                  end1:
+                                  - string
+                                  - 'null'
+                                  start2:
+                                  - string
+                                  - 'null'
+                                  end2:
+                                  - string
+                                  - 'null'
+                                  notes:
+                                  - string
+                                  - 'null'
+                                required:
+                                - day
+                                - start1
+                                - end1
+                                - start2
+                                - end2
+                                - notes
+                                additionalProperties: false
+                            publicContacts:
+                              type: object
+                              properties:
+                                email:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                fax:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                minicom:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                telephone:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                                website:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      contact:
+                                        type: string
+                                      description:
+                                      - string
+                                      - 'null'
+                                    required:
+                                    - contact
+                                    - description
+                                    additionalProperties: false
+                              required:
+                              - email
+                              - fax
+                              - minicom
+                              - telephone
+                              - website
+                              additionalProperties: false
+                            telephoneTimes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  day:
+                                    type: string
+                                    enum:
+                                    - Monday
+                                    - Tuesday
+                                    - Wednesday
+                                    - Thursday
+                                    - Friday
+                                    - Saturday
+                                    - Sunday
+                                  start1:
+                                  - string
+                                  - 'null'
+                                  end1:
+                                  - string
+                                  - 'null'
+                                  start2:
+                                  - string
+                                  - 'null'
+                                  end2:
+                                  - string
+                                  - 'null'
+                                  notes:
+                                  - string
+                                  - 'null'
+                                required:
+                                - day
+                                - start1
+                                - end1
+                                - start2
+                                - end2
+                                - notes
+                                additionalProperties: false
+                          required:
+                          - address
+                          - membershipNumber
+                          - name
+                          - serialNumber
+                          - inVCC
+                          - isBureau
+                          - isOutlet
+                          - features
+                          - notes
+                          - openingTimes
+                          - publicContacts
+                          - telephoneTimes
+                          additionalProperties: false
+                    required:
+                    - bureaux
+                    - outlets
+                    additionalProperties: false
+                  staff:
+                    type: 'null'
+                  vacancies:
+                    type: object
+                    items:
+                      type: object
+                      properties:
+                        address:
+                          type: object
+                          properties:
+                            address:
+                              type: string
+                            town:
+                              type: string
+                            county:
+                              type:
+                              - string
+                              - 'null'
+                            postcode:
+                              type:
+                              - string
+                              - 'null'
+                            onsDistrictCode:
+                              type: string
+                            localAuthority:
+                              type: string
+                            latLong:
+                              type: array
+                              items:
+                                type: number
+                              minItems: 2
+                              maxItems: 2
+                          required:
+                          - address
+                          - town
+                          - county
+                          - postcode
+                          - latLong
+                          additionalProperties: false
+                        membershipNumber:
+                          type: string
+                        name:
+                          type: string
+                        serialNumber:
+                          type: string
+                        email:
+                          type: string
+                        id:
+                          type: string
+                        roles:
+                          type: array
+                          items:
+                            type: string
+                        telephone:
+                        - string
+                        - 'null'
+                        website:
+                        - string
+                        - 'null'
+                      required:
+                      - address
+                      - membershipNumber
+                      - name
+                      - serialNumber
+                      - email
+                      - id
+                      - roles
+                      - telephone
+                      - website
+                      additionalProperties: false
+                  website:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - address
+                - membershipNumber
+                - name
+                - serialNumber
+                - charityNumber
+                - notes
+                - services
+                - staff
+                - vacancies
+                - website
+                additionalProperties: false
   "/api/v0/member/list":
     get:
       summary: List members
@@ -85,8 +679,76 @@ paths:
         schema:
           type: string
       responses:
-        '501':
-          description: Is not yet implemented
+        '200':
+          description: fetches a single vacancy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      address:
+                        type: string
+                      town:
+                        type: string
+                      county:
+                        type:
+                        - string
+                        - 'null'
+                      postcode:
+                        type:
+                        - string
+                        - 'null'
+                      onsDistrictCode:
+                        type: string
+                      localAuthority:
+                        type: string
+                      latLong:
+                        type: array
+                        items:
+                          type: number
+                        minItems: 2
+                        maxItems: 2
+                    required:
+                    - address
+                    - town
+                    - county
+                    - postcode
+                    - latLong
+                    additionalProperties: false
+                  membershipNumber:
+                    type: string
+                  name:
+                    type: string
+                  serialNumber:
+                    type: string
+                  email:
+                    type: string
+                  id:
+                    type: string
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                  telephone:
+                  - string
+                  - 'null'
+                  website:
+                  - string
+                  - 'null'
+                required:
+                - address
+                - membershipNumber
+                - name
+                - serialNumber
+                - email
+                - id
+                - roles
+                - telephone
+                - website
+                additionalProperties: false
   "/api/v0/vacancy/list":
     get:
       summary: List members
@@ -94,8 +756,8 @@ paths:
       - name: near
         in: query
         required: false
-        description: If near is provided then the nearest vacancies to {location}
-          are returned.
+        description: If near is provided then the nearest vacancies to the specified
+          location are returned.
         schema:
           type: string
       - name: roles
@@ -107,8 +769,92 @@ paths:
         schema:
           type: string
       responses:
-        '501':
-          description: Is not yet implemented
+        '200':
+          description: returns the nearest vacancies to the specified location
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - vacancies
+                  list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        distance:
+                          type: number
+                        address:
+                          type: object
+                          properties:
+                            address:
+                              type: string
+                            town:
+                              type: string
+                            county:
+                              type:
+                              - string
+                              - 'null'
+                            postcode:
+                              type:
+                              - string
+                              - 'null'
+                            onsDistrictCode:
+                              type: string
+                            localAuthority:
+                              type: string
+                            latLong:
+                              type: array
+                              items:
+                                type: number
+                              minItems: 2
+                              maxItems: 2
+                          required:
+                          - address
+                          - town
+                          - county
+                          - postcode
+                          - latLong
+                          additionalProperties: false
+                        membershipNumber:
+                          type: string
+                        name:
+                          type: string
+                        serialNumber:
+                          type: string
+                        email:
+                          type: string
+                        id:
+                          type: string
+                        roles:
+                          type: array
+                          items:
+                            type: string
+                        telephone:
+                        - string
+                        - 'null'
+                        website:
+                        - string
+                        - 'null'
+                      required:
+                      - address
+                      - membershipNumber
+                      - name
+                      - serialNumber
+                      - email
+                      - id
+                      - roles
+                      - telephone
+                      - website
+                      - distance
+                      additionalProperties: false
+                required:
+                - type
+                - list
+                additionalProperties: false
 servers:
 - url: https://{defaultHost}
   variables:

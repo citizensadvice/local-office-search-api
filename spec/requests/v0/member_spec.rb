@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
+require_relative "schema"
 
 RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.yaml" do
   path "/api/v0/member/id/{id}" do
@@ -11,7 +12,9 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                   {id} can be a serial number, eg 100002, or a membership number, eg 70/0023
                 DESCRIPTION
 
-      response "501", "Is not yet implemented" do
+      response "200", "fetches all data for a member", skip: "not yet implemented" do
+        schema BureauDetailsSchema::MEMBER_SCHEMA
+
         let(:id) { "70/0023" }
 
         run_test!
