@@ -7,6 +7,8 @@ paths:
   "/api/v0/location/id/{serial_number}":
     get:
       summary: Show full details for a location
+      security:
+      - basic_auth: []
       parameters:
       - name: serial_number
         in: path
@@ -20,6 +22,8 @@ paths:
   "/api/v0/location/list":
     get:
       summary: List members
+      security:
+      - basic_auth: []
       parameters:
       - name: near
         in: query
@@ -50,6 +54,8 @@ paths:
   "/api/v0/member/id/{id}":
     get:
       summary: Shows full details for a member
+      security:
+      - basic_auth: []
       parameters:
       - name: id
         in: path
@@ -64,6 +70,8 @@ paths:
   "/api/v0/member/list":
     get:
       summary: List members
+      security:
+      - basic_auth: []
       parameters:
       - name: near
         in: query
@@ -78,6 +86,8 @@ paths:
   "/api/v0/vacancy/id/{id}":
     get:
       summary: Shows full details for a member
+      security:
+      - basic_auth: []
       parameters:
       - name: id
         in: path
@@ -90,6 +100,8 @@ paths:
   "/api/v0/vacancy/list":
     get:
       summary: List members
+      security:
+      - basic_auth: []
       parameters:
       - name: near
         in: query
@@ -114,3 +126,8 @@ servers:
   variables:
     defaultHost:
       default: www.example.com
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic

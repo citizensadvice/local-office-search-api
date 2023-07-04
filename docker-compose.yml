@@ -32,6 +32,8 @@ services:
       - LOCAL_OFFICE_SEARCH_TEST_DB_USER=local_office_search_api
       - LOCAL_OFFICE_SEARCH_TEST_DB_PASSWORD=testing
       - LOCAL_OFFICE_SEARCH_TEST_DB_NAME=local_office_search_api_testing
+      - LOCAL_OFFICE_SEARCH_EPISERVER_USER=episerver
+      - LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD=development
     volumes:
       - .:/app
       - ~/.aws:/home/ruby/.aws
@@ -67,4 +69,3 @@ services:
       - POSTGRES_DB=local_office_search_api_testing
       - POSTGRES_USER=local_office_search_api
       - POSTGRES_PASSWORD=testing
-

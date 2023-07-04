@@ -2,7 +2,7 @@
 
 module Api
   module V0
-    class LocationController < ::ApplicationController
+    class LocationController < BaseController
       def get
         head :not_implemented
       end

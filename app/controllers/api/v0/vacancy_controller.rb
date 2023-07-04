@@ -2,7 +2,7 @@
 
 module Api
   module V0
-    class VacancyController < ::ApplicationController
+    class VacancyController < BaseController
       def get
         head :not_implemented
       end
