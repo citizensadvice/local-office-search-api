@@ -106,6 +106,8 @@ paths:
                     type: string
                   charityNumber:
                     type: string
+                  companyNumber:
+                    type: string
                   notes:
                     type:
                     - string
@@ -167,8 +169,9 @@ paths:
                               items:
                                 type: string
                             notes:
-                            - string
-                            - 'null'
+                              type:
+                              - string
+                              - 'null'
                             openingTimes:
                               type: array
                               items:
@@ -185,20 +188,25 @@ paths:
                                     - Saturday
                                     - Sunday
                                   start1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   start2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   notes:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                 required:
                                 - day
                                 - start1
@@ -218,8 +226,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -232,8 +241,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -246,8 +256,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -260,8 +271,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -274,8 +286,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -303,20 +316,25 @@ paths:
                                     - Saturday
                                     - Sunday
                                   start1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   start2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   notes:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                 required:
                                 - day
                                 - start1
@@ -393,8 +411,9 @@ paths:
                               items:
                                 type: string
                             notes:
-                            - string
-                            - 'null'
+                              type:
+                              - string
+                              - 'null'
                             openingTimes:
                               type: array
                               items:
@@ -411,20 +430,25 @@ paths:
                                     - Saturday
                                     - Sunday
                                   start1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   start2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   notes:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                 required:
                                 - day
                                 - start1
@@ -444,8 +468,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -458,8 +483,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -472,8 +498,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -486,8 +513,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -500,8 +528,9 @@ paths:
                                       contact:
                                         type: string
                                       description:
-                                      - string
-                                      - 'null'
+                                        type:
+                                        - string
+                                        - 'null'
                                     required:
                                     - contact
                                     - description
@@ -529,20 +558,25 @@ paths:
                                     - Saturday
                                     - Sunday
                                   start1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end1:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   start2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   end2:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                   notes:
-                                  - string
-                                  - 'null'
+                                    type:
+                                    - string
+                                    - 'null'
                                 required:
                                 - day
                                 - start1
@@ -572,7 +606,7 @@ paths:
                   staff:
                     type: 'null'
                   vacancies:
-                    type: object
+                    type: array
                     items:
                       type: object
                       properties:
@@ -623,11 +657,13 @@ paths:
                           items:
                             type: string
                         telephone:
-                        - string
-                        - 'null'
+                          type:
+                          - string
+                          - 'null'
                         website:
-                        - string
-                        - 'null'
+                          type:
+                          - string
+                          - 'null'
                       required:
                       - address
                       - membershipNumber
@@ -655,6 +691,8 @@ paths:
                 - vacancies
                 - website
                 additionalProperties: false
+        '404':
+          description: when no member with that ID is found
   "/api/v0/member/list":
     get:
       summary: List members
@@ -733,11 +771,13 @@ paths:
                     items:
                       type: string
                   telephone:
-                  - string
-                  - 'null'
+                    type:
+                    - string
+                    - 'null'
                   website:
-                  - string
-                  - 'null'
+                    type:
+                    - string
+                    - 'null'
                 required:
                 - address
                 - membershipNumber
@@ -834,11 +874,13 @@ paths:
                           items:
                             type: string
                         telephone:
-                        - string
-                        - 'null'
+                          type:
+                          - string
+                          - 'null'
                         website:
-                        - string
-                        - 'null'
+                          type:
+                          - string
+                          - 'null'
                       required:
                       - address
                       - membershipNumber

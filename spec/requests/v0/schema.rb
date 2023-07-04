@@ -23,11 +23,11 @@ module BureauDetailsSchema
     type: :object,
     properties: {
       day: { type: :string, enum: %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday] },
-      start1: NULLABLE_STRING,
-      end1: NULLABLE_STRING,
-      start2: NULLABLE_STRING,
-      end2: NULLABLE_STRING,
-      notes: NULLABLE_STRING
+      start1: { type: NULLABLE_STRING },
+      end1: { type: NULLABLE_STRING },
+      start2: { type: NULLABLE_STRING },
+      end2: { type: NULLABLE_STRING },
+      notes: { type: NULLABLE_STRING }
     },
     required: %w[day start1 end1 start2 end2 notes],
     additionalProperties: false
@@ -39,7 +39,7 @@ module BureauDetailsSchema
       type: :object,
       properties: {
         contact: { type: :string },
-        description: NULLABLE_STRING
+        description: { type: NULLABLE_STRING }
       },
       required: %w[contact description],
       additionalProperties: false
@@ -57,7 +57,7 @@ module BureauDetailsSchema
       isBureau: { type: :boolean },
       isOutlet: { type: :boolean },
       features: { type: :array, items: { type: :string } },
-      notes: NULLABLE_STRING,
+      notes: { type: NULLABLE_STRING },
       openingTimes: { type: :array, items: OPENING_TIME_SCHEMA },
       publicContacts: {
         type: :object,
@@ -88,8 +88,8 @@ module BureauDetailsSchema
       email: { type: :string },
       id: { type: :string },
       roles: { type: :array, items: { type: :string } },
-      telephone: NULLABLE_STRING,
-      website: NULLABLE_STRING
+      telephone: { type: NULLABLE_STRING },
+      website: { type: NULLABLE_STRING }
     },
     required: %w[address membershipNumber name serialNumber email id roles telephone website],
     additionalProperties: false
@@ -110,6 +110,7 @@ module BureauDetailsSchema
       name: { type: :string },
       serialNumber: { type: :string },
       charityNumber: { type: :string },
+      companyNumber: { type: :string },
       notes: { type: NULLABLE_STRING },
       services: {
         type: :object,
@@ -121,7 +122,7 @@ module BureauDetailsSchema
         additionalProperties: false
       },
       staff: { type: :null },
-      vacancies: { type: :object, items: VACANCY_SCHEMA },
+      vacancies: { type: :array, items: VACANCY_SCHEMA },
       website: { type: NULLABLE_STRING }
     },
     required: %w[address membershipNumber name serialNumber charityNumber notes services staff vacancies website],

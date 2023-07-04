@@ -154,6 +154,9 @@ RSpec.describe LssLoader do
     vals = {
       parent_id: nil,
       legacy_id: nil,
+      membership_number: nil,
+      company_number: nil,
+      charity_number: nil,
       about_text: nil,
       accessibility_information: [],
       street: nil,
