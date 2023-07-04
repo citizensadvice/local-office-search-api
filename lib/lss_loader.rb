@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./csv_helpers"
+require_relative "csv_helpers"
 
 class LssLoader
   include CsvHelpers
