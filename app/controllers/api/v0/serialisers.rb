@@ -2,6 +2,7 @@
 
 module Api
   module V0
+    # rubocop:disable Metrics/ModuleLength
     module Serialisers
       private
 
@@ -63,6 +64,20 @@ module Api
         }
       end
 
+      def vacancy_as_v0_json_with_distance(office, location)
+        vacancy = vacancy_as_v0_json(office)
+        vacancy[:distance] = distance_in_miles(location, office.location)
+        vacancy
+      end
+
+      def distance_in_miles(location1, location2)
+        if location1.nil? || location2.nil?
+          0
+        else
+          location1.distance(location2) / 1609.34
+        end
+      end
+
       def address_block(office, include_local_authority:)
         block = {
           address: office.street,
@@ -73,8 +88,10 @@ module Api
           latLong: [office.location.y, office.location.x]
         }
         if include_local_authority
-          block.update({          onsDistrictCode: office.local_authority&.id,
-                                  localAuthority: office.local_authority&.name })
+          block.update({
+            onsDistrictCode: office.local_authority&.id,
+            localAuthority: office.local_authority&.name
+          })
         end
         block
       end
@@ -105,5 +122,6 @@ module Api
         [{ contact: value, description: nil }]
       end
     end
+    # rubocop:enable Metrics/ModuleLength
   end
 end

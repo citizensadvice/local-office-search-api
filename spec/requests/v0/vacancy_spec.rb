@@ -93,7 +93,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
                   e.g roles=trustee,receptionist finds all trustee or receptionist vacancies.
                 DESCRIPTION
 
-      response "200", "returns the nearest vacancies to the specified location", skip: "not yet implemented" do
+      response "200", "returns the nearest vacancies to the specified location" do
         schema type: :object,
                properties: {
                  type: { type: :string, enum: %w[vacancies] },
@@ -102,7 +102,68 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
                required: %w[type list],
                additionalProperties: false
 
-        run_test!
+        let(:local_authority) { LocalAuthority.create! id: "E05XXTEST", name: "Borsetshire" }
+
+        let(:postcode) do
+          Postcode.create! canonical: "FX1 7AA",
+                           location: "POINT(-0.7731781431627129 52.03647020285301)",
+                           local_authority_id: local_authority.id
+        end
+
+        let(:id) do
+          # make a dummy office that gets ignored
+          Office.create!(id: generate_salesforce_id,
+                         name: "Citizens Advice Felpersham South",
+                         office_type: :office,
+                         location: "POINT(-0.7234629197151713, 52.05130183170279)",
+                         volunteer_roles: [])
+
+          office = Office.create!(id: generate_salesforce_id,
+                                  name: "Citizens Advice Felpersham North",
+                                  street: "14 Shakespeare Road",
+                                  city: "Felpersham",
+                                  postcode: "FX1 7QW",
+                                  location: "POINT(-0.7646468 52.0451619)",
+                                  legacy_id: 2,
+                                  membership_number: "55/5555",
+                                  office_type: :office,
+                                  email: "felphersham@example.com",
+                                  website: "http://www.felpershamcab.org.uk",
+                                  phone: "01632 555 555",
+                                  volunteer_roles: ["Receptionist", "Volunteer recruitment and support"],
+                                  local_authority:)
+          office.id
+        end
+
+        let(:near) { postcode.canonical }
+
+        before { id }
+
+        # rubocop:disable RSpec/ExampleLength
+        run_test! do |response|
+          expect(JSON.parse(response.body, symbolize_names: true)[:list]).to eq([{
+            address: {
+              address: "14 Shakespeare Road",
+              town: "Felpersham",
+              county: nil,
+              postcode: "FX1 7QW",
+              latLong: [52.0451619, -0.7646468]
+            },
+            distance: 0.7022914268464465,
+            membershipNumber: "55/5555",
+            name: "Citizens Advice Felpersham North",
+            serialNumber: "2",
+            email: "felphersham@example.com",
+            id:,
+            roles: [
+              "Receptionist",
+              "Volunteer recruitment and support"
+            ],
+            telephone: "01632 555 555",
+            website: "http://www.felpershamcab.org.uk"
+          }])
+        end
+        # rubocop:enable RSpec/ExampleLength
       end
     end
   end
