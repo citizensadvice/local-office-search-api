@@ -18,26 +18,29 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
         # this comes from the original fixture data provided in bureau-details
         # https://github.com/citizensadvice/rd-bureau-details-web-service/blob/master/BureauDetailsService/TestMember.cs
         let(:id) do
-          member = Office.create! id: generate_salesforce_id,
-                                  legacy_id: "x00001",
+          local_authority = LocalAuthority.create! id: "E05XXTEST", name: "Borsetshire"
+
+          member = Office.create!(id: generate_salesforce_id,
+                                  legacy_id: 1,
                                   membership_number: "55/5555",
                                   office_type: :member,
-                                  name: "Felpersham Citizens Advice Bureau",
+                                  name: "Citizens Advice Felpersham",
                                   company_number: "12345678",
                                   charity_number: "87654321",
                                   street: "14 Shakespeare Road",
                                   city: "Felpersham",
                                   postcode: "FX1 7QW",
-                                  location: "POINT(-0.7646468 52.0451619)"
+                                  location: "POINT(-0.7646468 52.0451619)",
+                                  local_authority:)
 
-          office = Office.create! id: generate_salesforce_id,
+          office = Office.create!(id: generate_salesforce_id,
                                   parent_id: member.id,
                                   name: "Citizens Advice Felpersham North",
                                   street: "14 Shakespeare Road",
                                   city: "Felpersham",
                                   postcode: "FX1 7QW",
                                   location: "POINT(-0.7646468 52.0451619)",
-                                  legacy_id: "x00002",
+                                  legacy_id: 2,
                                   membership_number: "55/5555",
                                   office_type: :office,
                                   about_text: "This is not a real Citizens Advice bureau.",
@@ -56,40 +59,42 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                                   telephone_advice_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
                                   email: "felphersham@example.com",
                                   website: "http://www.felpershamcab.org.uk",
-                                  phone: "01632 555 555"
+                                  phone: "01632 555 555",
+                                  local_authority:)
 
-          Office.create! id: generate_salesforce_id,
+          Office.create!(id: generate_salesforce_id,
                          parent_id: office.id,
                          name: "Felpersham hospital",
                          street: "Felperham general hospital\nNorth Beck Street",
                          city: "Felpersham",
                          postcode: "FX1 7YT",
                          location: "POINT(-0.7361886 52.0257741)",
-                         legacy_id: "x00004",
+                         legacy_id: 4,
                          membership_number: "55/5555",
                          office_type: :outreach,
                          about_text: "This location does not exist.",
                          accessibility_information: ["Wheelchair accessible"],
-                         opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(14))
+                         opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(14)),
+                         local_authority:)
 
           member.membership_number
         end
 
         # rubocop:disable RSpec/ExampleLength
         run_test! do |response|
-          expect(JSON.parse(response.body)).to eq({
+          expect(JSON.parse(response.body, symbolize_names: true)).to eq({
             address: {
               address: "14 Shakespeare Road",
               town: "Felpersham",
-              county: "Borsetshire",
+              county: nil,
               postcode: "FX1 7QW",
-              onsDistrictCode: "00FX",
+              onsDistrictCode: "E05XXTEST",
               localAuthority: "Borsetshire",
               latLong: [52.0451619, -0.7646468]
             },
             membershipNumber: "55/5555",
             name: "Citizens Advice Felpersham",
-            serialNumber: "x00001",
+            serialNumber: "1",
             charityNumber: "87654321",
             companyNumber: "12345678",
             notes: nil,
@@ -99,15 +104,15 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                   address: {
                     address: "14 Shakespeare Road",
                     town: "Felpersham",
-                    county: "Borsetshire",
+                    county: nil,
                     postcode: "FX1 7QW",
-                    onsDistrictCode: "00FX",
+                    onsDistrictCode: "E05XXTEST",
                     localAuthority: "Borsetshire",
                     latLong: [52.0451619, -0.7646468]
                   },
                   membershipNumber: "55/5555",
                   name: "Citizens Advice Felpersham North",
-                  serialNumber: "x00002",
+                  serialNumber: "2",
                   inVCC: true,
                   isBureau: true,
                   isOutlet: false,
@@ -136,8 +141,8 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                     },
                     {
                       day: "Wednesday",
-                      start1: "10.00",
-                      end1: "12.30",
+                      start1: "13.30",
+                      end1: "16.00",
                       start2: nil,
                       end2: nil,
                       notes: "Self help computers 9am to 4pm"
@@ -145,7 +150,7 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                     {
                       day: "Thursday",
                       start1: "10.00",
-                      end1: "12.30",
+                      end1: "16.00",
                       start2: nil,
                       end2: nil,
                       notes: "Self help computers 9am to 4pm"
@@ -153,7 +158,7 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                     {
                       day: "Friday",
                       start1: "10.00",
-                      end1: "12.30",
+                      end1: "16.00",
                       start2: nil,
                       end2: nil,
                       notes: "Self help computers 9am to 4pm"
@@ -166,25 +171,11 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                         description: nil
                       }
                     ],
-                    fax: [
-                      {
-                        contact: "01632 555 500",
-                        description: nil
-                      }
-                    ],
-                    minicom: [
-                      {
-                        contact: "01632 555 600",
-                        description: nil
-                      }
-                    ],
+                    fax: [],
+                    minicom: [],
                     telephone: [
                       {
-                        contact: "01632 555 555 (General advice)",
-                        description: nil
-                      },
-                      {
-                        contact: "01632 555 555 (Debt counselling service)",
+                        contact: "01632 555 555",
                         description: nil
                       }
                     ],
@@ -213,7 +204,7 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                       notes: nil
                     },
                     {
-                      day: "Wendesday",
+                      day: "Wednesday",
                       start1: "10.00",
                       end1: "16.00",
                       start2: nil,
@@ -244,9 +235,9 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                   address: {
                     address: "Felperham general hospital\nNorth Beck Street",
                     town: "Felpersham",
-                    county: "Borsetshire",
+                    county: nil,
                     postcode: "FX1 7YT",
-                    onsDistrictCode: "00FX",
+                    onsDistrictCode: "E05XXTEST",
                     localAuthority: "Borsetshire",
                     latLong: [
                       52.0257741,
@@ -255,7 +246,7 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                   },
                   membershipNumber: "55/5555",
                   name: "Felpersham hospital",
-                  serialNumber: "x00004",
+                  serialNumber: "4",
                   inVCC: false,
                   isBureau: false,
                   isOutlet: true,

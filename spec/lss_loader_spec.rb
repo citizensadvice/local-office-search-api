@@ -153,6 +153,7 @@ RSpec.describe LssLoader do
   def expect_single_record(vals)
     vals = {
       parent_id: nil,
+      local_authority_id: nil,
       legacy_id: nil,
       membership_number: nil,
       company_number: nil,

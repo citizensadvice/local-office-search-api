@@ -19,6 +19,8 @@ class Office < ApplicationRecord
   belongs_to :parent, class_name: "Office", optional: true
   has_many :children, class_name: "Office", foreign_key: "parent_id", dependent: :nullify, inverse_of: :parent
 
+  belongs_to :local_authority, optional: true
+
   # rubocop:disable Metrics/AbcSize
   def as_json(options = nil)
     options ||= {}

@@ -194,7 +194,8 @@ CREATE TABLE public.offices (
     telephone_advice_hours_sunday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
     membership_number character varying,
     company_number character varying,
-    charity_number character varying
+    charity_number character varying,
+    local_authority_id character(9)
 );
 
 
@@ -294,6 +295,13 @@ CREATE INDEX index_offices_on_legacy_id ON public.offices USING btree (legacy_id
 
 
 --
+-- Name: index_offices_on_local_authority_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_offices_on_local_authority_id ON public.offices USING btree (local_authority_id);
+
+
+--
 -- Name: index_offices_on_membership_number_and_office_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -322,6 +330,14 @@ CREATE UNIQUE INDEX index_postcodes_on_normalised ON public.postcodes USING btre
 
 
 --
+-- Name: offices fk_rails_5a2ab5b59d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.offices
+    ADD CONSTRAINT fk_rails_5a2ab5b59d FOREIGN KEY (local_authority_id) REFERENCES public.local_authorities(id);
+
+
+--
 -- Name: postcodes fk_rails_7ab3384eab; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -341,11 +357,12 @@ ALTER TABLE ONLY public.offices
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public, topology, tiger;
+SET search_path TO "$user", public, topology;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20230531135320'),
 ('20230621151704'),
-('20230704120347');
+('20230704120347'),
+('20230705095742');
 
 
