@@ -71,6 +71,12 @@ RSpec.describe LssLoader do
                                                           "Wheelchair - toilet", "Induction loop", "Internet advice access"]
   end
 
+  it "loads in volunteer roles as list" do
+    load_from_fixtures "has_volunteer_roles", "empty"
+
+    expect(Office.first.volunteer_roles).to eq ["Admin and customer service", "Giving information advice and client support", "Trustee"]
+  end
+
   # rubocop:disable RSpec/ExampleLength
   it "correctly assigns telephone and opening hours" do
     nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
@@ -182,7 +188,8 @@ RSpec.describe LssLoader do
       telephone_advice_hours_thursday: nil,
       telephone_advice_hours_friday: nil,
       telephone_advice_hours_saturday: nil,
-      telephone_advice_hours_sunday: nil
+      telephone_advice_hours_sunday: nil,
+      volunteer_roles: []
     }.update(vals)
 
     expect(Office.first.serializable_hash.symbolize_keys).to eq vals
