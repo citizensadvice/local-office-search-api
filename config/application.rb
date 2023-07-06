@@ -30,6 +30,7 @@ module LocalOfficeSearchApi
 
     # The location of the LSS data to be loaded
     config.lss_data_bucket = ENV.fetch("LSS_DATA_BUCKET", nil)
+    config.geo_data_bucket = ENV.fetch("GEO_DATA_BUCKET", nil)
 
     # Set tags for logs, including Datadog trace info
     # This needs to be set here because the logger is already initialized by the
