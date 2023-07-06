@@ -21,18 +21,23 @@ class PostcodeLoader
 
   private
 
+  # rubocop:disable Metrics/AbcSize
   def create_postcodes_and_local_authorities!
     # rubocop:disable Rails/SkipsModelValidations - we rely on database validations
     local_authorities = {}
-    @postcode_csv.each do |row|
-      next if row["local_authority_code"].nil?
+    # do this in chunks for performance reasons
+    @postcode_csv.each_slice(10_000) do |rows|
+      rows.reject! { |row| row["local_authority_code"].nil? || row["local_authority_name"].nil? }
+      rows.each do |row|
+        local_authorities[row["local_authority_code"]] = row["local_authority_name"]
+      end
 
-      Postcode.upsert postcode_attrs_from_row(row)
-      local_authorities[row["local_authority_code"]] = row["local_authority_name"]
+      Postcode.bulk_upsert(rows.map { |row| postcode_attrs_from_row(row) })
     end
     LocalAuthority.insert_all(local_authorities.map { |id, name| { id:, name: } })
     # rubocop:enable Rails/SkipsModelValidations
   end
+  # rubocop:enable Metrics/AbcSize
 
   def postcode_attrs_from_row(row)
     { canonical: row["postcode"], local_authority_id: row["local_authority_code"], location: point_wkt_or_nil(row["lat"], row["lon"]) }
