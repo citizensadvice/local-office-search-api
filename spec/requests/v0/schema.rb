@@ -11,11 +11,19 @@ module BureauDetailsSchema
       town: { type: :string },
       county: { type: NULLABLE_STRING },
       postcode: { type: NULLABLE_STRING },
-      onsDistrictCode: { type: :string },
-      localAuthority: { type: :string },
       latLong: { type: :array, items: { type: :number }, minItems: 2, maxItems: 2 }
     },
     required: %w[address town county postcode latLong],
+    additionalProperties: false
+  }.freeze
+
+  ADDRESS_WITH_LOCAL_AUTHORITY_SCHEMA = {
+    type: :object,
+    properties: {
+      onsDistrictCode: { type: :string },
+      localAuthority: { type: :string }
+    }.merge(ADDRESS_SCHEMA[:properties]),
+    required: %w[address town county postcode latLong onsDistrictCode localAuthority],
     additionalProperties: false
   }.freeze
 
@@ -49,7 +57,7 @@ module BureauDetailsSchema
   OFFICE_SCHEMA = {
     type: :object,
     properties: {
-      address: ADDRESS_SCHEMA,
+      address: ADDRESS_WITH_LOCAL_AUTHORITY_SCHEMA,
       membershipNumber: { type: :string },
       name: { type: :string },
       serialNumber: { type: :string },
@@ -105,7 +113,7 @@ module BureauDetailsSchema
   MEMBER_SCHEMA = {
     type: :object,
     properties: {
-      address: ADDRESS_SCHEMA,
+      address: ADDRESS_WITH_LOCAL_AUTHORITY_SCHEMA,
       membershipNumber: { type: :string },
       name: { type: :string },
       serialNumber: { type: :string },

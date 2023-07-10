@@ -80,7 +80,8 @@ class LssLoader
                website: str_or_nil(row["Website"]),
                phone: str_or_nil(row["Phone"]),
                opening_hours_information: str_or_nil(row["Local_Office_Opening_Hours_Information__c"]),
-               telephone_advice_hours_information: str_or_nil(row["Telephone_Advice_Hours_Information__c"])
+               telephone_advice_hours_information: str_or_nil(row["Telephone_Advice_Hours_Information__c"]),
+               volunteer_roles: array_from_value(row["Select_the_roles_you_re_recruiting_for__c"])
   end
   # rubocop:enable Metrics/AbcSize
 
