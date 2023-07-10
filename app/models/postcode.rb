@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Postcode < ApplicationRecord
+  attribute :location, :st_point, srid: 4326, geographic: true
   belongs_to :local_authority
 
   def self.normalise_and_find(postcode)

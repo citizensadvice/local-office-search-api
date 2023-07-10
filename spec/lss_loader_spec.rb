@@ -61,7 +61,7 @@ RSpec.describe LssLoader do
 
     # Think the lat and lon look backwards? that's because in GIS coordinates are expressed in
     # x,y terms, not lat, lon. Therefore the lon comes first.
-    expect(Office.first.location).to eq RGeo::Cartesian.preferred_factory.point(1.18184, 51.07988)
+    expect(Office.first.location.as_text).to eq "POINT (1.18184 51.07988)"
   end
 
   it "loads in accessibility information as list" do
