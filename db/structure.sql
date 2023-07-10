@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: tiger; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -184,7 +191,11 @@ CREATE TABLE public.offices (
     telephone_advice_hours_thursday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
     telephone_advice_hours_friday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
     telephone_advice_hours_saturday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    telephone_advice_hours_sunday public.timerange DEFAULT 'empty'::public.timerange NOT NULL
+    telephone_advice_hours_sunday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
+    membership_number character varying,
+    company_number character varying,
+    charity_number character varying,
+    local_authority_id character(9)
 );
 
 
@@ -277,6 +288,27 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: index_offices_on_legacy_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_offices_on_legacy_id ON public.offices USING btree (legacy_id);
+
+
+--
+-- Name: index_offices_on_local_authority_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_offices_on_local_authority_id ON public.offices USING btree (local_authority_id);
+
+
+--
+-- Name: index_offices_on_membership_number_and_office_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_offices_on_membership_number_and_office_type ON public.offices USING btree (membership_number, office_type);
+
+
+--
 -- Name: index_offices_on_parent_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -295,6 +327,14 @@ CREATE INDEX index_postcodes_on_local_authority_id ON public.postcodes USING btr
 --
 
 CREATE UNIQUE INDEX index_postcodes_on_normalised ON public.postcodes USING btree (normalised);
+
+
+--
+-- Name: offices fk_rails_5a2ab5b59d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.offices
+    ADD CONSTRAINT fk_rails_5a2ab5b59d FOREIGN KEY (local_authority_id) REFERENCES public.local_authorities(id);
 
 
 --
@@ -317,10 +357,12 @@ ALTER TABLE ONLY public.offices
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public, topology, tiger;
+SET search_path TO "$user", public, topology;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20230531135320'),
-('20230621151704');
+('20230621151704'),
+('20230704120347'),
+('20230705095742');
 
 
