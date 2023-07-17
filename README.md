@@ -1,4 +1,13 @@
-# README
+# Local Office Search API
+
+This is a codebase which provides an API that allows users to find a local Citizens Advice
+bureaux which serves their geographic area. It powers the Find Your Local Citizens Advice
+function on www.citizensadvice.org.uk.
+
+It loads a copy of the Citizens Advice network and geographic data into a PostgreSQL database
+to allow for fast searching. It also provides a partial implementation of the old Bureau
+Details API for our legacy CMS EPiServer, to support the functions which have not yet been
+migrated from EPiServer to the Content Platform.
 
 ## Prerequisites
 
