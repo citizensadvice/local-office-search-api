@@ -11,6 +11,10 @@ module Api
         end
       end
 
+      def search
+        render status: :bad_request, json: missing_search_param_json
+      end
+
       private
 
       def legacy_id?
@@ -36,6 +40,10 @@ module Api
 
       def not_found_json
         { type: "https://local-office-search.citizensadvice.org.uk/schemas/v1/errors#not-found", status: 404, title: "Office not found" }
+      end
+
+      def missing_search_param_json
+        { type: "https://local-office-search.citizensadvice.org.uk/schemas/v1/errors#missing-param", status: 400, title: "Required parameter (q) missing" }
       end
     end
   end
