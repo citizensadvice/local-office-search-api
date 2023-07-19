@@ -100,6 +100,38 @@ RSpec.describe "Search Local Office API" do
             expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "exact", results: [{ id: office.id }] })
           end
         end
+
+        context "when the postcode is Scottish" do
+          let(:local_authority_id) { LocalAuthority.create!(id: "S12000036", name: "Edinburgh").id }
+
+          let(:postcode) { Postcode.create! canonical: "EH1 1AA", local_authority_id:, location: "POINT(-3.188106 55.95365)" }
+
+          let(:q) { postcode.canonical }
+
+          run_test! do |response|
+            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "out_of_area_scotland", results: [] })
+          end
+        end
+
+        context "when the postcode is Northern Irish" do
+          let(:local_authority_id) { LocalAuthority.create!(id: "N09000003", name: "Belfast").id }
+
+          let(:postcode) { Postcode.create! canonical: "BT1 1AA", local_authority_id:, location: "POINT(-5.922291 54.602444)" }
+
+          let(:q) { postcode.canonical }
+
+          run_test! do |response|
+            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "out_of_area_ni", results: [] })
+          end
+        end
+
+        context "when the location is unknown" do
+          let(:q) { "AB1 2CD" }
+
+          run_test! do |response|
+            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "unknown", results: [] })
+          end
+        end
       end
 
       response "400", "If query is not specified" do

@@ -21,7 +21,7 @@ module Api
       rescue OfficeSearch::SearchUnknownLocationError
         render json: { type: "no results" }
       rescue OfficeSearch::SearchOutOfAreaError => e
-        render json: { type: "Out of bounds #{e.country}" }
+        render json: { type: "Out of bounds #{e.country_name}" }
       end
     end
   end

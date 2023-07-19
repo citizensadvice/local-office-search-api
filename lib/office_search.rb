@@ -16,15 +16,28 @@ module OfficeSearch
   class SearchOutOfAreaError < StandardError
     attr_reader :country
 
-    def initialize(msg, country)
+    def initialize(country)
+      super
       @country = country
-      super(msg)
+    end
+
+    def country_name
+      case @country
+      when :ni
+        "Northern Ireland"
+      when :scotland
+        "Scotland"
+      else
+        @country.to_s
+      end
     end
   end
 
   def self.find_location(near)
     postcode = Postcode.normalise_and_find(near)
     raise SearchUnknownLocationError if postcode.nil?
+    raise SearchOutOfAreaError, :ni if postcode.northern_irish?
+    raise SearchOutOfAreaError, :scotland if postcode.scottish?
 
     [postcode.location, postcode.local_authority_id]
   end
@@ -37,8 +50,7 @@ module OfficeSearch
           q.limit(10)
         end
 
-    q.order(Office.arel_table[:location].st_distance(location))
     q = q.where.not(volunteer_roles: []) if opts[:only_with_vacancies]
-    q
+    q.order(Office.arel_table[:location].st_distance(location))
   end
 end
