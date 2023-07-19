@@ -371,6 +371,81 @@ paths:
                 required:
                 - type
                 additionalProperties: false
+  "/api/v1/offices/":
+    get:
+      summary: Retrieves a single office
+      parameters:
+      - name: q
+        in: query
+        required: true
+        description: the search terms to use
+        schema:
+          type: string
+      responses:
+        '200':
+          description: a list of search results
+          content:
+            application/json:
+              schema:
+                "$schema": https://json-schema.org/draft/2019-09/schema
+                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v1/results
+                type: object
+                properties:
+                  match_type:
+                    type: string
+                    enum:
+                    - exact
+                    - fuzzy
+                    - unknown
+                    - out_of_area_scotland
+                    - out_of_area_ni
+                    description: "\n                                * `exact` means
+                      the search term matched an exact location, so only offices which
+                      serve the exact location\n                                   are
+                      shown (this could include no locations).\n                                *
+                      `fuzzy` means the search term matched a wider locality and not
+                      an individual point, so the results may\n                                   include
+                      offices which can not serve that exact location.\n                                *
+                      `unknown` means the search term was unable to be interpreted
+                      or matched to a location\n                                  (so
+                      there are no results).\n                                * `out_of_area_scotland`
+                      and `out_of_area_ni` means the search term matched exactly,
+                      but to a location in\n                                  Scotland
+                      or Northern Ireland which is not in the network coverage area.\n
+                      \                               "
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                      required:
+                      - id
+                      additionalProperties: false
+                required:
+                - match_type
+                - results
+                additionalProperties: false
+        '400':
+          description: If query is not specified
+          content:
+            application/json:
+              schema:
+                "$schema": https://json-schema.org/draft/2019-09/schema
+                "$id": https://www.rfc-editor.org/rfc/rfc7807
+                type: object
+                properties:
+                  type:
+                    type: string
+                    format: uri
+                  title:
+                    type: string
+                  status:
+                    type: number
+                required:
+                - type
+                additionalProperties: false
 servers:
 - url: https://{defaultHost}
   variables:
