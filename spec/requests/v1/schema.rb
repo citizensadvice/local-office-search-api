@@ -12,5 +12,5 @@ module ApiV1Schema
     },
     required: [:type],
     additionalProperties: false
-  }
+  }.freeze
 end

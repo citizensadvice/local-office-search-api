@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "office_search"
+
 module Api
   module V0
     class VacancyController < BaseController
@@ -14,14 +16,12 @@ module Api
       end
 
       def list
-        offices, normalised_location = Office.search_by_location(params[:near], only_with_vacancies: true)
+        offices, normalised_location = OfficeSearch.search_by_location(params[:near], only_with_vacancies: true)
         render json: { type: "vacancies", list: offices.map { |office| vacancy_as_v0_json_with_distance(office, normalised_location) } }
-      rescue Office::SearchNoResultsError
+      rescue OfficeSearch::SearchUnknownLocationError
         render json: { type: "no results" }
-      rescue Office::SearchOutOfAreaError => e
+      rescue OfficeSearch::SearchOutOfAreaError => e
         render json: { type: "Out of bounds #{e.country}" }
-      rescue Office::SearchAmbiguousError => e
-        render json: { type: "locality", list: e.options }
       end
     end
   end

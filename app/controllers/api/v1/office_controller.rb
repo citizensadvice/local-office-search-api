@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "office_search"
+
 module Api
   module V1
     class OfficeController < ::ApplicationController
@@ -12,13 +14,22 @@ module Api
       end
 
       def search
-        render status: :bad_request, json: missing_search_param_json
+        if search_q_is_valid?
+          offices, = OfficeSearch.search_by_location params[:q], only_in_same_local_authority: true
+          render json: { match_type: "exact", results: offices.map { |office| { id: office.id } } }
+        else
+          render status: :bad_request, json: missing_search_param_json
+        end
       end
 
       private
 
       def legacy_id?
         params[:id].match(/^\d+$/)
+      end
+
+      def search_q_is_valid?
+        !(params[:q] || "").empty?
       end
 
       def fetch_and_render_office

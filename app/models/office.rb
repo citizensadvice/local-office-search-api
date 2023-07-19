@@ -52,39 +52,6 @@ class Office < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
-  def self.search_by_location(near, opts)
-    opts[:only_with_vacancies] ||= false
-
-    postcode = Postcode.normalise_and_find(near)
-    raise SearchNoResultsError if postcode.nil?
-
-    q = Office.limit(10)
-    q.order(Office.arel_table[:location].st_distance(postcode.location))
-    q = q.where.not(volunteer_roles: []) if opts[:only_with_vacancies]
-    [q, postcode.location]
-  end
-
-  class SearchNoResultsError < StandardError
-  end
-
-  class SearchOutOfAreaError < StandardError
-    attr_reader :country
-
-    def initialize(msg, country)
-      @country = country
-      super(msg)
-    end
-  end
-
-  class SearchAmbiguousError < StandardError
-    attr_reader :options
-
-    def initialize(msg, options)
-      @options = options
-      super(msg)
-    end
-  end
-
   private
 
   def opening_hours_as_json(opening_hours)
