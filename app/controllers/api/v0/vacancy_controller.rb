@@ -16,11 +16,11 @@ module Api
       end
 
       def list
-        offices, normalised_location = OfficeSearch.search_by_location(params[:near], only_with_vacancies: true)
+        offices, normalised_location = OfficeSearch.by_location(params[:near], only_with_vacancies: true)
         render json: { type: "vacancies", list: offices.map { |office| vacancy_as_v0_json_with_distance(office, normalised_location) } }
-      rescue OfficeSearch::SearchUnknownLocationError
+      rescue OfficeSearch::UnknownLocationError
         render json: { type: "no results" }
-      rescue OfficeSearch::SearchOutOfAreaError => e
+      rescue OfficeSearch::OutOfAreaError => e
         render json: { type: "Out of bounds #{e.country_name}" }
       end
     end

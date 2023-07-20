@@ -32,10 +32,10 @@ module Api
       end
 
       def search_response(query)
-        offices, = OfficeSearch.search_by_location query, only_in_same_local_authority: true
-      rescue OfficeSearch::SearchUnknownLocationError
+        offices, = OfficeSearch.by_location query, only_in_same_local_authority: true
+      rescue OfficeSearch::UnknownLocationError
         { match_type: "unknown", results: [] }
-      rescue OfficeSearch::SearchOutOfAreaError => e
+      rescue OfficeSearch::OutOfAreaError => e
         { match_type: "out_of_area_#{e.country}", results: [] }
       else
         { match_type: "exact", results: offices.map { |office| { id: office.id } } }

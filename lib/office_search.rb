@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module OfficeSearch
-  def self.search_by_location(near, opts)
+  def self.by_location(near, opts)
     opts[:only_with_vacancies] ||= false
     opts[:only_in_same_local_authority] ||= false
 
@@ -10,10 +10,10 @@ module OfficeSearch
     [build_query(location, local_authority_id, opts), location]
   end
 
-  class SearchUnknownLocationError < StandardError
+  class UnknownLocationError < StandardError
   end
 
-  class SearchOutOfAreaError < StandardError
+  class OutOfAreaError < StandardError
     attr_reader :country
 
     def initialize(country)
@@ -35,9 +35,9 @@ module OfficeSearch
 
   def self.find_location(near)
     postcode = Postcode.normalise_and_find(near)
-    raise SearchUnknownLocationError if postcode.nil?
-    raise SearchOutOfAreaError, :ni if postcode.northern_irish?
-    raise SearchOutOfAreaError, :scotland if postcode.scottish?
+    raise UnknownLocationError if postcode.nil?
+    raise OutOfAreaError, :ni if postcode.northern_irish?
+    raise OutOfAreaError, :scotland if postcode.scottish?
 
     [postcode.location, postcode.local_authority_id]
   end
