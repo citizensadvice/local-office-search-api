@@ -4,6 +4,14 @@ class Postcode < ApplicationRecord
   attribute :location, :st_point, srid: 4326, geographic: true
   belongs_to :local_authority
 
+  def scottish?
+    local_authority_id.start_with? "S"
+  end
+
+  def northern_irish?
+    local_authority_id.start_with? "N"
+  end
+
   def self.normalise_and_find(postcode)
     find_by normalised: postcode.gsub(" ", "").downcase
   end

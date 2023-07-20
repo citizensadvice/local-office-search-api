@@ -7,7 +7,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
   include_context "with episerver credentials"
 
   path "/api/v0/vacancy/id/{id}" do
-    get "Shows full details for a member" do
+    get "Shows full details for a vacancy" do
       produces "application/json"
       security [basic_auth: []]
       parameter name: :id, in: :path, type: :string
@@ -82,7 +82,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
   end
 
   path "/api/v0/vacancy/list" do
-    get "List members" do
+    get "List vacancies" do
       produces "application/json"
       security [basic_auth: []]
       parameter name: :near, in: :query, type: :string, required: false,

@@ -75,6 +75,10 @@ paths:
                   address:
                     type: object
                     properties:
+                      onsDistrictCode:
+                        type: string
+                      localAuthority:
+                        type: string
                       address:
                         type: string
                       town:
@@ -87,10 +91,6 @@ paths:
                         type:
                         - string
                         - 'null'
-                      onsDistrictCode:
-                        type: string
-                      localAuthority:
-                        type: string
                       latLong:
                         type: array
                         items:
@@ -103,6 +103,8 @@ paths:
                     - county
                     - postcode
                     - latLong
+                    - onsDistrictCode
+                    - localAuthority
                     additionalProperties: false
                   membershipNumber:
                     type: string
@@ -129,6 +131,10 @@ paths:
                             address:
                               type: object
                               properties:
+                                onsDistrictCode:
+                                  type: string
+                                localAuthority:
+                                  type: string
                                 address:
                                   type: string
                                 town:
@@ -141,10 +147,6 @@ paths:
                                   type:
                                   - string
                                   - 'null'
-                                onsDistrictCode:
-                                  type: string
-                                localAuthority:
-                                  type: string
                                 latLong:
                                   type: array
                                   items:
@@ -157,6 +159,8 @@ paths:
                               - county
                               - postcode
                               - latLong
+                              - onsDistrictCode
+                              - localAuthority
                               additionalProperties: false
                             membershipNumber:
                               type: string
@@ -371,6 +375,10 @@ paths:
                             address:
                               type: object
                               properties:
+                                onsDistrictCode:
+                                  type: string
+                                localAuthority:
+                                  type: string
                                 address:
                                   type: string
                                 town:
@@ -383,10 +391,6 @@ paths:
                                   type:
                                   - string
                                   - 'null'
-                                onsDistrictCode:
-                                  type: string
-                                localAuthority:
-                                  type: string
                                 latLong:
                                   type: array
                                   items:
@@ -399,6 +403,8 @@ paths:
                               - county
                               - postcode
                               - latLong
+                              - onsDistrictCode
+                              - localAuthority
                               additionalProperties: false
                             membershipNumber:
                               type: string
@@ -631,10 +637,6 @@ paths:
                               type:
                               - string
                               - 'null'
-                            onsDistrictCode:
-                              type: string
-                            localAuthority:
-                              type: string
                             latLong:
                               type: array
                               items:
@@ -717,7 +719,7 @@ paths:
           description: is a deprecated API which has not been reimplemented
   "/api/v0/vacancy/id/{id}":
     get:
-      summary: Shows full details for a member
+      summary: Shows full details for a vacancy
       security:
       - basic_auth: []
       parameters:
@@ -749,10 +751,6 @@ paths:
                         type:
                         - string
                         - 'null'
-                      onsDistrictCode:
-                        type: string
-                      localAuthority:
-                        type: string
                       latLong:
                         type: array
                         items:
@@ -799,9 +797,11 @@ paths:
                 - telephone
                 - website
                 additionalProperties: false
+        '404':
+          description: when ID references something with no roles
   "/api/v0/vacancy/list":
     get:
-      summary: List members
+      summary: List vacancies
       security:
       - basic_auth: []
       parameters:
@@ -854,10 +854,6 @@ paths:
                               type:
                               - string
                               - 'null'
-                            onsDistrictCode:
-                              type: string
-                            localAuthority:
-                              type: string
                             latLong:
                               type: array
                               items:

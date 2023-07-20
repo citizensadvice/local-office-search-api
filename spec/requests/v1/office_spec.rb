@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
+require_relative "schema"
 
 RSpec.describe "Lookup Local Office API" do
   path "/api/v1/offices/{id}" do
@@ -163,21 +164,8 @@ RSpec.describe "Lookup Local Office API" do
         end
       end
 
-      json_problem_schema = {
-        "$schema": "https://json-schema.org/draft/2019-09/schema",
-        "$id": "https://www.rfc-editor.org/rfc/rfc7807",
-        type: :object,
-        properties: {
-          type: { type: :string, format: :uri },
-          title: { type: :string },
-          status: { type: :number }
-        },
-        required: [:type],
-        additionalProperties: false
-      }
-
       response "404", "No office with this ID" do
-        schema json_problem_schema
+        schema ApiV1Schema::JSON_PROBLEM
 
         let(:id) { generate_salesforce_id }
 
