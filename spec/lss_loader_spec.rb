@@ -8,7 +8,7 @@ RSpec.describe LssLoader do
   it "removes any offices no longer referenced in the data" do
     id = create_a_single_office
 
-    load_from_fixtures "minimal", "empty"
+    load_from_fixtures "empty", "minimal", "empty"
 
     expect(Office.all.map(&:id)).not_to include id
   end
@@ -16,13 +16,13 @@ RSpec.describe LssLoader do
   it "does not remove any offices if an error occurs during load" do
     id = create_a_single_office
 
-    load_from_fixtures_with_error "corrupt", "empty"
+    load_from_fixtures_with_error "empty", "corrupt", "empty"
 
     expect(Office.all.map(&:id)).to eq [id]
   end
 
-  it "loads a single record into the database with minimal fields" do
-    load_from_fixtures "minimal", "empty"
+  it "loads a single advice location record into the database with minimal fields" do
+    load_from_fixtures "empty", "minimal", "empty"
 
     expect_single_record id: "0014K00000PcCA6QAN",
                          name: "Citizens Advice Bristol",
@@ -30,13 +30,14 @@ RSpec.describe LssLoader do
   end
 
   # rubocop:disable RSpec/ExampleLength
-  it "loads a single record into the database with all text fields populated" do
-    load_from_fixtures "all_strings_populated", "empty"
+  it "loads a single advice location record into the database with all text fields populated" do
+    load_from_fixtures "empty", "all_strings_populated", "empty"
 
     expect_single_record id: "0014K00000PcCA6QAN",
                          name: "Citizens Advice Bristol",
-                         office_type: "office",
+                         office_type: "member",
                          legacy_id: 101_185,
+                         membership_number: "90/0011",
                          about_text: "About our advice service",
                          accessibility_information: [],
                          street: "48 Fairfax Street",
@@ -51,13 +52,13 @@ RSpec.describe LssLoader do
   # rubocop:enable RSpec/ExampleLength
 
   it "handles multiline strings in the source file correctly" do
-    load_from_fixtures "multiline", "empty"
+    load_from_fixtures "empty", "multiline", "empty"
 
     expect(Office.first.about_text).to eq "This detail is on\nMultiple lines."
   end
 
   it "handles location information correctly" do
-    load_from_fixtures "has_location", "empty"
+    load_from_fixtures "empty", "has_location", "empty"
 
     # Think the lat and lon look backwards? that's because in GIS coordinates are expressed in
     # x,y terms, not lat, lon. Therefore the lon comes first.
@@ -65,14 +66,14 @@ RSpec.describe LssLoader do
   end
 
   it "loads in accessibility information as list" do
-    load_from_fixtures "has_access_information", "empty"
+    load_from_fixtures "empty", "has_access_information", "empty"
 
     expect(Office.first.accessibility_information).to eq ["Wheelchair accessible", "Wheelchair access - interview room",
                                                           "Wheelchair - toilet", "Induction loop", "Internet advice access"]
   end
 
   it "loads in volunteer roles as list" do
-    load_from_fixtures "has_volunteer_roles", "empty"
+    load_from_fixtures "empty", "has_volunteer_roles", "empty"
 
     expect(Office.first.volunteer_roles).to eq ["Admin and customer service", "Giving information advice and client support", "Trustee"]
   end
@@ -80,7 +81,7 @@ RSpec.describe LssLoader do
   # rubocop:disable RSpec/ExampleLength
   it "correctly assigns telephone and opening hours" do
     nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
-    load_from_fixtures "minimal", "minimal"
+    load_from_fixtures "empty", "minimal", "minimal"
 
     expect_single_record id: "0014K00000PcCA6QAN",
                          name: "Citizens Advice Bristol",
@@ -102,41 +103,50 @@ RSpec.describe LssLoader do
   end
   # rubocop:enable RSpec/ExampleLength
 
-  it "ignores opening hours which do not belong to a LCA" do
-    load_from_fixtures "minimal", "includes_nulls"
-
-    expect_single_record id: "0014K00000PcCA6QAN", name: "Citizens Advice Bristol", office_type: "member"
-  end
-
   it "ignores opening hours where it closes before it opens" do
-    load_from_fixtures "minimal", "includes_time_travel"
+    load_from_fixtures "empty", "minimal", "includes_time_travel"
 
     expect_single_record id: "0014K00000PcCA6QAN", name: "Citizens Advice Bristol", office_type: "member"
   end
 
   it "sets up parent/child hierarchy correctly" do
-    load_from_fixtures "basic_hierarchy", "empty"
+    load_from_fixtures "empty", "basic_hierarchy", "empty"
 
     expect_basic_hierarchy
   end
 
   it "handles when a child is defined before a parent in the CSV files" do
-    load_from_fixtures "backwards_hierarchy", "empty"
+    load_from_fixtures "empty", "backwards_hierarchy", "empty"
 
     expect_basic_hierarchy
   end
 
   it "makes a dangling parent ID null" do
-    load_from_fixtures "dangling_hierarchy", "empty"
+    load_from_fixtures "empty", "dangling_hierarchy", "empty"
 
     expect(Office.find("0014K00000an3g3QAA").parent_id).to be_nil
   end
 
-  it "does not crash when loading a full dump" do
-    load_from_fixtures "full", "full"
+  # rubocop:disable RSpec/ExampleLength
+  it "loads in members from the members file" do
+    LocalAuthority.create! id: "E07000112", name: "Folkestone and Hythe"
+    load_from_fixtures "minimal", "empty", "empty"
 
-    expect(Office.count).to eq 1865
+    expect_single_record id: "0014K00000PcC94QAF",
+                         name: "Citizens Advice Shepway",
+                         office_type: "member",
+                         charity_number: "1102964",
+                         company_number: "5063463",
+                         legacy_id: 100_725,
+                         membership_number: "75/0030",
+                         street: "Units 4 - 6, Princes Gate, George Lane,",
+                         city: "FOLKESTONE",
+                         postcode: "CT20 1RH",
+                         email: "cab@example.com",
+                         website: "www.shepwaycab.co.uk",
+                         local_authority_id: "E07000112"
   end
+  # rubocop:enable RSpec/ExampleLength
 
   def create_a_single_office
     id = SecureRandom.hex(9)
@@ -144,19 +154,21 @@ RSpec.describe LssLoader do
     id
   end
 
-  def load_from_fixtures(account_csv_filename, opening_hours_csv_filename)
-    account_csv = File.open File.expand_path("fixtures/accounts/#{account_csv_filename}.csv", File.dirname(__FILE__))
+  def load_from_fixtures(members_csv_filename, locations_csv_filename, opening_hours_csv_filename)
+    members_csv = File.open File.expand_path("fixtures/members/#{members_csv_filename}.csv", File.dirname(__FILE__))
+    locations_csv = File.open File.expand_path("fixtures/advice_locations/#{locations_csv_filename}.csv", File.dirname(__FILE__))
     opening_hours_csv = File.open File.expand_path("fixtures/opening_hours/#{opening_hours_csv_filename}.csv", File.dirname(__FILE__))
-    lss_loader = LssLoader.new account_csv, opening_hours_csv
+    lss_loader = LssLoader::LssLoader.new members_csv, locations_csv, opening_hours_csv
     lss_loader.load!
   ensure
-    account_csv&.close
+    members_csv&.close
+    locations_csv&.close
     opening_hours_csv&.close
   end
 
-  def load_from_fixtures_with_error(account_csv, opening_hours_csv)
+  def load_from_fixtures_with_error(members_csv_filename, locations_csv_filename, opening_hours_csv_filename)
     expect do
-      load_from_fixtures account_csv, opening_hours_csv
+      load_from_fixtures members_csv_filename, locations_csv_filename, opening_hours_csv_filename
     end.to raise_error LssLoader::LssLoadError
   end
 
