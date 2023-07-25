@@ -6,7 +6,7 @@ class PostcodeLoader
   include CsvHelpers
 
   def initialize(postcode_csv)
-    @postcode_csv = CSV.open postcode_csv, headers: true, return_headers: true
+    @postcode_csv = CSV.new postcode_csv, headers: true, return_headers: true
     initialise_csv_headers!
   end
 
@@ -21,16 +21,23 @@ class PostcodeLoader
 
   private
 
+  # rubocop:disable Metrics/AbcSize
   def create_postcodes_and_local_authorities!
     # rubocop:disable Rails/SkipsModelValidations - we rely on database validations
     local_authorities = {}
-    @postcode_csv.each do |row|
-      Postcode.upsert postcode_attrs_from_row(row)
-      local_authorities[row["local_authority_code"]] = row["local_authority_name"]
+    # do this in chunks for performance reasons
+    @postcode_csv.each_slice(10_000) do |rows|
+      rows.reject! { |row| row["local_authority_code"].nil? || row["local_authority_name"].nil? }
+      rows.each do |row|
+        local_authorities[row["local_authority_code"]] = row["local_authority_name"]
+      end
+
+      Postcode.bulk_upsert(rows.map { |row| postcode_attrs_from_row(row) })
     end
     LocalAuthority.insert_all(local_authorities.map { |id, name| { id:, name: } })
     # rubocop:enable Rails/SkipsModelValidations
   end
+  # rubocop:enable Metrics/AbcSize
 
   def postcode_attrs_from_row(row)
     { canonical: row["postcode"], local_authority_id: row["local_authority_code"], location: point_wkt_or_nil(row["lat"], row["lon"]) }
@@ -49,16 +56,16 @@ class PostcodeLoader
   end
 
   def postcode_csv_has_expected_headers?
-    @postcode_csv.headers == %w[
-      postcode postcode_no_space postcode_area postcode_district date_start date_end state onspd_version
-      easting northing positional_quality lat lon european_economic_region_code european_economic_region_name
-      county_code county_name local_authority_code local_authority_name ward_code ward_name
-      county_electoral_division_code county_electoral_division_name parish_code parish_name
-      parliamentary_constituency_code parliamentary_constituency_name census_output_area_2021_code
-      lower_super_output_area_2021_code census_output_area_2011_code lower_super_output_area_2011_code
-      rural_urban_area_2011_code imd_rank primary_care_trust_code integrated_care_board_subdivision_code
-      integrated_care_board_subdivision_name police_force_area_code police_force_area_name integrated_care_board_code
-      integrated_care_board_name westminster_member_of_parliment westminster_political_party
+    @postcode_csv.headers == [
+      nil, "postcode", "postcode_no_space", "postcode_area", "postcode_district", "date_start", "date_end", "state", "onspd_version",
+      "easting", "northing", "positional_quality", "lat", "lon", "european_economic_region_code", "european_economic_region_name",
+      "county_code", "county_name", "local_authority_code", "local_authority_name", "ward_code", "ward_name",
+      "county_electoral_division_code", "county_electoral_division_name", "parish_code", "parish_name",
+      "parliamentary_constituency_code", "parliamentary_constituency_name", "census_output_area_2021_code",
+      "lower_super_output_area_2021_code", "census_output_area_2011_code", "lower_super_output_area_2011_code",
+      "rural_urban_area_2011_code", "imd_rank", "primary_care_trust_code", "integrated_care_board_subdivision_code",
+      "integrated_care_board_subdivision_name", "police_force_area_code", "police_force_area_name", "integrated_care_board_code",
+      "integrated_care_board_name", "westminster_member_of_parliment", "westminster_political_party"
     ]
   end
 

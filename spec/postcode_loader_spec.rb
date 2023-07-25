@@ -16,6 +16,12 @@ RSpec.describe PostcodeLoader do
   end
   # rubocop:enable RSpec/MultipleExpectations
 
+  it "skips postcodes which are not assigned to a local authority" do
+    load_from_fixture "with_nil_la"
+
+    expect(Postcode.count).to eq(1)
+  end
+
   it "is idempotent when importing postcodes" do
     load_from_fixture "single"
     initial_id = Postcode.first.id
@@ -64,7 +70,7 @@ RSpec.describe PostcodeLoader do
   end
 
   def load_from_fixture(postcode_file)
-    postcode_loader = PostcodeLoader.new File.expand_path("fixtures/postcodes/#{postcode_file}.csv", File.dirname(__FILE__))
+    postcode_loader = PostcodeLoader.new File.open File.expand_path("fixtures/postcodes/#{postcode_file}.csv", File.dirname(__FILE__))
     postcode_loader.load!
   end
 

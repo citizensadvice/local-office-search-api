@@ -13,6 +13,9 @@ gem "activerecord-postgis-adapter"
 gem "pg", "~> 1.5"
 gem "rgeo-geojson"
 
+# We load data from S3
+gem "aws-sdk-s3"
+
 # use the time of day gem to represent opening times in the database
 gem "tod"
 

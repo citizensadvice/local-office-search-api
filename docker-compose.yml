@@ -32,11 +32,13 @@ services:
       - LOCAL_OFFICE_SEARCH_TEST_DB_USER=local_office_search_api
       - LOCAL_OFFICE_SEARCH_TEST_DB_PASSWORD=testing
       - LOCAL_OFFICE_SEARCH_TEST_DB_NAME=local_office_search_api_testing
+      - LSS_DATA_BUCKET=test-network-data-advice-locations-raw-eu-west-1
+      - GEO_DATA_BUCKET=uat-geo-data-postcodes-raw-eu-west-1
       - LOCAL_OFFICE_SEARCH_EPISERVER_USER=episerver
       - LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD=development
     volumes:
       - .:/app
-      - ~/.aws:/home/ruby/.aws
+      - ~/.aws:/root/.aws
     depends_on:
       - db
       - testdb

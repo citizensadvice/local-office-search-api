@@ -1,2 +1,2 @@
-Id,Parent_Account__c,RecordTypeId,Weekday__c,Start_Time__c,End_Time__c,Type__c
-a014K00000J8xAQQAZ,0014K00000PcCA6QAN,0124K0000000qqYQAQ,Monday,09:00:00.000Z,03:00:00.000Z,Local office opening hours
+advice_location_salesforce_id,session_day,session_start_time,session_end_time,session_type
+0014K00000PcCA6QAN,Monday,09:00:00,03:00:00,Local office opening hours

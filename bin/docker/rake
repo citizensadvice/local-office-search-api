@@ -4,4 +4,6 @@ set -e
 
 source bin/docker/compose_files
 
+rebuild_if_gem_changed
+
 docker-compose ${COMPOSE_FILES[@]} run --rm local-office-search-api bin/rake "$@"

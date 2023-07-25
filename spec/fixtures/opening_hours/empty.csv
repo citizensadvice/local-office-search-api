@@ -1,1 +1,1 @@
-Id,Parent_Account__c,RecordTypeId,Weekday__c,Start_Time__c,End_Time__c,Type__c
+advice_location_salesforce_id,session_day,session_start_time,session_end_time,session_type
