@@ -24,24 +24,22 @@ module LssLoader
     end
 
     def office_from_advice_location_row(row)
-      Office.new id: row["salesforce_id"],
+      Office.new id: row["salesforce_advice_location_id"],
                  name: row["advice_location_name"],
                  office_type: record_type_id_to_office_type(row["location_type_id"]),
                  parent_id: str_or_nil(row["salesforce_parent_id"]),
                  legacy_id: str_or_nil(row["resource_directory_id"]),
                  membership_number: str_or_nil(row["membership_number"]),
                  about_text: str_or_nil(row["advice_service_information"]),
-                 accessibility_information: array_from_value(row["accessiblity_details"]),
                  street: str_or_nil(row["street_name"]),
                  city: str_or_nil(row["city"]),
                  postcode: str_or_nil(row["postcode"]),
                  location: point_wkt_or_nil(row["latitude"], row["longitude"]),
-                 email: str_or_nil(row["email"]),
-                 website: str_or_nil(row["website"]),
+                 email: str_or_nil(row["enquiries_email"]),
+                 website: str_or_nil(row["public_website"]),
                  phone: str_or_nil(row["phone"]),
                  opening_hours_information: str_or_nil(row["face_to_face_advice_hours_information"]),
-                 telephone_advice_hours_information: str_or_nil(row["telephone_advice_hours_information"]),
-                 volunteer_roles: array_from_value(row["volunteer_roles_currently_available"])
+                 telephone_advice_hours_information: str_or_nil(row["telephone_advice_hours_information"])
     end
     # rubocop:enable Metrics/AbcSize
 
@@ -49,6 +47,14 @@ module LssLoader
       return unless row["session_type"] != "null" && offices.key?(row["advice_location_salesforce_id"])
 
       offices[row["advice_location_salesforce_id"]].write_attribute column_from_row(row), shift_from_row(row)
+    end
+
+    def apply_accessibility_info!(offices, row)
+      offices[row["salesforce_advice_location_id"]].accessibility_information << row["advice_location_accessibility"]
+    end
+
+    def apply_volunteer_roles!(offices, row)
+      offices[row["salesforce_advice_location_id"]].volunteer_roles << row["advice_location_volunteer_roles_recruiting_status"]
     end
 
     def column_from_row(row)

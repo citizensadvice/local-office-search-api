@@ -1,15 +1,15 @@
 advice_location_salesforce_id,session_day,session_start_time,session_end_time,session_type
-0014K00000PcCA6QAN,Monday,null,null,Local office opening hours
-0014K00000PcCA6QAN,Tuesday,null,null,Local office opening hours
-0014K00000PcCA6QAN,Wednesday,null,null,Local office opening hours
-0014K00000PcCA6QAN,Thursday,null,null,Local office opening hours
-0014K00000PcCA6QAN,Friday,null,null,Local office opening hours
-0014K00000PcCA6QAN,Saturday,09:00:00,17:00:00,Local office opening hours
-0014K00000PcCA6QAN,Sunday,09:00:00,17:00:00,Local office opening hours
-0014K00000PcCA6QAN,Monday,09:00:00,17:00:00,Telephone advice hours
-0014K00000PcCA6QAN,Tuesday,09:00:00,17:00:00,Telephone advice hours
-0014K00000PcCA6QAN,Wednesday,09:00:00,17:00:00,Telephone advice hours
-0014K00000PcCA6QAN,Thursday,09:00:00,17:00:00,Telephone advice hours
-0014K00000PcCA6QAN,Friday,09:00:00,17:00:00,Telephone advice hours
-0014K00000PcCA6QAN,Saturday,null,null,Telephone advice hours
-0014K00000PcCA6QAN,Sunday,null,null,Telephone advice hours
+0014K000009EMMbQAO,Monday,null,null,Local office opening hours
+0014K000009EMMbQAO,Tuesday,null,null,Local office opening hours
+0014K000009EMMbQAO,Wednesday,null,null,Local office opening hours
+0014K000009EMMbQAO,Thursday,null,null,Local office opening hours
+0014K000009EMMbQAO,Friday,null,null,Local office opening hours
+0014K000009EMMbQAO,Saturday,09:00:00,17:00:00,Local office opening hours
+0014K000009EMMbQAO,Sunday,09:00:00,17:00:00,Local office opening hours
+0014K000009EMMbQAO,Monday,09:00:00,17:00:00,Telephone advice hours
+0014K000009EMMbQAO,Tuesday,09:00:00,17:00:00,Telephone advice hours
+0014K000009EMMbQAO,Wednesday,09:00:00,17:00:00,Telephone advice hours
+0014K000009EMMbQAO,Thursday,09:00:00,17:00:00,Telephone advice hours
+0014K000009EMMbQAO,Friday,09:00:00,17:00:00,Telephone advice hours
+0014K000009EMMbQAO,Saturday,null,null,Telephone advice hours
+0014K000009EMMbQAO,Sunday,null,null,Telephone advice hours

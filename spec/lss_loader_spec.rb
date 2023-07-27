@@ -8,7 +8,7 @@ RSpec.describe LssLoader do
   it "removes any offices no longer referenced in the data" do
     id = create_a_single_office
 
-    load_from_fixtures "empty", "minimal", "empty"
+    load_from_fixtures locations_csv_filename: "minimal"
 
     expect(Office.all.map(&:id)).not_to include id
   end
@@ -16,26 +16,26 @@ RSpec.describe LssLoader do
   it "does not remove any offices if an error occurs during load" do
     id = create_a_single_office
 
-    load_from_fixtures_with_error "empty", "corrupt", "empty"
+    load_from_fixtures_with_error locations_csv_filename: "corrupt"
 
     expect(Office.all.map(&:id)).to eq [id]
   end
 
   it "loads a single advice location record into the database with minimal fields" do
-    load_from_fixtures "empty", "minimal", "empty"
+    load_from_fixtures locations_csv_filename: "minimal"
 
-    expect_single_record id: "0014K00000PcCA6QAN",
+    expect_single_record id: "0014K000009EMMbQAO",
                          name: "Citizens Advice Bristol",
-                         office_type: "member"
+                         office_type: "office"
   end
 
   # rubocop:disable RSpec/ExampleLength
   it "loads a single advice location record into the database with all text fields populated" do
-    load_from_fixtures "empty", "all_strings_populated", "empty"
+    load_from_fixtures locations_csv_filename: "all_strings_populated"
 
-    expect_single_record id: "0014K00000PcCA6QAN",
+    expect_single_record id: "0014K000009EMMbQAO",
                          name: "Citizens Advice Bristol",
-                         office_type: "member",
+                         office_type: "office",
                          legacy_id: 101_185,
                          membership_number: "90/0011",
                          about_text: "About our advice service",
@@ -52,40 +52,39 @@ RSpec.describe LssLoader do
   # rubocop:enable RSpec/ExampleLength
 
   it "handles multiline strings in the source file correctly" do
-    load_from_fixtures "empty", "multiline", "empty"
+    load_from_fixtures locations_csv_filename: "multiline"
 
     expect(Office.first.about_text).to eq "This detail is on\nMultiple lines."
   end
 
   it "handles location information correctly" do
-    load_from_fixtures "empty", "has_location", "empty"
+    load_from_fixtures locations_csv_filename: "has_location"
 
     # Think the lat and lon look backwards? that's because in GIS coordinates are expressed in
     # x,y terms, not lat, lon. Therefore the lon comes first.
     expect(Office.first.location.as_text).to eq "POINT (1.18184 51.07988)"
   end
 
-  it "loads in accessibility information as list" do
-    load_from_fixtures "empty", "has_access_information", "empty"
+  it "loads in accessibility information" do
+    load_from_fixtures locations_csv_filename: "minimal", accessibility_info_csv_filename: "minimal"
 
-    expect(Office.first.accessibility_information).to eq ["Wheelchair accessible", "Wheelchair access - interview room",
-                                                          "Wheelchair - toilet", "Induction loop", "Internet advice access"]
+    expect(Office.first.accessibility_information).to eq %w[has_wheelchair_access has_induction_loop]
   end
 
   it "loads in volunteer roles as list" do
-    load_from_fixtures "empty", "has_volunteer_roles", "empty"
+    load_from_fixtures locations_csv_filename: "minimal", volunteer_roles_csv_filename: "minimal"
 
-    expect(Office.first.volunteer_roles).to eq ["Admin and customer service", "Giving information advice and client support", "Trustee"]
+    expect(Office.first.volunteer_roles).to eq ["admin_and_customer_service", "giving_information_advice_and_client support", "trustee"]
   end
 
   # rubocop:disable RSpec/ExampleLength
   it "correctly assigns telephone and opening hours" do
     nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
-    load_from_fixtures "empty", "minimal", "minimal"
+    load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "minimal"
 
-    expect_single_record id: "0014K00000PcCA6QAN",
+    expect_single_record id: "0014K000009EMMbQAO",
                          name: "Citizens Advice Bristol",
-                         office_type: "member",
+                         office_type: "office",
                          opening_hours_monday: nil,
                          opening_hours_tuesday: nil,
                          opening_hours_wednesday: nil,
@@ -104,25 +103,25 @@ RSpec.describe LssLoader do
   # rubocop:enable RSpec/ExampleLength
 
   it "ignores opening hours where it closes before it opens" do
-    load_from_fixtures "empty", "minimal", "includes_time_travel"
+    load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "includes_time_travel"
 
-    expect_single_record id: "0014K00000PcCA6QAN", name: "Citizens Advice Bristol", office_type: "member"
+    expect_single_record id: "0014K000009EMMbQAO", name: "Citizens Advice Bristol", office_type: "office"
   end
 
   it "sets up parent/child hierarchy correctly" do
-    load_from_fixtures "empty", "basic_hierarchy", "empty"
+    load_from_fixtures locations_csv_filename: "basic_hierarchy"
 
     expect_basic_hierarchy
   end
 
   it "handles when a child is defined before a parent in the CSV files" do
-    load_from_fixtures "empty", "backwards_hierarchy", "empty"
+    load_from_fixtures locations_csv_filename: "backwards_hierarchy"
 
     expect_basic_hierarchy
   end
 
   it "makes a dangling parent ID null" do
-    load_from_fixtures "empty", "dangling_hierarchy", "empty"
+    load_from_fixtures locations_csv_filename: "dangling_hierarchy"
 
     expect(Office.find("0014K00000an3g3QAA").parent_id).to be_nil
   end
@@ -130,7 +129,7 @@ RSpec.describe LssLoader do
   # rubocop:disable RSpec/ExampleLength
   it "loads in members from the members file" do
     LocalAuthority.create! id: "E07000112", name: "Folkestone and Hythe"
-    load_from_fixtures "minimal", "empty", "empty"
+    load_from_fixtures members_csv_filename: "minimal"
 
     expect_single_record id: "0014K00000PcC94QAF",
                          name: "Citizens Advice Shepway",
@@ -148,27 +147,48 @@ RSpec.describe LssLoader do
   end
   # rubocop:enable RSpec/ExampleLength
 
+  it "makes a dangling local authority ID null" do
+    load_from_fixtures members_csv_filename: "minimal"
+
+    expect(Office.find("0014K00000PcC94QAF").local_authority_id).to be_nil
+  end
+
   def create_a_single_office
     id = SecureRandom.hex(9)
     Office.create! id:, name: "Testtown Citizens Advice", office_type: "member"
     id
   end
 
-  def load_from_fixtures(members_csv_filename, locations_csv_filename, opening_hours_csv_filename)
-    members_csv = File.open File.expand_path("fixtures/members/#{members_csv_filename}.csv", File.dirname(__FILE__))
-    locations_csv = File.open File.expand_path("fixtures/advice_locations/#{locations_csv_filename}.csv", File.dirname(__FILE__))
-    opening_hours_csv = File.open File.expand_path("fixtures/opening_hours/#{opening_hours_csv_filename}.csv", File.dirname(__FILE__))
-    lss_loader = LssLoader::LssLoader.new members_csv, locations_csv, opening_hours_csv
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def load_from_fixtures(members_csv_filename: "empty", locations_csv_filename: "empty", opening_hours_csv_filename: "empty",
+                         accessibility_info_csv_filename: "empty", volunteer_roles_csv_filename: "empty")
+    members_csv = File.open(File.expand_path("fixtures/members/#{members_csv_filename}.csv", File.dirname(__FILE__)))
+    advice_locations_csv = File.open(File.expand_path("fixtures/advice_locations/#{locations_csv_filename}.csv", File.dirname(__FILE__)))
+    opening_hours_csv = File.open(File.expand_path("fixtures/opening_hours/#{opening_hours_csv_filename}.csv", File.dirname(__FILE__)))
+    accessibility_info_csv = File.open(
+      File.expand_path("fixtures/accessibility_info/#{accessibility_info_csv_filename}.csv", File.dirname(__FILE__))
+    )
+    volunteer_roles_csv = File.open(
+      File.expand_path("fixtures/volunteer_roles/#{volunteer_roles_csv_filename}.csv", File.dirname(__FILE__))
+    )
+    lss_loader = LssLoader::LssLoader.new(members_csv:,
+                                          advice_locations_csv:,
+                                          opening_hours_csv:,
+                                          accessibility_info_csv:,
+                                          volunteer_roles_csv:)
     lss_loader.load!
   ensure
     members_csv&.close
-    locations_csv&.close
+    advice_locations_csv&.close
     opening_hours_csv&.close
+    accessibility_info_csv&.close
+    volunteer_roles_csv&.close
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-  def load_from_fixtures_with_error(members_csv_filename, locations_csv_filename, opening_hours_csv_filename)
+  def load_from_fixtures_with_error(**opts)
     expect do
-      load_from_fixtures members_csv_filename, locations_csv_filename, opening_hours_csv_filename
+      load_from_fixtures(**opts)
     end.to raise_error LssLoader::LssLoadError
   end
 

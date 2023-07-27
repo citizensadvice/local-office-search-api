@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require "csv_helpers"
+require "loader_helpers"
 
 class PostcodeLoader
   include CsvHelpers
+  include LoaderHelpers
 
   def initialize(postcode_csv)
     @postcode_csv = CSV.new postcode_csv, headers: true, return_headers: true
@@ -52,7 +54,8 @@ class PostcodeLoader
   end
 
   def defer_local_authority_integrity_checks_until_commit!
-    ActiveRecord::Base.connection.execute("SET CONSTRAINTS fk_rails_7ab3384eab DEFERRED")
+    postcode_local_authority_foreign_key = "fk_rails_7ab3384eab"
+    defer_constraint_until_commit! postcode_local_authority_foreign_key
   end
 
   def postcode_csv_has_expected_headers?
@@ -62,10 +65,12 @@ class PostcodeLoader
       "county_code", "county_name", "local_authority_code", "local_authority_name", "ward_code", "ward_name",
       "county_electoral_division_code", "county_electoral_division_name", "parish_code", "parish_name",
       "parliamentary_constituency_code", "parliamentary_constituency_name", "census_output_area_2021_code",
-      "lower_super_output_area_2021_code", "census_output_area_2011_code", "lower_super_output_area_2011_code",
+      "lower_super_output_area_2021_code", "lower_super_output_area_2021_name", "middle_super_output_area_2021_code",
+      "middle_super_output_area_2021_name", "census_output_area_2011_code", "lower_super_output_area_2011_code",
       "rural_urban_area_2011_code", "imd_rank", "primary_care_trust_code", "integrated_care_board_subdivision_code",
       "integrated_care_board_subdivision_name", "police_force_area_code", "police_force_area_name", "integrated_care_board_code",
-      "integrated_care_board_name", "westminster_member_of_parliment", "westminster_political_party"
+      "integrated_care_board_name", "westminster_member_of_parliament_code", "westminster_member_of_parliament",
+      "westminster_political_party_code", "westminster_political_party"
     ]
   end
 
