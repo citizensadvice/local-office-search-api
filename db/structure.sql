@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: tiger; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -335,7 +328,7 @@ CREATE UNIQUE INDEX index_postcodes_on_normalised ON public.postcodes USING btre
 --
 
 ALTER TABLE ONLY public.offices
-    ADD CONSTRAINT fk_rails_5a2ab5b59d FOREIGN KEY (local_authority_id) REFERENCES public.local_authorities(id);
+    ADD CONSTRAINT fk_rails_5a2ab5b59d FOREIGN KEY (local_authority_id) REFERENCES public.local_authorities(id) DEFERRABLE;
 
 
 --
@@ -351,7 +344,7 @@ ALTER TABLE ONLY public.postcodes
 --
 
 ALTER TABLE ONLY public.offices
-    ADD CONSTRAINT fk_rails_b381f08761 FOREIGN KEY (parent_id) REFERENCES public.offices(id);
+    ADD CONSTRAINT fk_rails_b381f08761 FOREIGN KEY (parent_id) REFERENCES public.offices(id) DEFERRABLE;
 
 
 --
@@ -365,6 +358,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230621151704'),
 ('20230704120347'),
 ('20230705095742'),
-('20230705132647');
+('20230705132647'),
+('20230731104744');
 
 
