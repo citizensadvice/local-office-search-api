@@ -67,6 +67,25 @@ RSpec.describe PostcodeLoader do
 
       expect(Postcode.normalise_and_find("AB1 0AA").id).to eq(postcode.id)
     end
+
+    it "successfully renames a local authority when an LCA is assigned to it" do
+      LocalAuthority.create! id: "S12000033", name: "City of Aberdeen"
+      Office.create! id: generate_salesforce_id, name: "Aberdeen CAB", office_type: "member", local_authority_id: "S12000033"
+
+      load_from_fixture "single"
+
+      expect(LocalAuthority.find("S12000033").name).to eq("Aberdeen City")
+    end
+
+    it "successfully handles removal of a local authority when an LCA is assigned to it" do
+      LocalAuthority.create! id: "X00000000", name: "Testtown City Council"
+      office_id = generate_salesforce_id
+      Office.create! id: office_id, name: "Aberdeen CAB", office_type: "member", local_authority_id: "X00000000"
+
+      load_from_fixture "single"
+
+      expect(Office.find(office_id).local_authority_id).to be_nil
+    end
   end
 
   def load_from_fixture(postcode_file)
