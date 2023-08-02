@@ -6,7 +6,7 @@ require_relative "schema"
 RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger.yaml" do
   include_context "with episerver credentials"
 
-  path "/api/v0/vacancy/id/{id}" do
+  path "/api/v0/json/vacancy/id/{id}" do
     get "Shows full details for a vacancy" do
       produces "application/json"
       security [basic_auth: []]
@@ -81,7 +81,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
     end
   end
 
-  path "/api/v0/vacancy/list" do
+  path "/api/v0/json/vacancy/list" do
     get "List vacancies" do
       produces "application/json"
       security [basic_auth: []]

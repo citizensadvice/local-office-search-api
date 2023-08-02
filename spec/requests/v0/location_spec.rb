@@ -5,7 +5,7 @@ require "swagger_helper"
 RSpec.describe "Bureau Details legacy API - Locations", swagger_doc: "v0/swagger.yaml" do
   include_context "with episerver credentials"
 
-  path "/api/v0/location/id/{serial_number}" do
+  path "/api/v0/json/location/id/{serial_number}" do
     get "Show full details for a location" do
       produces "application/json"
       security [basic_auth: []]
@@ -19,7 +19,7 @@ RSpec.describe "Bureau Details legacy API - Locations", swagger_doc: "v0/swagger
     end
   end
 
-  path "/api/v0/location/list" do
+  path "/api/v0/json/location/list" do
     get "List members" do
       produces "application/json"
       security [basic_auth: []]

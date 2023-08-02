@@ -4,7 +4,7 @@ info:
   title: Bureau Details API (legacy)
   version: v0
 paths:
-  "/api/v0/location/id/{serial_number}":
+  "/api/v0/json/location/id/{serial_number}":
     get:
       summary: Show full details for a location
       security:
@@ -19,7 +19,7 @@ paths:
       responses:
         '501':
           description: is a deprecated API which has not been reimplemented
-  "/api/v0/location/list":
+  "/api/v0/json/location/list":
     get:
       summary: List members
       security:
@@ -51,7 +51,7 @@ paths:
       responses:
         '501':
           description: is a deprecated API which has not been reimplemented
-  "/api/v0/member/id/{id}":
+  "/api/v0/json/member/id/{id}":
     get:
       summary: Shows full details for a member
       security:
@@ -701,7 +701,7 @@ paths:
                 additionalProperties: false
         '404':
           description: when no member with that ID is found
-  "/api/v0/member/list":
+  "/api/v0/json/member/list":
     get:
       summary: List members
       security:
@@ -717,7 +717,7 @@ paths:
       responses:
         '501':
           description: is a deprecated API which has not been reimplemented
-  "/api/v0/vacancy/id/{id}":
+  "/api/v0/json/vacancy/id/{id}":
     get:
       summary: Shows full details for a vacancy
       security:
@@ -799,7 +799,7 @@ paths:
                 additionalProperties: false
         '404':
           description: when ID references something with no roles
-  "/api/v0/vacancy/list":
+  "/api/v0/json/vacancy/list":
     get:
       summary: List vacancies
       security:

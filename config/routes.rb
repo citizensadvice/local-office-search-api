@@ -8,12 +8,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v0 do
-      get "/location/id/:id", to: "location#get"
-      get "/location/list", to: "location#list"
-      get "/member/id/*id", to: "member#get"
-      get "/member/list", to: "member#list"
-      get "/vacancy/id/:id", to: "vacancy#get"
-      get "/vacancy/list", to: "vacancy#list"
+      get "/json/location/id/:id", to: "location#get"
+      get "/json/location/list", to: "location#list"
+      get "/json/member/id/*id", to: "member#get"
+      get "/json/member/list", to: "member#list"
+      get "/json/vacancy/id/:id", to: "vacancy#get"
+      get "/json/vacancy/list", to: "vacancy#list"
     end
 
     namespace :v1 do
