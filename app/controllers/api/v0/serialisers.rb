@@ -8,6 +8,10 @@ module Api
 
       # rubocop:disable Metrics/AbcSize
       def member_as_v0_json(member)
+        offices = Office.where(membership_number: params[:id], office_type: :office)
+        offices_with_vacancies = offices.reject { |office| office.volunteer_roles.empty? }
+        outreaches = Office.where(membership_number: params[:id], office_type: :outreach)
+
         {
           address: address_block(member, include_local_authority: true),
           membershipNumber: member.membership_number,
@@ -17,11 +21,11 @@ module Api
           companyNumber: member.company_number,
           notes: member.about_text,
           services: {
-            bureaux: Office.where(membership_number: params[:id], office_type: :office).map { |office| location_as_v0_json(office) },
-            outlets: Office.where(membership_number: params[:id], office_type: :outreach).map { |office| location_as_v0_json(office) }
+            bureaux: offices.map { |office| location_as_v0_json(office) },
+            outlets: outreaches.map { |office| location_as_v0_json(office) }
           },
           staff: nil,
-          vacancies: [],
+          vacancies: offices_with_vacancies.map { |office| vacancy_as_v0_json(office) },
           website: member.website
         }
       end

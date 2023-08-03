@@ -20,67 +20,80 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
 
         # this comes from the original fixture data provided in bureau-details
         # https://github.com/citizensadvice/rd-bureau-details-web-service/blob/master/BureauDetailsService/TestMember.cs
+        let(:local_authority) { LocalAuthority.create! id: "E05XXTEST", name: "Borsetshire" }
+
+        let(:member) do
+          Office.new(id: generate_salesforce_id,
+                     legacy_id: 1,
+                     membership_number: "55/5555",
+                     office_type: :member,
+                     name: "Citizens Advice Felpersham",
+                     company_number: "12345678",
+                     charity_number: "87654321",
+                     street: "14 Shakespeare Road",
+                     city: "Felpersham",
+                     postcode: "FX1 7QW",
+                     location: "POINT(-0.7646468 52.0451619)",
+                     local_authority:)
+        end
+
+        let(:office) do
+          Office.new(id: generate_salesforce_id,
+                     parent: member,
+                     name: "Citizens Advice Felpersham North",
+                     street: "14 Shakespeare Road",
+                     city: "Felpersham",
+                     postcode: "FX1 7QW",
+                     location: "POINT(-0.7646468 52.0451619)",
+                     legacy_id: 2,
+                     membership_number: "55/5555",
+                     office_type: :office,
+                     about_text: "This is not a real Citizens Advice bureau.",
+                     accessibility_information: ["Wheelchair accessible", "Wheelchair toilet access",
+                                                 "Internet advice access"],
+                     volunteer_roles: ["admin_and_customer_service"],
+                     opening_hours_information: "Self help computers 9am to 4pm",
+                     opening_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)),
+                     opening_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)),
+                     opening_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(13, 30), Tod::TimeOfDay.new(16)),
+                     opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
+                     opening_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
+                     telephone_advice_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
+                     telephone_advice_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
+                     telephone_advice_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
+                     telephone_advice_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
+                     telephone_advice_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
+                     email: "felphersham@example.com",
+                     website: "http://www.felpershamcab.org.uk",
+                     phone: "01632 555 555",
+                     local_authority:)
+        end
+
+        let(:outlet) do
+          Office.new(id: generate_salesforce_id,
+                     parent: office,
+                     name: "Felpersham hospital",
+                     street: "Felperham general hospital\nNorth Beck Street",
+                     city: "Felpersham",
+                     postcode: "FX1 7YT",
+                     location: "POINT(-0.7361886 52.0257741)",
+                     legacy_id: 4,
+                     membership_number: "55/5555",
+                     office_type: :outreach,
+                     about_text: "This location does not exist.",
+                     accessibility_information: ["Wheelchair accessible"],
+                     opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(14)),
+                     local_authority:)
+        end
+
         let(:id) do
-          local_authority = LocalAuthority.create! id: "E05XXTEST", name: "Borsetshire"
-
-          member = Office.create!(id: generate_salesforce_id,
-                                  legacy_id: 1,
-                                  membership_number: "55/5555",
-                                  office_type: :member,
-                                  name: "Citizens Advice Felpersham",
-                                  company_number: "12345678",
-                                  charity_number: "87654321",
-                                  street: "14 Shakespeare Road",
-                                  city: "Felpersham",
-                                  postcode: "FX1 7QW",
-                                  location: "POINT(-0.7646468 52.0451619)",
-                                  local_authority:)
-
-          office = Office.create!(id: generate_salesforce_id,
-                                  parent_id: member.id,
-                                  name: "Citizens Advice Felpersham North",
-                                  street: "14 Shakespeare Road",
-                                  city: "Felpersham",
-                                  postcode: "FX1 7QW",
-                                  location: "POINT(-0.7646468 52.0451619)",
-                                  legacy_id: 2,
-                                  membership_number: "55/5555",
-                                  office_type: :office,
-                                  about_text: "This is not a real Citizens Advice bureau.",
-                                  accessibility_information: ["Wheelchair accessible", "Wheelchair toilet access",
-                                                              "Internet advice access"],
-                                  opening_hours_information: "Self help computers 9am to 4pm",
-                                  opening_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)),
-                                  opening_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)),
-                                  opening_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(13, 30), Tod::TimeOfDay.new(16)),
-                                  opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                                  opening_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                                  telephone_advice_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                                  telephone_advice_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                                  telephone_advice_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                                  telephone_advice_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                                  telephone_advice_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                                  email: "felphersham@example.com",
-                                  website: "http://www.felpershamcab.org.uk",
-                                  phone: "01632 555 555",
-                                  local_authority:)
-
-          Office.create!(id: generate_salesforce_id,
-                         parent_id: office.id,
-                         name: "Felpersham hospital",
-                         street: "Felperham general hospital\nNorth Beck Street",
-                         city: "Felpersham",
-                         postcode: "FX1 7YT",
-                         location: "POINT(-0.7361886 52.0257741)",
-                         legacy_id: 4,
-                         membership_number: "55/5555",
-                         office_type: :outreach,
-                         about_text: "This location does not exist.",
-                         accessibility_information: ["Wheelchair accessible"],
-                         opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(14)),
-                         local_authority:)
-
           member.membership_number
+        end
+
+        before do
+          member.save
+          office.save
+          outlet.save
         end
 
         # rubocop:disable RSpec/ExampleLength
@@ -279,7 +292,23 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
               ]
             },
             staff: nil,
-            vacancies: [],
+            vacancies: [{
+              address: {
+                address: "14 Shakespeare Road",
+                town: "Felpersham",
+                county: nil,
+                postcode: "FX1 7QW",
+                latLong: [52.0451619, -0.7646468]
+              },
+              membershipNumber: "55/5555",
+              name: "Citizens Advice Felpersham North",
+              serialNumber: "2",
+              email: "felphersham@example.com",
+              id: office.id,
+              roles: ["Admin and customer service"],
+              telephone: "01632 555 555",
+              website: "http://www.felpershamcab.org.uk"
+            }],
             website: nil
           })
         end
