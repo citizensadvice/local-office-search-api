@@ -60,7 +60,7 @@ module Api
           membershipNumber: office.membership_number,
           name: office.name,
           serialNumber: office.legacy_id.to_s,
-          email: office.email,
+          email: office.volunteer_recruitment_email || office.email,
           id: office.id,
           roles: office.volunteer_roles.map { |role| role_to_human_text(role) },
           telephone: office.phone,
@@ -86,9 +86,8 @@ module Api
         block = {
           address: office.street,
           town: office.city,
-          county: nil,
+          county: office.county,
           postcode: office.postcode,
-
           latLong: [office.location.y, office.location.x]
         }
         if include_local_authority

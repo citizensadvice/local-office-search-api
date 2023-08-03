@@ -25,7 +25,7 @@ class Office < ApplicationRecord
   # rubocop:disable Metrics/AbcSize
   def as_json(options = nil)
     options ||= {}
-    options[:only] = %i[id name about_text accessibility_information street city postcode location email website phone]
+    options[:only] = %i[id name about_text accessibility_information street city county postcode location email website phone]
     super(options).tap do |json|
       json[:member_id] = parent_id
       json[:opening_hours] = {

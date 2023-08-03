@@ -189,7 +189,10 @@ CREATE TABLE public.offices (
     company_number character varying,
     charity_number character varying,
     local_authority_id character(9),
-    volunteer_roles text[] DEFAULT '{}'::text[] NOT NULL
+    volunteer_roles text[] DEFAULT '{}'::text[] NOT NULL,
+    county text,
+    volunteer_recruitment_email text,
+    allows_drop_ins boolean DEFAULT false NOT NULL
 );
 
 
@@ -359,6 +362,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230704120347'),
 ('20230705095742'),
 ('20230705132647'),
-('20230731104744');
+('20230731104744'),
+('20230803141746');
 
 

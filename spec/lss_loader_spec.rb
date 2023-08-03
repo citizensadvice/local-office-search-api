@@ -42,6 +42,7 @@ RSpec.describe LssLoader do
                          accessibility_information: [],
                          street: "48 Fairfax Street",
                          city: "BRISTOL",
+                         county: "Bristol",
                          postcode: "BS1 3BL",
                          email: "cab@example.com",
                          website: "https://www.example.com/",
@@ -140,6 +141,7 @@ RSpec.describe LssLoader do
                          membership_number: "75/0030",
                          street: "Units 4 - 6, Princes Gate, George Lane,",
                          city: "FOLKESTONE",
+                         county: "Kent",
                          postcode: "CT20 1RH",
                          email: "cab@example.com",
                          website: "www.shepwaycab.co.uk",
@@ -204,12 +206,14 @@ RSpec.describe LssLoader do
       accessibility_information: [],
       street: nil,
       city: nil,
+      county: nil,
       postcode: nil,
       location: nil,
       email: nil,
       website: nil,
       phone: nil,
       opening_hours_information: nil,
+      allows_drop_ins: false,
       opening_hours_monday: nil,
       opening_hours_tuesday: nil,
       opening_hours_wednesday: nil,
@@ -225,6 +229,7 @@ RSpec.describe LssLoader do
       telephone_advice_hours_friday: nil,
       telephone_advice_hours_saturday: nil,
       telephone_advice_hours_sunday: nil,
+      volunteer_recruitment_email: nil,
       volunteer_roles: []
     }.update(vals)
 
