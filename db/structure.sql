@@ -165,7 +165,7 @@ CREATE TABLE public.offices (
     street text,
     city text,
     postcode text,
-    location public.geometry(Point),
+    location public.geography(Point,4326),
     email text,
     website text,
     phone text,
@@ -204,7 +204,7 @@ CREATE TABLE public.postcodes (
     id bigint NOT NULL,
     canonical character varying(8) NOT NULL,
     normalised character varying(7) GENERATED ALWAYS AS (lower(replace((canonical)::text, ' '::text, ''::text))) STORED,
-    location public.geometry(Point) NOT NULL,
+    location public.geography(Point,4326) NOT NULL,
     local_authority_id character(9) NOT NULL
 );
 
@@ -363,6 +363,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230705095742'),
 ('20230705132647'),
 ('20230731104744'),
-('20230803141746');
+('20230803141746'),
+('20230803145002');
 
 
