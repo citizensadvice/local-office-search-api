@@ -32,13 +32,13 @@ module Api
       end
 
       def search_response(query)
-        offices, = OfficeSearch.by_location query, only_in_same_local_authority: true
+        offices, normalised_location = OfficeSearch.by_location query, only_in_same_local_authority: true
       rescue OfficeSearch::UnknownLocationError
         { match_type: "unknown", results: [] }
       rescue OfficeSearch::OutOfAreaError => e
         { match_type: "out_of_area_#{e.country}", results: [] }
       else
-        { match_type: "exact", results: offices.map { |office| { id: office.id } } }
+        { match_type: normalised_location.nil? ? "fuzzy" : "exact", results: offices.map { |office| { id: office.id, name: office.name } } }
       end
 
       def fetch_and_render_office

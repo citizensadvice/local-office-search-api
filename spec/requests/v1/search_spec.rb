@@ -30,9 +30,10 @@ RSpec.describe "Search Local Office API" do
                    items: {
                      type: :object,
                      properties: {
-                       id: { type: :string }
+                       id: { type: :string },
+                       name: { type: :string }
                      },
-                     required: %i[id],
+                     required: %i[id name],
                      additionalProperties: false
                    }
                  }
@@ -48,7 +49,7 @@ RSpec.describe "Search Local Office API" do
           let(:q) { postcode.canonical }
 
           run_test! do |response|
-            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "exact", results: [] })
+            expect_result_ids_in_response response, "exact", []
           end
         end
 
@@ -69,16 +70,37 @@ RSpec.describe "Search Local Office API" do
           before { office.save! }
 
           run_test! do |response|
-            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "exact", results: [{ id: office.id }] })
+            expect_result_ids_in_response response, "exact", [office.id]
           end
         end
 
-        context "when the location is known, and there is an LCA in that area plus LCAs out of area" do
-          let(:local_authority_id) { LocalAuthority.create!(id: "X0001234", name: "Testshire").id }
+        context "when the location is Scottish" do
+          let(:local_authority_id) { LocalAuthority.create!(id: "S12000036", name: "Edinburgh").id }
 
-          let(:postcode) { Postcode.create! canonical: "XX4 6LA", local_authority_id:, location: "POINT(-0.78 52.66)" }
+          let(:postcode) { Postcode.create! canonical: "EH1 1AA", local_authority_id:, location: "POINT(-3.188106 55.95365)" }
 
           let(:q) { postcode.canonical }
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "out_of_area_scotland", []
+          end
+        end
+
+        context "when the location is Northern Irish" do
+          let(:local_authority_id) { LocalAuthority.create!(id: "N09000003", name: "Belfast").id }
+
+          let(:postcode) { Postcode.create! canonical: "BT1 1AA", local_authority_id:, location: "POINT(-5.922291 54.602444)" }
+
+          let(:q) { postcode.canonical }
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "out_of_area_ni", []
+          end
+        end
+
+        context "when the location is fuzzily matched" do
+          let(:local_authority_id) { LocalAuthority.create!(id: "X0001234", name: "Testshire").id }
+          let(:q) { "Testshire" }
 
           let(:office) do
             Office.new id: generate_salesforce_id,
@@ -87,41 +109,10 @@ RSpec.describe "Search Local Office API" do
                        local_authority_id:
           end
 
-          before do
-            office.save!
-            other_la = LocalAuthority.create!(id: "X00012345", name: "Testtown")
-            Office.create! id: generate_salesforce_id,
-                           office_type: :office,
-                           name: "Testtown Citizens Advice",
-                           local_authority_id: other_la.id
-          end
+          before { office.save! }
 
           run_test! do |response|
-            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "exact", results: [{ id: office.id }] })
-          end
-        end
-
-        context "when the postcode is Scottish" do
-          let(:local_authority_id) { LocalAuthority.create!(id: "S12000036", name: "Edinburgh").id }
-
-          let(:postcode) { Postcode.create! canonical: "EH1 1AA", local_authority_id:, location: "POINT(-3.188106 55.95365)" }
-
-          let(:q) { postcode.canonical }
-
-          run_test! do |response|
-            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "out_of_area_scotland", results: [] })
-          end
-        end
-
-        context "when the postcode is Northern Irish" do
-          let(:local_authority_id) { LocalAuthority.create!(id: "N09000003", name: "Belfast").id }
-
-          let(:postcode) { Postcode.create! canonical: "BT1 1AA", local_authority_id:, location: "POINT(-5.922291 54.602444)" }
-
-          let(:q) { postcode.canonical }
-
-          run_test! do |response|
-            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "out_of_area_ni", results: [] })
+            expect_result_ids_in_response response, "fuzzy", [office.id]
           end
         end
 
@@ -129,7 +120,7 @@ RSpec.describe "Search Local Office API" do
           let(:q) { "AB1 2CD" }
 
           run_test! do |response|
-            expect(JSON.parse(response.body).deep_symbolize_keys).to eq({ match_type: "unknown", results: [] })
+            expect_result_ids_in_response response, "unknown", []
           end
         end
       end
@@ -142,5 +133,12 @@ RSpec.describe "Search Local Office API" do
         run_test!
       end
     end
+  end
+
+  def expect_result_ids_in_response(response, match_type, ids)
+    body = JSON.parse(response.body).deep_symbolize_keys
+
+    expect(body[:match_type]).to eq match_type
+    expect(body[:results].pluck(:id)).to eq ids
   end
 end
