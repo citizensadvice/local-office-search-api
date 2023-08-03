@@ -30,7 +30,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
                                   email: "felphersham@example.com",
                                   website: "http://www.felpershamcab.org.uk",
                                   phone: "01632 555 555",
-                                  volunteer_roles: ["Receptionist", "Volunteer recruitment and support"],
+                                  volunteer_roles: %w[admin_and_customer_service volunteer_recruitment_and_support],
                                   local_authority:)
           office.id
         end
@@ -51,7 +51,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
             email: "felphersham@example.com",
             id:,
             roles: [
-              "Receptionist",
+              "Admin and customer service",
               "Volunteer recruitment and support"
             ],
             telephone: "01632 555 555",
@@ -149,7 +149,7 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
               postcode: "FX1 7QW",
               latLong: [52.0451619, -0.7646468]
             },
-            distance: 0.7022914268464465,
+            distance: 0.70,
             membershipNumber: "55/5555",
             name: "Citizens Advice Felpersham North",
             serialNumber: "2",
