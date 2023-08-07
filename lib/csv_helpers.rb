@@ -13,6 +13,10 @@ module CsvHelpers
     val
   end
 
+  def bool_from_val(val)
+    val == "TRUE"
+  end
+
   def point_wkt_or_nil(latitude, longitude)
     return nil if latitude.nil? || longitude.nil?
 

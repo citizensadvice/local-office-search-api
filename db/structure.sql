@@ -165,7 +165,7 @@ CREATE TABLE public.offices (
     street text,
     city text,
     postcode text,
-    location public.geometry(Point),
+    location public.geography(Point,4326),
     email text,
     website text,
     phone text,
@@ -189,7 +189,10 @@ CREATE TABLE public.offices (
     company_number character varying,
     charity_number character varying,
     local_authority_id character(9),
-    volunteer_roles text[] DEFAULT '{}'::text[] NOT NULL
+    volunteer_roles text[] DEFAULT '{}'::text[] NOT NULL,
+    county text,
+    volunteer_recruitment_email text,
+    allows_drop_ins boolean DEFAULT false NOT NULL
 );
 
 
@@ -201,7 +204,7 @@ CREATE TABLE public.postcodes (
     id bigint NOT NULL,
     canonical character varying(8) NOT NULL,
     normalised character varying(7) GENERATED ALWAYS AS (lower(replace((canonical)::text, ' '::text, ''::text))) STORED,
-    location public.geometry(Point) NOT NULL,
+    location public.geography(Point,4326) NOT NULL,
     local_authority_id character(9) NOT NULL
 );
 
@@ -359,6 +362,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230704120347'),
 ('20230705095742'),
 ('20230705132647'),
-('20230731104744');
+('20230731104744'),
+('20230803141746'),
+('20230803145002');
 
 

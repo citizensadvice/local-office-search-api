@@ -16,6 +16,7 @@ module LssLoader
                  company_number: str_or_nil(row["company_number"]),
                  street: str_or_nil(row["street_name"]),
                  city: str_or_nil(row["city"]),
+                 county: str_or_nil(row["county"]),
                  postcode: str_or_nil(row["postcode"]),
                  location: point_wkt_or_nil(row["latitude"], row["longitude"]),
                  local_authority_id: row["local_authority_ons_code"],
@@ -33,11 +34,14 @@ module LssLoader
                  about_text: str_or_nil(row["advice_service_information"]),
                  street: str_or_nil(row["street_name"]),
                  city: str_or_nil(row["city"]),
+                 county: str_or_nil(row["county"]),
                  postcode: str_or_nil(row["postcode"]),
                  location: point_wkt_or_nil(row["latitude"], row["longitude"]),
                  email: str_or_nil(row["enquiries_email"]),
+                 volunteer_recruitment_email: str_or_nil(row["volunteer_recruitment_email"]),
                  website: str_or_nil(row["public_website"]),
                  phone: str_or_nil(row["phone"]),
+                 allows_drop_ins: bool_from_val(row["allows_drop_in_visits"]),
                  opening_hours_information: str_or_nil(row["face_to_face_advice_hours_information"]),
                  telephone_advice_hours_information: str_or_nil(row["telephone_advice_hours_information"])
     end

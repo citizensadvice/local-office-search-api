@@ -53,6 +53,10 @@ paths:
                     type:
                     - string
                     - 'null'
+                  county:
+                    type:
+                    - string
+                    - 'null'
                   postcode:
                     type:
                     - string
