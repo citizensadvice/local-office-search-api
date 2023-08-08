@@ -23,7 +23,7 @@ gem "tod"
 gem "puma", "~> 6.3"
 
 # Monitoring
-gem "ddtrace", "~> 1.10.1"
+gem "ddtrace", "~> 1.13.0"
 gem "rails_semantic_logger", "~> 4.12"
 gem "yabeda-prometheus", "~> 0.9"
 gem "yabeda-puma-plugin", "~> 0.7"

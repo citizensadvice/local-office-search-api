@@ -107,12 +107,12 @@ GEM
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     date (3.3.3)
-    ddtrace (1.10.1)
-      debase-ruby_core_source (>= 0.10.16, <= 3.2.0)
-      libdatadog (~> 2.0.0.1.0)
-      libddwaf (~> 1.6.2.0.0)
+    ddtrace (1.13.0)
+      debase-ruby_core_source (= 3.2.1)
+      libdatadog (~> 3.0.0.1.0)
+      libddwaf (~> 1.9.0.0.0)
       msgpack
-    debase-ruby_core_source (3.2.0)
+    debase-ruby_core_source (3.2.1)
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
@@ -137,14 +137,14 @@ GEM
     json-schema (3.0.0)
       addressable (>= 2.8)
     language_server-protocol (3.17.0.3)
-    libdatadog (2.0.0.1.0)
-    libdatadog (2.0.0.1.0-aarch64-linux)
-    libdatadog (2.0.0.1.0-x86_64-linux)
-    libddwaf (1.6.2.0.0-aarch64-linux)
+    libdatadog (3.0.0.1.0)
+    libdatadog (3.0.0.1.0-aarch64-linux)
+    libdatadog (3.0.0.1.0-x86_64-linux)
+    libddwaf (1.9.0.0.1-aarch64-linux)
       ffi (~> 1.0)
-    libddwaf (1.6.2.0.0-arm64-darwin)
+    libddwaf (1.9.0.0.1-arm64-darwin)
       ffi (~> 1.0)
-    libddwaf (1.6.2.0.0-x86_64-linux)
+    libddwaf (1.9.0.0.1-x86_64-linux)
       ffi (~> 1.0)
     loofah (2.21.3)
       crass (~> 1.0.2)
@@ -338,7 +338,7 @@ DEPENDENCIES
   aws-sdk-s3
   bootsnap
   citizens-advice-style!
-  ddtrace (~> 1.10.1)
+  ddtrace (~> 1.13.0)
   debug
   dotenv-rails
   pg (~> 1.5)
