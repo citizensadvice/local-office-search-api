@@ -25,7 +25,7 @@ gem "puma", "~> 6.3"
 # Monitoring
 gem "ddtrace", "~> 1.10.1"
 gem "rails_semantic_logger", "~> 4.12"
-gem "yabeda-prometheus", "~> 0.8"
+gem "yabeda-prometheus", "~> 0.9"
 gem "yabeda-puma-plugin", "~> 0.7"
 gem "yabeda-rails", "~> 0.8"
 
