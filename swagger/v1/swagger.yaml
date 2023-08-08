@@ -424,8 +424,11 @@ paths:
                       properties:
                         id:
                           type: string
+                        name:
+                          type: string
                       required:
                       - id
+                      - name
                       additionalProperties: false
                 required:
                 - match_type
