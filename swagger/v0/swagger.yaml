@@ -17,8 +17,254 @@ paths:
         schema:
           type: string
       responses:
-        '501':
-          description: is a deprecated API which has not been reimplemented
+        '200':
+          description: fetches all data for an office
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      onsDistrictCode:
+                        type: string
+                      localAuthority:
+                        type: string
+                      address:
+                        type: string
+                      town:
+                        type: string
+                      county:
+                        type:
+                        - string
+                        - 'null'
+                      postcode:
+                        type:
+                        - string
+                        - 'null'
+                      latLong:
+                        type: array
+                        items:
+                          type: number
+                        minItems: 2
+                        maxItems: 2
+                    required:
+                    - address
+                    - town
+                    - county
+                    - postcode
+                    - latLong
+                    - onsDistrictCode
+                    - localAuthority
+                    additionalProperties: false
+                  membershipNumber:
+                    type: string
+                  name:
+                    type: string
+                  serialNumber:
+                    type: string
+                  inVCC:
+                    type: boolean
+                  isBureau:
+                    type: boolean
+                  isOutlet:
+                    type: boolean
+                  features:
+                    type: array
+                    items:
+                      type: string
+                  notes:
+                    type:
+                    - string
+                    - 'null'
+                  openingTimes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        day:
+                          type: string
+                          enum:
+                          - Monday
+                          - Tuesday
+                          - Wednesday
+                          - Thursday
+                          - Friday
+                          - Saturday
+                          - Sunday
+                        start1:
+                          type:
+                          - string
+                          - 'null'
+                        end1:
+                          type:
+                          - string
+                          - 'null'
+                        start2:
+                          type:
+                          - string
+                          - 'null'
+                        end2:
+                          type:
+                          - string
+                          - 'null'
+                        notes:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - day
+                      - start1
+                      - end1
+                      - start2
+                      - end2
+                      - notes
+                      additionalProperties: false
+                  publicContacts:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            contact:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - contact
+                          - description
+                          additionalProperties: false
+                      fax:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            contact:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - contact
+                          - description
+                          additionalProperties: false
+                      minicom:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            contact:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - contact
+                          - description
+                          additionalProperties: false
+                      telephone:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            contact:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - contact
+                          - description
+                          additionalProperties: false
+                      website:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            contact:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - contact
+                          - description
+                          additionalProperties: false
+                    required:
+                    - email
+                    - fax
+                    - minicom
+                    - telephone
+                    - website
+                    additionalProperties: false
+                  telephoneTimes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        day:
+                          type: string
+                          enum:
+                          - Monday
+                          - Tuesday
+                          - Wednesday
+                          - Thursday
+                          - Friday
+                          - Saturday
+                          - Sunday
+                        start1:
+                          type:
+                          - string
+                          - 'null'
+                        end1:
+                          type:
+                          - string
+                          - 'null'
+                        start2:
+                          type:
+                          - string
+                          - 'null'
+                        end2:
+                          type:
+                          - string
+                          - 'null'
+                        notes:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - day
+                      - start1
+                      - end1
+                      - start2
+                      - end2
+                      - notes
+                      additionalProperties: false
+                required:
+                - address
+                - membershipNumber
+                - name
+                - serialNumber
+                - inVCC
+                - isBureau
+                - isOutlet
+                - features
+                - notes
+                - openingTimes
+                - publicContacts
+                - telephoneTimes
+                additionalProperties: false
+        '404':
+          description: when no office with that serial number is found
   "/api/v0/json/location/list":
     get:
       summary: List members
