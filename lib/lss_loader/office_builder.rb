@@ -19,7 +19,7 @@ module LssLoader
                  county: str_or_nil(row["county"]),
                  postcode: str_or_nil(row["postcode"]),
                  location: point_wkt_or_nil(row["latitude"], row["longitude"]),
-                 local_authority_id: row["local_authority_ons_code"],
+                 local_authority_id: str_or_nil(row["local_authority_ons_code"]),
                  email: str_or_nil(row["enquiries_email"]),
                  website: str_or_nil(row["public_website"])
     end
@@ -37,6 +37,7 @@ module LssLoader
                  county: str_or_nil(row["county"]),
                  postcode: str_or_nil(row["postcode"]),
                  location: point_wkt_or_nil(row["latitude"], row["longitude"]),
+                 local_authority_id: str_or_nil(row["local_authority_ons_code"]),
                  email: str_or_nil(row["enquiries_email"]),
                  volunteer_recruitment_email: str_or_nil(row["volunteer_recruitment_email"]),
                  website: str_or_nil(row["public_website"]),
