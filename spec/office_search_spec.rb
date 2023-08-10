@@ -4,9 +4,9 @@ require "rails_helper"
 require "office_search"
 
 RSpec.describe OfficeSearch do
-  it "only returns LCAs in the area when specified" do
+  it "only returns offices in the area when specified" do
     in_area_office = create_office_with_local_authority
-    create_office_with_local_authority "X0001235", "Testtown"
+    create_office_with_local_authority la_id: "X0001235", la_name: "Testtown"
     create_postcode "XX4 6LA", in_area_office.local_authority_id
 
     results, = described_class.by_location("XX4 6LA", only_in_same_local_authority: true)
@@ -14,7 +14,7 @@ RSpec.describe OfficeSearch do
     expect(results.pluck(:id)).to contain_exactly(in_area_office.id)
   end
 
-  it "returns all the LCAs in an area when it's a fuzzy match that matches on local authority names" do
+  it "returns all the offices in an area when it's a fuzzy match that matches on local authority names" do
     office = create_office_with_local_authority
     other_office = create_office name: "Another Citizens Advice", local_authority_id: office.local_authority_id
 
@@ -23,7 +23,7 @@ RSpec.describe OfficeSearch do
     expect(results.pluck(:id)).to contain_exactly(office.id, other_office.id)
   end
 
-  it "returns all LCAs which have a fuzzy match on the LCA name" do
+  it "returns all offices which have a fuzzy match on the LCA name" do
     office = create_office_with_local_authority
     other_office = create_office name: "Anotherville Citizens Advice", local_authority_id: office.local_authority_id
 
@@ -51,9 +51,19 @@ RSpec.describe OfficeSearch do
     expect(results.pluck(:id)).to contain_exactly(office_with_roles.id)
   end
 
-  def create_office_with_local_authority(la_id = "X0001234", la_name = "Testshire")
+  it "does not return members or outreaches when searching offices" do
+    member = create_office_with_local_authority office_type: :member
+    create_office office_type: :outreach, local_authority_id: member.local_authority_id
+    Postcode.create! canonical: "AB1 2CD", local_authority_id: member.local_authority_id, location: "POINT(-0.78 52.66)"
+
+    results, = described_class.by_location("AB1 2CD")
+
+    expect(results.pluck(:id)).to eq([])
+  end
+
+  def create_office_with_local_authority(la_id: "X0001234", la_name: "Testshire", **office_vals)
     local_authority_id = LocalAuthority.create!(id: la_id, name: la_name).id
-    create_office name: "#{la_name} Citizens Advice", local_authority_id:
+    create_office name: "#{la_name} Citizens Advice", local_authority_id:, **office_vals
   end
 
   def create_office(vals = {})

@@ -47,7 +47,7 @@ module OfficeSearch
   end
 
   def self.build_query_from_location(location, local_authority_id, opts)
-    q = Office.all
+    q = Office.where(office_type: :office)
     q = if opts[:only_in_same_local_authority]
           q.where(local_authority_id:)
         else
@@ -69,6 +69,7 @@ module OfficeSearch
     office_with_local_authorities = Office.left_outer_joins(:local_authority)
     q = office_with_local_authorities.where(Office.arel_table[:name].matches("%#{near}%"))
     q = q.or(office_with_local_authorities.where(LocalAuthority.arel_table[:name].matches("%#{near}%")))
+    q = q.where(office_type: :office)
     q = q.where.not(volunteer_roles: []) if opts[:only_with_vacancies]
     q.limit(10)
   end
