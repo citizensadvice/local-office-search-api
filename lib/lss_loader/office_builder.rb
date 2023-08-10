@@ -48,6 +48,12 @@ module LssLoader
     end
     # rubocop:enable Metrics/AbcSize
 
+    def advice_location_row_is_excluded?(row)
+      row["salesforce_advice_location_id"].nil? ||
+        row["excluded_from_lss_front_end"] == "TRUE" ||
+        row["excluded_from_lss_reports"] == "TRUE"
+    end
+
     def apply_opening_hours!(offices, row)
       return unless row["session_type"] != "null" && offices.key?(row["advice_location_salesforce_id"])
 
@@ -55,10 +61,14 @@ module LssLoader
     end
 
     def apply_accessibility_info!(offices, row)
+      return unless offices.key? row["salesforce_advice_location_id"]
+
       offices[row["salesforce_advice_location_id"]].accessibility_information << row["advice_location_accessibility"]
     end
 
     def apply_volunteer_roles!(offices, row)
+      return unless offices.key? row["salesforce_advice_location_id"]
+
       offices[row["salesforce_advice_location_id"]].volunteer_roles << row["advice_location_volunteer_roles_recruiting_status"]
     end
 

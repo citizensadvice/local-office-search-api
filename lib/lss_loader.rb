@@ -63,7 +63,7 @@ module LssLoader
 
     def build_office_records_from_advice_locations_csv(offices)
       @advice_locations_csv.each do |row|
-        next if row["salesforce_advice_location_id"].nil?
+        next if advice_location_row_is_excluded?(row)
 
         office = office_from_advice_location_row row
         offices[office[:id]] = office
