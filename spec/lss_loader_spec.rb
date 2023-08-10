@@ -121,6 +121,12 @@ RSpec.describe LssLoader do
     expect_basic_hierarchy
   end
 
+  it "ignores advice locations which are marked as excluded" do
+    load_from_fixtures locations_csv_filename: "excluded"
+
+    expect(Office.count).to eq 0
+  end
+
   it "makes a dangling parent ID null" do
     load_from_fixtures locations_csv_filename: "dangling_hierarchy"
 
