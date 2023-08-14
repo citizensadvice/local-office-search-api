@@ -10,71 +10,7 @@ RSpec.describe "Lookup Local Office API" do
       parameter name: :id, in: :path, type: :string
 
       response "200", "Fetches a single office" do
-        nullable_string = %i[string null]
-
-        geo_json_point = {
-          "$id": "https://geojson.org/schema/Point.json",
-          type: :object,
-          properties: {
-            type: { type: :string, enum: ["Point"] },
-            coordinates: { type: :array, items: { type: :number }, minItems: 2, maxItems: 2 }
-          },
-          required: %w[type coordinates],
-          additionalProperties: false
-        }
-
-        time_of_day = {
-          type: :string,
-          pattern: '^\d{2}:\d{2}:\d{2}$'
-        }
-
-        time_range = {
-          type: :object,
-          properties: { opens: time_of_day, closes: time_of_day },
-          required: %w[opens closes],
-          additionalProperties: false
-        }
-        nullable_time_range = [:null, time_range]
-
-        opening_hours_specification = {
-          type: :object,
-          properties: {
-            information: { type: nullable_string },
-            monday: { type: nullable_time_range },
-            tuesday: { type: nullable_time_range },
-            wednesday: { type: nullable_time_range },
-            thursday: { type: nullable_time_range },
-            friday: { type: nullable_time_range },
-            saturday: { type: nullable_time_range },
-            sunday: { type: nullable_time_range }
-          },
-          required: %w[information monday tuesday wednesday thursday friday saturday sunday],
-          additionalProperties: false
-        }
-
-        schema "$schema": "https://json-schema.org/draft/2019-09/schema",
-               "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v1/office",
-               type: :object,
-               properties: {
-                 id: { type: :string },
-                 member_id: { type: nullable_string },
-                 name: { type: :string },
-                 about_text: { type: nullable_string },
-                 accessibility_information: { type: :array, items: { type: :string } },
-                 street: { type: nullable_string },
-                 city: { type: nullable_string },
-                 county: { type: nullable_string },
-                 postcode: { type: nullable_string },
-                 location: { type: [:null, geo_json_point] },
-                 email: { type: nullable_string },
-                 website: { type: nullable_string },
-                 phone: { type: nullable_string },
-                 opening_hours: opening_hours_specification,
-                 telephone_advice_hours: opening_hours_specification
-               },
-               required: %i[id member_id name about_text accessibility_information street city postcode location email website phone
-                            opening_hours telephone_advice_hours],
-               additionalProperties: false
+        schema ApiV1Schema::OFFICE
 
         let(:parent) do
           Office.create({ id: generate_salesforce_id, office_type: :member, name: "Testtown CAB" })
@@ -96,6 +32,7 @@ RSpec.describe "Lookup Local Office API" do
             email: "contact@wigancitizensadvice.org.uk",
             website: "https://www.wigancitizensadvice.org.uk/",
             phone: "01234 567890",
+            allows_drop_ins: true,
             opening_hours_information: "Sessions available between the following times",
             opening_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(1), Tod::TimeOfDay.new(1, 30)),
             opening_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(2), Tod::TimeOfDay.new(2, 30)),
@@ -119,8 +56,8 @@ RSpec.describe "Lookup Local Office API" do
         run_test! do |response|
           expect(JSON.parse(response.body)).to eq({
             id:,
-            member_id: parent.id,
             name: "Testtown Citizens Advice",
+            type: "office",
             about_text: "Open for drop-ins",
             accessibility_information: ["Wheelchair accessible"],
             street: "62 West Wallaby Street",
@@ -131,6 +68,7 @@ RSpec.describe "Lookup Local Office API" do
             email: "contact@wigancitizensadvice.org.uk",
             website: "https://www.wigancitizensadvice.org.uk/",
             phone: "01234 567890",
+            allows_drop_ins: true,
             opening_hours: {
               information: "Sessions available between the following times",
               monday: { opens: "01:00:00", closes: "01:30:00" },
@@ -150,7 +88,14 @@ RSpec.describe "Lookup Local Office API" do
               friday: { opens: "12:00:00", closes: "12:30:00" },
               saturday: { opens: "13:00:00", closes: "13:30:00" },
               sunday: { opens: "14:00:00", closes: "14:30:00" }
-            }
+            },
+            relations: [
+              {
+                id: parent.id,
+                type: "member",
+                name: parent.name
+              }
+            ]
           }.as_json)
         end
         # rubocop:enable RSpec/ExampleLength
