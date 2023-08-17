@@ -54,6 +54,14 @@ class Office < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
+  def as_search_result_json
+    {
+      id:,
+      name:,
+      contact_methods:
+    }
+  end
+
   def as_relation_json
     {
       id:,
@@ -77,5 +85,13 @@ class Office < ApplicationRecord
     return nil if opening_hours.nil?
 
     { opens: opening_hours.beginning.strftime("%H:%M:%S"), closes: opening_hours.ending.strftime("%H:%M:%S") }
+  end
+
+  def contact_methods
+    methods = []
+    methods << "drop_in" if allows_drop_ins
+    methods << "phone" unless phone.nil?
+    methods << "email" unless email.nil?
+    methods
   end
 end

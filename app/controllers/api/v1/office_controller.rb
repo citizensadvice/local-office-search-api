@@ -38,7 +38,7 @@ module Api
       rescue OfficeSearch::OutOfAreaError => e
         { match_type: "out_of_area_#{e.country}", results: [] }
       else
-        { match_type: normalised_location.nil? ? "fuzzy" : "exact", results: offices.map { |office| { id: office.id, name: office.name } } }
+        { match_type: normalised_location.nil? ? "fuzzy" : "exact", results: offices.map(&:as_search_result_json) }
       end
 
       def fetch_and_render_office
