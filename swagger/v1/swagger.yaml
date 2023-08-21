@@ -451,9 +451,18 @@ paths:
                           type: string
                         name:
                           type: string
+                        contact_methods:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - phone
+                            - email
+                            - drop_in
                       required:
                       - id
                       - name
+                      - contact_methods
                       additionalProperties: false
                 required:
                 - match_type
