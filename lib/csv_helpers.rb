@@ -2,9 +2,9 @@
 
 module CsvHelpers
   def tod_from_val(val)
-    match = /^(?<h>\d{2}):(?<m>\d{2}):(?<s>\d{2})$/.match(val)
+    match = /^(?<h>\d{2}):(?<m>\d{2})$/.match(val)
 
-    Tod::TimeOfDay.new match[:h].to_i, match[:m].to_i, match[:s].to_i
+    Tod::TimeOfDay.new match[:h].to_i, match[:m].to_i
   end
 
   def str_or_nil(val)

@@ -109,6 +109,12 @@ RSpec.describe LssLoader do
     expect_single_record id: "0014K000009EMMbQAO", name: "Citizens Advice Bristol", office_type: "office"
   end
 
+  it "ignores opening hours which do not specify any opening hour types" do
+    load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "missing_type"
+
+    expect_single_record id: "0014K000009EMMbQAO", name: "Citizens Advice Bristol", office_type: "office"
+  end
+
   it "sets up parent/child hierarchy correctly" do
     load_from_fixtures locations_csv_filename: "basic_hierarchy"
 
