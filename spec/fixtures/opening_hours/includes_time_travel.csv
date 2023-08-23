@@ -1,2 +1,2 @@
-advice_location_salesforce_id,session_day,session_start_time,session_end_time,session_type
-0014K000009EMMbQAO,Monday,09:00:00,03:00:00,Local office opening hours
+advice_location_salesforce_id,session_type,session_day,start_time_value,end_time_value,lastmodifieddate,transformation_date
+0014K000009EMMbQAO,Local office opening hours,Monday,09:00,03:00,,

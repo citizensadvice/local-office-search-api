@@ -55,7 +55,7 @@ module LssLoader
     end
 
     def apply_opening_hours!(offices, row)
-      return unless row["session_type"] != "null" && offices.key?(row["advice_location_salesforce_id"])
+      return unless str_or_nil(row["session_type"]).present? && offices.key?(row["advice_location_salesforce_id"])
 
       offices[row["advice_location_salesforce_id"]].write_attribute column_from_row(row), shift_from_row(row)
     end
@@ -69,7 +69,7 @@ module LssLoader
     def apply_volunteer_roles!(offices, row)
       return unless offices.key? row["salesforce_advice_location_id"]
 
-      offices[row["salesforce_advice_location_id"]].volunteer_roles << row["advice_location_volunteer_roles_recruiting_status"]
+      offices[row["salesforce_advice_location_id"]].volunteer_roles << row["volunteer_roles"]
     end
 
     def column_from_row(row)
@@ -84,8 +84,8 @@ module LssLoader
     end
 
     def shift_from_row(row)
-      start_time = str_or_nil(row["session_start_time"])
-      end_time = str_or_nil(row["session_end_time"])
+      start_time = str_or_nil(row["start_time_value"])
+      end_time = str_or_nil(row["end_time_value"])
       return nil if start_time.nil? || end_time.nil?
 
       beginning = tod_from_val(start_time)
