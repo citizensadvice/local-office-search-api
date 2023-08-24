@@ -50,8 +50,8 @@ module LssLoader
 
     def advice_location_row_is_excluded?(row)
       row["salesforce_advice_location_id"].nil? ||
-        row["excluded_from_lss_front_end"] == "TRUE" ||
-        row["excluded_from_lss_reports"] == "TRUE"
+        bool_from_val(row["excluded_from_lss_front_end"]) ||
+        bool_from_val(row["excluded_from_lss_reports"])
     end
 
     def apply_opening_hours!(offices, row)
