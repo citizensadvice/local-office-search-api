@@ -14,7 +14,9 @@ module CsvHelpers
   end
 
   def bool_from_val(val)
-    val == "TRUE"
+    return false if val.blank?
+
+    ActiveRecord::Type::Boolean.new.cast val.downcase
   end
 
   def point_wkt_or_nil(latitude, longitude)
