@@ -20,7 +20,7 @@ gem "aws-sdk-s3"
 gem "tod"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 6.3"
+gem "puma", "~> 6.4"
 
 # Monitoring
 gem "ddtrace", "~> 1.14.0"
