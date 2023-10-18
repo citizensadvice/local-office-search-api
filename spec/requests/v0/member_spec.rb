@@ -313,6 +313,17 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
           })
         end
         # rubocop:enable RSpec/ExampleLength
+
+        context "when the location is null" do
+          before do
+            member.update! location: nil
+          end
+
+          run_test! do |response|
+            body = JSON.parse(response.body, symbolize_names: true)
+            expect(body[:address][:latLong]).to eq [0.0, 0.0]
+          end
+        end
       end
 
       response "404", "when no member with that ID is found" do
