@@ -88,7 +88,7 @@ module Api
           town: office.city,
           county: office.county,
           postcode: office.postcode,
-          latLong: [office.location.y, office.location.x]
+          latLong: office.location.nil? ? [0.0, 0.0] : [office.location.y, office.location.x]
         }
         if include_local_authority
           block.update({
