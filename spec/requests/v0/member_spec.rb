@@ -324,6 +324,24 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
             expect(body[:address][:latLong]).to eq [0.0, 0.0]
           end
         end
+
+        context "when the outlet is associated using salesforce IDs, not membership number" do
+          let(:outlet) do
+            Office.new(id: generate_salesforce_id,
+                       parent: office,
+                       membership_number: "66/6666",
+                       name: "Felpersham hospital",
+                       street: "North Beck Street",
+                       city: "Felpersham",
+                       office_type: :outreach,
+                       local_authority:)
+          end
+
+          run_test! do |response|
+            body = JSON.parse(response.body, symbolize_names: true)
+            expect(body[:services][:outlets].count).to eq 1
+          end
+        end
       end
 
       response "404", "when no member with that ID is found" do
