@@ -8,9 +8,9 @@ module Api
 
       # rubocop:disable Metrics/AbcSize
       def member_as_v0_json(member)
-        offices = Office.where(parent_id: member.id, office_type: :office)
+        offices = Office.where(membership_number: params[:id], office_type: :office)
         offices_with_vacancies = offices.reject { |office| office.volunteer_roles.empty? }
-        outreaches = Office.where(parent_id: offices.collect(&:id), office_type: :outreach)
+        outreaches = Office.where(membership_number: params[:id], office_type: :outreach)
 
         {
           address: address_block(member, include_local_authority: true),
