@@ -8,26 +8,8 @@ module Api
                                 allows_drop_ins]).tap do |json|
           json[:type] = office.office_type
           json[:relations] = build_relations_json(office)
-          json[:opening_hours] = {
-            information: office.opening_hours_information,
-            monday: opening_hours_as_json(office.opening_hours_monday),
-            tuesday: opening_hours_as_json(office.opening_hours_tuesday),
-            wednesday: opening_hours_as_json(office.opening_hours_wednesday),
-            thursday: opening_hours_as_json(office.opening_hours_thursday),
-            friday: opening_hours_as_json(office.opening_hours_friday),
-            saturday: opening_hours_as_json(office.opening_hours_saturday),
-            sunday: opening_hours_as_json(office.opening_hours_sunday)
-          }
-          json[:telephone_advice_hours] = {
-            information: office.telephone_advice_hours_information,
-            monday: opening_hours_as_json(office.telephone_advice_hours_monday),
-            tuesday: opening_hours_as_json(office.telephone_advice_hours_tuesday),
-            wednesday: opening_hours_as_json(office.telephone_advice_hours_wednesday),
-            thursday: opening_hours_as_json(office.telephone_advice_hours_thursday),
-            friday: opening_hours_as_json(office.telephone_advice_hours_friday),
-            saturday: opening_hours_as_json(office.telephone_advice_hours_saturday),
-            sunday: opening_hours_as_json(office.telephone_advice_hours_sunday)
-          }
+          json[:opening_hours] = opening_times_as_json(office.opening_hours_information, office.opening_hours)
+          json[:telephone_advice_hours] = opening_times_as_json(office.telephone_advice_hours_information, office.telephone_advice_hours)
         end
       end
 
@@ -58,10 +40,14 @@ module Api
         relations
       end
 
-      def opening_hours_as_json(opening_hours)
-        return [] if opening_hours.nil?
-
-        [{ opens: opening_hours.beginning.strftime("%H:%M:%S"), closes: opening_hours.ending.strftime("%H:%M:%S") }]
+      def opening_times_as_json(information, opening_hours)
+        opening_times = { information: }
+        opening_hours.each do |day, ranges|
+          opening_times[day] = ranges.map do |range|
+            { opens: range.beginning.strftime("%H:%M:%S"), closes: range.ending.strftime("%H:%M:%S") }
+          end
+        end
+        opening_times
       end
 
       def contact_methods(office)

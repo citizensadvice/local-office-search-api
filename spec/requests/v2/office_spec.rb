@@ -34,22 +34,41 @@ RSpec.describe "Lookup Local Office API" do
             phone: "01234 567890",
             allows_drop_ins: true,
             opening_hours_information: "Sessions available between the following times",
-            opening_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(1), Tod::TimeOfDay.new(1, 30)),
-            opening_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(2), Tod::TimeOfDay.new(2, 30)),
-            opening_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(3), Tod::TimeOfDay.new(3, 30)),
-            opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(4), Tod::TimeOfDay.new(4, 30)),
-            opening_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(5), Tod::TimeOfDay.new(5, 30)),
-            opening_hours_saturday: Tod::Shift.new(Tod::TimeOfDay.new(6), Tod::TimeOfDay.new(6, 30)),
-            opening_hours_sunday: Tod::Shift.new(Tod::TimeOfDay.new(7), Tod::TimeOfDay.new(7, 30)),
-            telephone_advice_hours_information: "Please phone us",
-            telephone_advice_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(8), Tod::TimeOfDay.new(8, 30)),
-            telephone_advice_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(9), Tod::TimeOfDay.new(9, 30)),
-            telephone_advice_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(10, 30)),
-            telephone_advice_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(11), Tod::TimeOfDay.new(11, 30)),
-            telephone_advice_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(12), Tod::TimeOfDay.new(12, 30)),
-            telephone_advice_hours_saturday: Tod::Shift.new(Tod::TimeOfDay.new(13), Tod::TimeOfDay.new(13, 30)),
-            telephone_advice_hours_sunday: Tod::Shift.new(Tod::TimeOfDay.new(14), Tod::TimeOfDay.new(14, 30))
+            telephone_advice_hours_information: "Please phone us"
           }).id
+        end
+
+        before do
+          OpeningTimes.create(office_id: id, day_of_week: "monday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(1), Tod::TimeOfDay.new(1, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "monday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(15), Tod::TimeOfDay.new(15, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "tuesday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(2), Tod::TimeOfDay.new(2, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "wednesday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(3), Tod::TimeOfDay.new(3, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "thursday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(4), Tod::TimeOfDay.new(4, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "friday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(5), Tod::TimeOfDay.new(5, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "saturday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(6), Tod::TimeOfDay.new(6, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "sunday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(7), Tod::TimeOfDay.new(7, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "monday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(8), Tod::TimeOfDay.new(8, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "tuesday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(9), Tod::TimeOfDay.new(9, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "wednesday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(10, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "thursday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(11), Tod::TimeOfDay.new(11, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "friday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(12), Tod::TimeOfDay.new(12, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "saturday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(13), Tod::TimeOfDay.new(13, 30)))
+          OpeningTimes.create(office_id: id, day_of_week: "sunday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(14), Tod::TimeOfDay.new(14, 30)))
         end
 
         # rubocop:disable RSpec/ExampleLength
@@ -71,7 +90,7 @@ RSpec.describe "Lookup Local Office API" do
             allows_drop_ins: true,
             opening_hours: {
               information: "Sessions available between the following times",
-              monday: [{ opens: "01:00:00", closes: "01:30:00" }],
+              monday: [{ opens: "01:00:00", closes: "01:30:00" }, { opens: "15:00:00", closes: "15:30:00" }],
               tuesday: [{ opens: "02:00:00", closes: "02:30:00" }],
               wednesday: [{ opens: "03:00:00", closes: "03:30:00" }],
               thursday: [{ opens: "04:00:00", closes: "04:30:00" }],
