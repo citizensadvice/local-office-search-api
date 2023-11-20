@@ -99,6 +99,7 @@ module Api
         block
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       def opening_time_block(office, time_type)
         days = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
         case time_type
@@ -109,23 +110,20 @@ module Api
           opening_times = office.telephone_advice_hours
           notes = office.telephone_advice_hours_information
         end
-        open_days = days.reject { |day| opening_times[day.downcase.to_sym].nil? }
+        open_days = days.reject { |day| opening_times[day.downcase.to_sym].empty? }
         open_days.map do |day|
           opening_time_range = opening_times[day.downcase.to_sym]
-          if opening_time_range.empty?
-            nil
-          else
-            {
-              day:,
-              start1: opening_time_range[0].beginning.strftime("%H.%M"),
-              end1: opening_time_range[0].ending.strftime("%H.%M"),
-              start2: opening_time_range[1]&.beginning&.strftime("%H.%M"),
-              end2: opening_time_range[1]&.ending&.strftime("%H.%M"),
-              notes:
-            }
-          end
+          {
+            day:,
+            start1: opening_time_range[0].beginning.strftime("%H.%M"),
+            end1: opening_time_range[0].ending.strftime("%H.%M"),
+            start2: opening_time_range[1]&.beginning&.strftime("%H.%M"),
+            end2: opening_time_range[1]&.ending&.strftime("%H.%M"),
+            notes:
+          }
         end
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
       def contact_block(value)
         return [] if value.nil?

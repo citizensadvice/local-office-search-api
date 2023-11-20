@@ -3,6 +3,7 @@
 module Api
   module V1
     module Serialisers
+      # rubocop:disable Metrics/AbcSize
       def office_as_json(office)
         office.as_json(only: %i[id name about_text accessibility_information street city county postcode location email website phone
                                 allows_drop_ins]).tap do |json|
@@ -30,6 +31,7 @@ module Api
           }
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       def office_as_search_result_json(office)
         {
