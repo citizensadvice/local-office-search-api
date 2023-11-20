@@ -8,12 +8,16 @@ Accepted
 
 ## Context
 
-The issue motivating this decision, and any context that influences or constrains the decision.
+The previous data model assumed that each office would only have one set of opening times per day,
+but this is not the case (Leighton Linslade is an example of one that has a lunch break where they
+are not open). 
 
 ## Decision
 
-The change that we're proposing or have agreed to implement.
+The major version of the API will be bumped to v2, and then the v1 API shortly discontinued once
+public-website has been updated to use the v2 API, as this would require a breaking change to the
+API to turn the field into a list.
 
 ## Consequences
 
-What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
+This decision makes it easier to update the API interface to support multiple open/close times.
