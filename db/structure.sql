@@ -94,6 +94,21 @@ COMMENT ON EXTENSION postgis_topology IS 'PostGIS topology spatial types and fun
 
 
 --
+-- Name: day_of_week; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.day_of_week AS ENUM (
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday'
+);
+
+
+--
 -- Name: office_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -101,6 +116,16 @@ CREATE TYPE public.office_type AS ENUM (
     'member',
     'office',
     'outreach'
+);
+
+
+--
+-- Name: opening_time_for_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.opening_time_for_type AS ENUM (
+    'office',
+    'telephone'
 );
 
 
@@ -197,6 +222,38 @@ CREATE TABLE public.offices (
 
 
 --
+-- Name: opening_times; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.opening_times (
+    id bigint NOT NULL,
+    office_id character(18) NOT NULL,
+    opening_time_for public.opening_time_for_type NOT NULL,
+    day_of_week public.day_of_week NOT NULL,
+    range public.timerange NOT NULL
+);
+
+
+--
+-- Name: opening_times_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.opening_times_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: opening_times_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.opening_times_id_seq OWNED BY public.opening_times.id;
+
+
+--
 -- Name: postcodes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -238,6 +295,13 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: opening_times id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opening_times ALTER COLUMN id SET DEFAULT nextval('public.opening_times_id_seq'::regclass);
+
+
+--
 -- Name: postcodes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -266,6 +330,14 @@ ALTER TABLE ONLY public.local_authorities
 
 ALTER TABLE ONLY public.offices
     ADD CONSTRAINT offices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: opening_times opening_times_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opening_times
+    ADD CONSTRAINT opening_times_pkey PRIMARY KEY (id);
 
 
 --
@@ -313,6 +385,13 @@ CREATE INDEX index_offices_on_parent_id ON public.offices USING btree (parent_id
 
 
 --
+-- Name: index_opening_times_on_office_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opening_times_on_office_id ON public.opening_times USING btree (office_id);
+
+
+--
 -- Name: index_postcodes_on_local_authority_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -335,6 +414,14 @@ ALTER TABLE ONLY public.offices
 
 
 --
+-- Name: opening_times fk_rails_67a7efc4d6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opening_times
+    ADD CONSTRAINT fk_rails_67a7efc4d6 FOREIGN KEY (office_id) REFERENCES public.offices(id);
+
+
+--
 -- Name: postcodes fk_rails_7ab3384eab; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -354,7 +441,7 @@ ALTER TABLE ONLY public.offices
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public, topology;
+SET search_path TO "$user", public, topology, tiger;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20230531135320'),
@@ -364,6 +451,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230705132647'),
 ('20230731104744'),
 ('20230803141746'),
-('20230803145002');
+('20230803145002'),
+('20231120111349');
 
 

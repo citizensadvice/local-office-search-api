@@ -41,7 +41,7 @@ module Api
           isOutlet: office.office_type == "outreach",
           features: office.accessibility_information.map { |info| accessibility_to_human_text(info) },
           notes: office.about_text,
-          openingTimes: opening_time_block(office, "opening"),
+          openingTimes: opening_time_block(office, :office),
           publicContacts: {
             email: contact_block(office.email),
             fax: [],
@@ -49,7 +49,7 @@ module Api
             telephone: contact_block(office.phone),
             website: contact_block(office.website)
           },
-          telephoneTimes: opening_time_block(office, "telephone_advice")
+          telephoneTimes: opening_time_block(office, :telephone)
         }
       end
       # rubocop:enable Metrics/AbcSize
@@ -101,19 +101,27 @@ module Api
 
       def opening_time_block(office, time_type)
         days = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
-        open_days = days.reject { |day| office["#{time_type}_hours_#{day.downcase}"].nil? }
+        case time_type
+        when :office
+          opening_times = office.opening_hours
+          notes = office.opening_hours_information
+        when :telephone
+          opening_times = office.telephone_advice_hours
+          notes = office.telephone_advice_hours_information
+        end
+        open_days = days.reject { |day| opening_times[day.downcase.to_sym].nil? }
         open_days.map do |day|
-          opening_time_range = office["#{time_type}_hours_#{day.downcase}"]
-          if opening_time_range.nil?
+          opening_time_range = opening_times[day.downcase.to_sym]
+          if opening_time_range.empty?
             nil
           else
             {
               day:,
-              start1: opening_time_range.beginning.strftime("%H.%M"),
-              end1: opening_time_range.ending.strftime("%H.%M"),
-              start2: nil,
-              end2: nil,
-              notes: office["#{time_type}_hours_information"]
+              start1: opening_time_range[0].beginning.strftime("%H.%M"),
+              end1: opening_time_range[0].ending.strftime("%H.%M"),
+              start2: opening_time_range[1]&.beginning&.strftime("%H.%M"),
+              end2: opening_time_range[1]&.ending&.strftime("%H.%M"),
+              notes:
             }
           end
         end

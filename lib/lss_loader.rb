@@ -4,6 +4,7 @@ require "csv"
 require "csv_helpers"
 require "loader_helpers"
 require "lss_loader/office_builder"
+require "lss_loader/opening_time_builder"
 require "lss_loader/validators"
 
 module LssLoader
@@ -11,6 +12,7 @@ module LssLoader
     include CsvHelpers
     include LoaderHelpers
     include OfficeBuilder
+    include OpeningTimeBuilder
     include Validators
 
     def initialize(members_csv:, advice_locations_csv:, opening_hours_csv:, volunteer_roles_csv:, accessibility_info_csv:)
@@ -27,7 +29,11 @@ module LssLoader
         defer_integrity_checks_until_commit!
         validate_csv_headers!
         Office.delete_all
-        build_office_records.map(&:save!)
+        OpeningTimes.delete_all
+        offices = build_office_records
+        opening_times = build_opening_times(offices)
+        offices.values.map(&:save!)
+        opening_times.map(&:save!)
       end
     end
 
@@ -45,13 +51,16 @@ module LssLoader
       offices = {}
       build_office_records_from_members_csv(offices)
       build_office_records_from_advice_locations_csv(offices)
-      apply_opening_hours_from_csv(offices)
       apply_accessibility_info_from_csv(offices)
       apply_volunteer_roles_from_csv(offices)
 
       nullify_dangling_parent_ids! offices
       nullify_dangling_local_authority_ids! offices
-      offices.values
+      offices
+    end
+
+    def build_opening_times(offices)
+      @opening_hours_csv.map { |row| build_opening_time_from_row(row, offices) }.compact
     end
 
     def build_office_records_from_members_csv(offices)
