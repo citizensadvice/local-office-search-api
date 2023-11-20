@@ -195,21 +195,7 @@ CREATE TABLE public.offices (
     website text,
     phone text,
     opening_hours_information text,
-    opening_hours_monday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    opening_hours_tuesday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    opening_hours_wednesday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    opening_hours_thursday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    opening_hours_friday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    opening_hours_saturday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    opening_hours_sunday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
     telephone_advice_hours_information text,
-    telephone_advice_hours_monday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    telephone_advice_hours_tuesday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    telephone_advice_hours_wednesday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    telephone_advice_hours_thursday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    telephone_advice_hours_friday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    telephone_advice_hours_saturday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
-    telephone_advice_hours_sunday public.timerange DEFAULT 'empty'::public.timerange NOT NULL,
     membership_number character varying,
     company_number character varying,
     charity_number character varying,
@@ -441,7 +427,7 @@ ALTER TABLE ONLY public.offices
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public, topology, tiger;
+SET search_path TO "$user", public, topology;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20230531135320'),
@@ -452,6 +438,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230731104744'),
 ('20230803141746'),
 ('20230803145002'),
-('20231120111349');
+('20231120111349'),
+('20231120143230');
 
 

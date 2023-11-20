@@ -16,11 +16,6 @@ Rails.application.routes.draw do
       get "/json/vacancy/list", to: "vacancy#list"
     end
 
-    namespace :v1 do
-      get "/offices/", to: "office#search"
-      get "/offices/:id", to: "office#show", as: :office
-    end
-
     namespace :v2 do
       get "/offices/", to: "office#search"
       get "/offices/:id", to: "office#show", as: :office

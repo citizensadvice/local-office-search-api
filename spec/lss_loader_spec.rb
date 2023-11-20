@@ -79,29 +79,6 @@ RSpec.describe LssLoader do
   end
 
   # rubocop:disable RSpec/ExampleLength
-  it "correctly assigns telephone and opening hours" do
-    nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
-    load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "minimal"
-
-    expect_single_record id: "0014K000009EMMbQAO",
-                         name: "Citizens Advice Bristol",
-                         office_type: "office",
-                         opening_hours_monday: nil,
-                         opening_hours_tuesday: nil,
-                         opening_hours_wednesday: nil,
-                         opening_hours_thursday: nil,
-                         opening_hours_friday: nil,
-                         opening_hours_saturday: nine_to_five,
-                         opening_hours_sunday: nine_to_five,
-                         telephone_advice_hours_monday: nine_to_five,
-                         telephone_advice_hours_tuesday: nine_to_five,
-                         telephone_advice_hours_wednesday: nine_to_five,
-                         telephone_advice_hours_thursday: nine_to_five,
-                         telephone_advice_hours_friday: nine_to_five,
-                         telephone_advice_hours_saturday: nil,
-                         telephone_advice_hours_sunday: nil
-  end
-
   it "correctly assigns telephone hours" do
     nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
     load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "minimal"
@@ -278,21 +255,7 @@ RSpec.describe LssLoader do
       phone: nil,
       opening_hours_information: nil,
       allows_drop_ins: false,
-      opening_hours_monday: nil,
-      opening_hours_tuesday: nil,
-      opening_hours_wednesday: nil,
-      opening_hours_thursday: nil,
-      opening_hours_friday: nil,
-      opening_hours_saturday: nil,
-      opening_hours_sunday: nil,
       telephone_advice_hours_information: nil,
-      telephone_advice_hours_monday: nil,
-      telephone_advice_hours_tuesday: nil,
-      telephone_advice_hours_wednesday: nil,
-      telephone_advice_hours_thursday: nil,
-      telephone_advice_hours_friday: nil,
-      telephone_advice_hours_saturday: nil,
-      telephone_advice_hours_sunday: nil,
       volunteer_recruitment_email: nil,
       volunteer_roles: []
     }.update(vals)
