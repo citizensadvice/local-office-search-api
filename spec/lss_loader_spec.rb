@@ -101,6 +101,51 @@ RSpec.describe LssLoader do
                          telephone_advice_hours_saturday: nil,
                          telephone_advice_hours_sunday: nil
   end
+
+  it "correctly assigns telephone hours" do
+    nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
+    load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "minimal"
+
+    expect(Office.first.telephone_advice_hours).to eq({
+      monday: [nine_to_five],
+      tuesday: [nine_to_five],
+      wednesday: [nine_to_five],
+      thursday: [nine_to_five],
+      friday: [nine_to_five],
+      saturday: [],
+      sunday: []
+    })
+  end
+
+  it "correctly assigns when there are multiple slots in a day" do
+    load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "multiple_slots"
+
+    expect(Office.first.opening_hours).to eq({
+      monday: [Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(11, 30)),
+               Tod::Shift.new(Tod::TimeOfDay.new(14, 0), Tod::TimeOfDay.new(16, 30))],
+      tuesday: [],
+      wednesday: [],
+      thursday: [],
+      friday: [],
+      saturday: [],
+      sunday: []
+    })
+  end
+
+  it "correctly assigns opening hours" do
+    nine_to_five = Tod::Shift.new(Tod::TimeOfDay.new(9, 0), Tod::TimeOfDay.new(17, 0))
+    load_from_fixtures locations_csv_filename: "minimal", opening_hours_csv_filename: "minimal"
+
+    expect(Office.first.opening_hours).to eq({
+      monday: [],
+      tuesday: [],
+      wednesday: [],
+      thursday: [],
+      friday: [],
+      saturday: [nine_to_five],
+      sunday: [nine_to_five]
+    })
+  end
   # rubocop:enable RSpec/ExampleLength
 
   it "ignores opening hours where it closes before it opens" do

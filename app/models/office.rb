@@ -22,76 +22,29 @@ class Office < ApplicationRecord
 
   belongs_to :local_authority, optional: true
 
-  # rubocop:disable Metrics/AbcSize
-  def as_json(options = nil)
-    options ||= {}
-    options[:only] =
-      %i[id name about_text accessibility_information street city county postcode location email website phone allows_drop_ins]
-    super(options).tap do |json|
-      json[:type] = office_type
-      json[:relations] = build_relations_json
-      json[:opening_hours] = {
-        information: opening_hours_information,
-        monday: opening_hours_as_json(opening_hours_monday),
-        tuesday: opening_hours_as_json(opening_hours_tuesday),
-        wednesday: opening_hours_as_json(opening_hours_wednesday),
-        thursday: opening_hours_as_json(opening_hours_thursday),
-        friday: opening_hours_as_json(opening_hours_friday),
-        saturday: opening_hours_as_json(opening_hours_saturday),
-        sunday: opening_hours_as_json(opening_hours_sunday)
-      }
-      json[:telephone_advice_hours] = {
-        information: telephone_advice_hours_information,
-        monday: opening_hours_as_json(telephone_advice_hours_monday),
-        tuesday: opening_hours_as_json(telephone_advice_hours_tuesday),
-        wednesday: opening_hours_as_json(telephone_advice_hours_wednesday),
-        thursday: opening_hours_as_json(telephone_advice_hours_thursday),
-        friday: opening_hours_as_json(telephone_advice_hours_friday),
-        saturday: opening_hours_as_json(telephone_advice_hours_saturday),
-        sunday: opening_hours_as_json(telephone_advice_hours_sunday)
-      }
-    end
-  end
-  # rubocop:enable Metrics/AbcSize
+  has_many :opening_times, class_name: "OpeningTimes", dependent: :destroy
 
-  def as_search_result_json
-    {
-      id:,
-      name:,
-      contact_methods:
-    }
+  def opening_hours
+    build_opening_times("office")
   end
 
-  def as_relation_json
-    {
-      id:,
-      name:,
-      type: office_type
-    }
+  def telephone_advice_hours
+    build_opening_times("telephone")
   end
 
   private
 
-  def build_relations_json
-    relations = []
-    relations << parent.as_relation_json unless parent.nil?
-    children.each do |child|
-      relations << child.as_relation_json
+  # rubocop:disable Metrics/AbcSize
+  def build_opening_times(opening_times_for)
+    office_opening_times = opening_times.where(opening_time_for: opening_times_for).to_a
+
+    opening_hours = {}
+    %w[monday tuesday wednesday thursday friday saturday sunday].each do |day_of_week|
+      todays_opening_times = office_opening_times.select { |opening_time| opening_time.day_of_week == day_of_week }
+      opening_hours[day_of_week.to_sym] = todays_opening_times.map(&:range)
+      opening_hours[day_of_week.to_sym].sort! { |a, b| a.beginning <=> b.beginning }
     end
-    relations
+    opening_hours
   end
-
-  def opening_hours_as_json(opening_hours)
-    return nil if opening_hours.nil?
-
-    { opens: opening_hours.beginning.strftime("%H:%M:%S"), closes: opening_hours.ending.strftime("%H:%M:%S") }
-  end
-
-  def contact_methods
-    methods = []
-    methods << "drop_in" if allows_drop_ins
-    methods << "phone" unless phone.nil?
-    methods << "email" unless email.nil?
-    methods
-  end
+  # rubocop:enable Metrics/AbcSize
 end

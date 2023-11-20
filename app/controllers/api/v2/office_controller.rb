@@ -3,7 +3,7 @@
 require "office_search"
 
 module Api
-  module V1
+  module V2
     class OfficeController < ::ApplicationController
       include Serialisers
 
@@ -56,16 +56,16 @@ module Api
         if office.nil?
           render status: :not_found, json: not_found_json
         else
-          redirect_to api_v1_office_url(office)
+          redirect_to api_v2_office_url(office)
         end
       end
 
       def not_found_json
-        { type: "https://local-office-search.citizensadvice.org.uk/schemas/v1/errors#not-found", status: 404, title: "Office not found" }
+        { type: "https://local-office-search.citizensadvice.org.uk/schemas/v2/errors#not-found", status: 404, title: "Office not found" }
       end
 
       def missing_search_param_json
-        { type: "https://local-office-search.citizensadvice.org.uk/schemas/v1/errors#missing-param", status: 400, title: "Required parameter (q) missing" }
+        { type: "https://local-office-search.citizensadvice.org.uk/schemas/v2/errors#missing-param", status: 400, title: "Required parameter (q) missing" }
       end
     end
   end

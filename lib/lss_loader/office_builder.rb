@@ -54,12 +54,6 @@ module LssLoader
         bool_from_val(row["excluded_from_lss_reports"])
     end
 
-    def apply_opening_hours!(offices, row)
-      return unless str_or_nil(row["session_type"]).present? && offices.key?(row["advice_location_salesforce_id"])
-
-      offices[row["advice_location_salesforce_id"]].write_attribute column_from_row(row), shift_from_row(row)
-    end
-
     def apply_accessibility_info!(offices, row)
       return unless offices.key? row["salesforce_advice_location_id"]
 
@@ -70,27 +64,6 @@ module LssLoader
       return unless offices.key? row["salesforce_advice_location_id"]
 
       offices[row["salesforce_advice_location_id"]].volunteer_roles << row["volunteer_roles"]
-    end
-
-    def column_from_row(row)
-      case row["session_type"]
-      when "Local office opening hours"
-        "opening_hours_#{row['session_day'].downcase}".to_sym
-      when "Telephone advice hours"
-        "telephone_advice_hours_#{row['session_day'].downcase}".to_sym
-      else
-        raise LssLoadError, "Unrecognised opening hour type #{row['session_type']}"
-      end
-    end
-
-    def shift_from_row(row)
-      start_time = str_or_nil(row["start_time_value"])
-      end_time = str_or_nil(row["end_time_value"])
-      return nil if start_time.nil? || end_time.nil?
-
-      beginning = tod_from_val(start_time)
-      ending = tod_from_val(end_time)
-      Tod::Shift.new(beginning, ending) unless beginning > ending
     end
 
     def record_type_id_to_office_type(record_type_id)

@@ -53,16 +53,6 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                                                  "Internet advice access"],
                      volunteer_roles: ["admin_and_customer_service"],
                      opening_hours_information: "Self help computers 9am to 4pm",
-                     opening_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)),
-                     opening_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)),
-                     opening_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(13, 30), Tod::TimeOfDay.new(16)),
-                     opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                     opening_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                     telephone_advice_hours_monday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                     telephone_advice_hours_tuesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                     telephone_advice_hours_wednesday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                     telephone_advice_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
-                     telephone_advice_hours_friday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)),
                      email: "felphersham@example.com",
                      website: "http://www.felpershamcab.org.uk",
                      phone: "01632 555 555",
@@ -94,6 +84,29 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
           member.save
           office.save
           outlet.save
+
+          OpeningTimes.create(office_id: office.id, day_of_week: "monday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "tuesday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "wednesday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(13, 30), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "thursday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "friday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "monday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "tuesday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "wednesday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "thursday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: office.id, day_of_week: "friday", opening_time_for: "telephone",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(16)))
+          OpeningTimes.create(office_id: outlet.id, day_of_week: "thursday", opening_time_for: "office",
+                              range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(14)))
         end
 
         # rubocop:disable RSpec/ExampleLength
