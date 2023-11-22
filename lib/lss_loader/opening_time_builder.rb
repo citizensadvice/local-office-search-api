@@ -9,8 +9,6 @@ module LssLoader
 
       range = shift_from_row(row)
 
-      offices[row["advice_location_salesforce_id"]].write_attribute opening_time_column_from_row(row), range
-
       return if range.nil?
 
       OpeningTimes.new(office_id: row["advice_location_salesforce_id"],
@@ -25,17 +23,6 @@ module LssLoader
         "office"
       when "Telephone advice hours"
         "telephone"
-      else
-        raise LssLoadError, "Unrecognised opening hour type #{row['session_type']}"
-      end
-    end
-
-    def opening_time_column_from_row(row)
-      case row["session_type"]
-      when "Local office opening hours"
-        "opening_hours_#{row['session_day'].downcase}".to_sym
-      when "Telephone advice hours"
-        "telephone_advice_hours_#{row['session_day'].downcase}".to_sym
       else
         raise LssLoadError, "Unrecognised opening hour type #{row['session_type']}"
       end

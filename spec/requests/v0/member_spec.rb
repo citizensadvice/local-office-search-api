@@ -72,7 +72,6 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                      office_type: :outreach,
                      about_text: "This location does not exist.",
                      accessibility_information: ["Wheelchair accessible"],
-                     opening_hours_thursday: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(14)),
                      local_authority:)
         end
 

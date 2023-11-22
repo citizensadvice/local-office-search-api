@@ -28,8 +28,8 @@ module LssLoader
       ActiveRecord::Base.transaction do
         defer_integrity_checks_until_commit!
         validate_csv_headers!
-        Office.delete_all
         OpeningTimes.delete_all
+        Office.delete_all
         offices = build_office_records
         opening_times = build_opening_times(offices)
         offices.values.map(&:save!)
@@ -76,12 +76,6 @@ module LssLoader
 
         office = office_from_advice_location_row row
         offices[office[:id]] = office
-      end
-    end
-
-    def apply_opening_hours_from_csv(offices)
-      @opening_hours_csv.each do |row|
-        apply_opening_hours! offices, row
       end
     end
 

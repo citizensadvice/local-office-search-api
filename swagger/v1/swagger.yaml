@@ -10,7 +10,7 @@ paths:
       responses:
         '200':
           description: Service is available
-  "/api/v1/offices/{id}":
+  "/api/v2/offices/{id}":
     get:
       summary: Retrieves a single office
       parameters:
@@ -26,7 +26,7 @@ paths:
             application/json:
               schema:
                 "$schema": https://json-schema.org/draft/2019-09/schema
-                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v1/office
+                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v2/office
                 type: object
                 properties:
                   id:
@@ -106,109 +106,116 @@ paths:
                         - 'null'
                       monday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       tuesday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       wednesday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       thursday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       friday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       saturday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       sunday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                     required:
                     - information
                     - monday
@@ -228,109 +235,116 @@ paths:
                         - 'null'
                       monday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       tuesday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       wednesday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       thursday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       friday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       saturday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                       sunday:
                         type:
-                        - 'null'
-                        - type: object
-                          properties:
-                            opens:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                            closes:
-                              type: string
-                              pattern: "^\\d{2}:\\d{2}:\\d{2}$"
-                          required:
-                          - opens
-                          - closes
-                          additionalProperties: false
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              opens:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                              closes:
+                                type: string
+                                pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                            required:
+                            - opens
+                            - closes
+                            additionalProperties: false
                     required:
                     - information
                     - monday
@@ -400,9 +414,9 @@ paths:
                 required:
                 - type
                 additionalProperties: false
-  "/api/v1/offices/":
+  "/api/v2/offices/":
     get:
-      summary: Retrieves a single office
+      summary: Searches for offices
       parameters:
       - name: q
         in: query
@@ -417,7 +431,7 @@ paths:
             application/json:
               schema:
                 "$schema": https://json-schema.org/draft/2019-09/schema
-                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v1/results
+                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v2/results
                 type: object
                 properties:
                   match_type:
