@@ -118,11 +118,11 @@ GEM
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     crass (1.0.6)
-    datadog-ci (0.3.0)
+    datadog-ci (0.4.1)
       msgpack
     date (3.3.4)
-    ddtrace (1.16.2)
-      datadog-ci (~> 0.3.0)
+    ddtrace (1.17.0)
+      datadog-ci (~> 0.4.0)
       debase-ruby_core_source (= 3.2.2)
       libdatadog (~> 5.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
@@ -369,7 +369,7 @@ DEPENDENCIES
   aws-sdk-s3
   bootsnap
   citizens-advice-style!
-  ddtrace (~> 1.16.2)
+  ddtrace (~> 1.17.0)
   debug
   dotenv-rails
   pg (~> 1.5)
