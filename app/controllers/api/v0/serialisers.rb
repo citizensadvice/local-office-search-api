@@ -30,6 +30,15 @@ module Api
         }
       end
 
+      def member_as_v0_list_json(member)
+        {
+          address: address_block(member, include_local_authority: true),
+          membershipNumber: member.membership_number,
+          name: member.name,
+          serialNumber: member.legacy_id.to_s
+        }
+      end
+
       def location_as_v0_json(office)
         {
           address: address_block(office, include_local_authority: true),

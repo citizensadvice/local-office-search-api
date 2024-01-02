@@ -356,8 +356,54 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                   members to the parameter will be returned.
                 DESCRIPTION
 
-      response "501", "is a deprecated API which has not been reimplemented" do
-        run_test!
+      response "200", "returns all the members it knows about" do
+        schema type: :object,
+               properties: {
+                 type: { type: :string, enum: %w[member] },
+                 list: { type: :array, items: BureauDetailsSchema::MEMBER_LIST_SCHEMA }
+               },
+               required: %w[type list],
+               additionalProperties: false
+
+        let(:local_authority) { LocalAuthority.create! id: "E05XXTEST", name: "Borsetshire" }
+
+        let(:member) do
+          Office.new(id: generate_salesforce_id,
+                     legacy_id: 1,
+                     membership_number: "55/5555",
+                     office_type: :member,
+                     name: "Citizens Advice Felpersham",
+                     company_number: "12345678",
+                     charity_number: "87654321",
+                     street: "14 Shakespeare Road",
+                     city: "Felpersham",
+                     postcode: "FX1 7QW",
+                     location: "POINT(-0.7646468 52.0451619)",
+                     local_authority:)
+        end
+
+        before do
+          member.save!
+        end
+
+        # rubocop:disable RSpec/ExampleLength
+        run_test! do |response|
+          expect(JSON.parse(response.body, symbolize_names: true)[:list]).to eq([{
+            address: {
+              address: "14 Shakespeare Road",
+              town: "Felpersham",
+              county: nil,
+              postcode: "FX1 7QW",
+              onsDistrictCode: "E05XXTEST",
+              localAuthority: "Borsetshire",
+              latLong: [52.0451619, -0.7646468]
+            },
+            membershipNumber: "55/5555",
+            name: "Citizens Advice Felpersham",
+            serialNumber: "1"
+          }])
+        end
+        # rubocop:enable RSpec/ExampleLength
       end
     end
   end

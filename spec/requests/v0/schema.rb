@@ -136,5 +136,17 @@ module BureauDetailsSchema
     required: %w[address membershipNumber name serialNumber charityNumber notes services staff vacancies website],
     additionalProperties: false
   }.freeze
+
+  MEMBER_LIST_SCHEMA = {
+    type: :object,
+    properties: {
+      serialNumber: { type: :string },
+      name: { type: :string },
+      membershipNumber: { type: :string },
+      address: ADDRESS_WITH_LOCAL_AUTHORITY_SCHEMA
+    },
+    required: %w[address membershipNumber name serialNumber],
+    additionalProperties: false
+  }.freeze
 end
 # rubocop:enable Metrics/ModuleLength
