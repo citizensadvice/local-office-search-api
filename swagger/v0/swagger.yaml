@@ -961,8 +961,72 @@ paths:
         schema:
           type: string
       responses:
-        '501':
-          description: is a deprecated API which has not been reimplemented
+        '200':
+          description: returns all the members it knows about
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - member
+                  list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        serialNumber:
+                          type: string
+                        name:
+                          type: string
+                        membershipNumber:
+                          type: string
+                        address:
+                          type: object
+                          properties:
+                            onsDistrictCode:
+                              type: string
+                            localAuthority:
+                              type: string
+                            address:
+                              type: string
+                            town:
+                              type: string
+                            county:
+                              type:
+                              - string
+                              - 'null'
+                            postcode:
+                              type:
+                              - string
+                              - 'null'
+                            latLong:
+                              type: array
+                              items:
+                                type: number
+                              minItems: 2
+                              maxItems: 2
+                          required:
+                          - address
+                          - town
+                          - county
+                          - postcode
+                          - latLong
+                          - onsDistrictCode
+                          - localAuthority
+                          additionalProperties: false
+                      required:
+                      - address
+                      - membershipNumber
+                      - name
+                      - serialNumber
+                      additionalProperties: false
+                required:
+                - type
+                - list
+                additionalProperties: false
   "/api/v0/json/vacancy/id/{id}":
     get:
       summary: Shows full details for a vacancy

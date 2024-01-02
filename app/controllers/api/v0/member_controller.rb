@@ -13,7 +13,7 @@ module Api
       end
 
       def list
-        head :not_implemented
+        render json: { type: "member", list: Office.where(office_type: :member).map { |office| member_as_v0_list_json(office) } }
       end
     end
   end
