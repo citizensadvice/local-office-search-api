@@ -161,7 +161,7 @@ module Api
         when "volunteer"
           "Volunteer"
         else
-          role.gsub("_", " ")
+          role.tr("_", " ")
         end
       end
 

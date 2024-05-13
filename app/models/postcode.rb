@@ -13,7 +13,7 @@ class Postcode < ApplicationRecord
   end
 
   def self.normalise_and_find(postcode)
-    find_by normalised: postcode.gsub(" ", "").downcase
+    find_by normalised: postcode.delete(" ").downcase
   end
 
   # this overrides the default Rails upsert because that doesn't know how to handle conflicts on
