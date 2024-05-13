@@ -60,7 +60,7 @@ module LssLoader
     end
 
     def build_opening_times(offices)
-      @opening_hours_csv.map { |row| build_opening_time_from_row(row, offices) }.compact
+      @opening_hours_csv.filter_map { |row| build_opening_time_from_row(row, offices) }
     end
 
     def build_office_records_from_members_csv(offices)

@@ -20,7 +20,6 @@ class Office < ApplicationRecord
 
   private
 
-  # rubocop:disable Metrics/AbcSize
   def build_opening_times(opening_times_for)
     office_opening_times = opening_times.where(opening_time_for: opening_times_for).to_a
 
@@ -28,9 +27,8 @@ class Office < ApplicationRecord
     %w[monday tuesday wednesday thursday friday saturday sunday].each do |day_of_week|
       todays_opening_times = office_opening_times.select { |opening_time| opening_time.day_of_week == day_of_week }
       opening_hours[day_of_week.to_sym] = todays_opening_times.map(&:range)
-      opening_hours[day_of_week.to_sym].sort! { |a, b| a.beginning <=> b.beginning }
+      opening_hours[day_of_week.to_sym].sort_by!(&:beginning)
     end
     opening_hours
   end
-  # rubocop:enable Metrics/AbcSize
 end
