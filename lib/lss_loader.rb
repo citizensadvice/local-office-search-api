@@ -28,26 +28,19 @@ module LssLoader
       ActiveRecord::Base.transaction do
         defer_integrity_checks_until_commit!
         validate_csv_headers!
-        OpeningTimes.delete_all
-        Office.delete_all
-        offices = build_office_records
-        opening_times = build_opening_times(offices)
-        offices.values.map(&:save!)
+        clear_existing_records!
+
+        office_map = build_office_and_served_area_records
+        opening_times = build_opening_times(office_map)
+
+        save_offices_and_saved_areas(office_map.values)
         opening_times.map(&:save!)
       end
     end
 
     private
 
-    def initialise_csv_headers!
-      @members_csv.shift if @members_csv.headers == true
-      @advice_locations_csv.shift if @advice_locations_csv.headers == true
-      @opening_hours_csv.shift if @opening_hours_csv.headers == true
-      @volunteer_roles_csv.shift if @volunteer_roles_csv.headers == true
-      @accessibility_info_csv.shift if @accessibility_info_csv.headers == true
-    end
-
-    def build_office_records
+    def build_office_and_served_area_records
       offices = {}
       build_office_records_from_members_csv(offices)
       build_office_records_from_advice_locations_csv(offices)
@@ -66,7 +59,7 @@ module LssLoader
     def build_office_records_from_members_csv(offices)
       @members_csv.each do |row|
         office = office_from_member_row row
-        offices[office[:id]] = office
+        offices[office[:id]] = [office, served_areas_from_member_row(row)]
       end
     end
 
@@ -75,7 +68,7 @@ module LssLoader
         next if advice_location_row_is_excluded?(row)
 
         office = office_from_advice_location_row row
-        offices[office[:id]] = office
+        offices[office[:id]] = [office, served_areas_from_advice_location_row(row)]
       end
     end
 
@@ -92,18 +85,38 @@ module LssLoader
     end
 
     def nullify_dangling_parent_ids!(offices)
-      orphaned_offices = offices.values.select { |office| !office.parent_id.nil? && !offices.key?(office.parent_id) }
-      orphaned_offices.each do |office|
+      orphaned_offices = offices.values.select { |(office, _)| !office.parent_id.nil? && !offices.key?(office.parent_id) }
+      orphaned_offices.each do |(office, _)|
         office.parent_id = nil
       end
     end
 
     def nullify_dangling_local_authority_ids!(offices)
       local_authority_ids = LocalAuthority.ids.to_set
-      orphaned_offices = offices.values.reject { |office| local_authority_ids.include? office.local_authority_id }
-      orphaned_offices.each do |office|
+      orphaned_offices = offices.values.reject { |(office, _)| local_authority_ids.include? office.local_authority_id }
+      orphaned_offices.each do |(office, _)|
         office.local_authority_id = nil
       end
+    end
+
+    def reject_dangling_local_authority_ids(served_areas)
+      local_authority_ids = LocalAuthority.ids.to_set
+      served_areas.select { |served_area| local_authority_ids.include?(served_area.local_authority_id) }
+    end
+
+    def save_offices_and_saved_areas(offices)
+      served_areas = []
+      offices.map do |(office, office_served_areas)|
+        office.save!
+        served_areas.concat(office_served_areas)
+      end
+      reject_dangling_local_authority_ids(served_areas).map(&:save!)
+    end
+
+    def clear_existing_records!
+      ServedArea.delete_all
+      OpeningTimes.delete_all
+      Office.delete_all
     end
 
     def defer_integrity_checks_until_commit!

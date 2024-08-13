@@ -48,6 +48,19 @@ module LssLoader
     end
     # rubocop:enable Metrics/AbcSize
 
+    def served_areas_from_member_row(row)
+      served_areas = []
+      served_areas << ServedArea.new(office_id: row["salesforce_id"], local_authority_id: str_or_nil(row["local_authority_ons_code"]))
+      served_areas.reject { |served_area| served_area.local_authority_id.nil? }
+    end
+
+    def served_areas_from_advice_location_row(row)
+      served_areas = []
+      served_areas << ServedArea.new(office_id: row["salesforce_advice_location_id"],
+                                     local_authority_id: str_or_nil(row["local_authority_ons_code"]))
+      served_areas.reject { |served_area| served_area.local_authority_id.nil? }
+    end
+
     def advice_location_row_is_excluded?(row)
       row["salesforce_advice_location_id"].nil? ||
         bool_from_val(row["excluded_from_lss_front_end"]) ||
@@ -57,13 +70,13 @@ module LssLoader
     def apply_accessibility_info!(offices, row)
       return unless offices.key? row["salesforce_advice_location_id"]
 
-      offices[row["salesforce_advice_location_id"]].accessibility_information << row["advice_location_accessibility"]
+      offices[row["salesforce_advice_location_id"]][0].accessibility_information << row["advice_location_accessibility"]
     end
 
     def apply_volunteer_roles!(offices, row)
       return unless offices.key? row["salesforce_advice_location_id"]
 
-      offices[row["salesforce_advice_location_id"]].volunteer_roles << row["volunteer_roles"]
+      offices[row["salesforce_advice_location_id"]][0].volunteer_roles << row["volunteer_roles"]
     end
 
     def record_type_id_to_office_type(record_type_id)

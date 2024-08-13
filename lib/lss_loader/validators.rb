@@ -2,6 +2,14 @@
 
 module LssLoader
   module Validators
+    def initialise_csv_headers!
+      @members_csv.shift if @members_csv.headers == true
+      @advice_locations_csv.shift if @advice_locations_csv.headers == true
+      @opening_hours_csv.shift if @opening_hours_csv.headers == true
+      @volunteer_roles_csv.shift if @volunteer_roles_csv.headers == true
+      @accessibility_info_csv.shift if @accessibility_info_csv.headers == true
+    end
+
     def validate_csv_headers!
       raise LssLoadError, "Members CSV file was not in expected format" unless members_csv_has_expected_headers?
       raise LssLoadError, "Advice Locations CSV file was not in expected format" unless advice_locations_csv_has_expected_headers?

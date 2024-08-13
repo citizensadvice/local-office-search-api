@@ -168,6 +168,13 @@ RSpec.describe LssLoader do
     expect(Office.find("0014K000009EMMbQAO").local_authority_id).to eq("E06000023")
   end
 
+  it "loads in local authority IDs on advice locations into the served areas table" do
+    LocalAuthority.create! id: "E06000023", name: "Bristol, City of"
+    load_from_fixtures locations_csv_filename: "has_local_authority"
+
+    expect(Office.find("0014K000009EMMbQAO").served_areas.first&.local_authority_id).to eq("E06000023")
+  end
+
   # rubocop:disable RSpec/ExampleLength
   it "loads in members from the members file" do
     LocalAuthority.create! id: "E07000112", name: "Folkestone and Hythe"

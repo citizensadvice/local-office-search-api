@@ -7,6 +7,7 @@ class Office < ApplicationRecord
   has_many :children, class_name: "Office", foreign_key: "parent_id", dependent: :nullify, inverse_of: :parent
 
   belongs_to :local_authority, optional: true
+  has_many :served_areas, dependent: :destroy
 
   has_many :opening_times, class_name: "OpeningTimes", dependent: :destroy
 

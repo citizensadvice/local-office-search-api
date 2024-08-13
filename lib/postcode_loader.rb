@@ -58,13 +58,16 @@ class PostcodeLoader
   def defer_local_authority_integrity_checks_until_commit!
     postcode_local_authority_foreign_key = "fk_rails_7ab3384eab"
     office_local_authority_foreign_key = "fk_rails_5a2ab5b59d"
+    served_areas_local_authority_foreign_key = "fk_rails_90a03e3955"
     defer_constraint_until_commit! postcode_local_authority_foreign_key
     defer_constraint_until_commit! office_local_authority_foreign_key
+    defer_constraint_until_commit! served_areas_local_authority_foreign_key
   end
 
   def nullify_dangling_offices!(current_local_authority_ids)
     # rubocop:disable Rails/SkipsModelValidations - we rely on database validations
     Office.where.not(local_authority_id: current_local_authority_ids).update_all(local_authority_id: nil)
+    ServedArea.where.not(local_authority_id: current_local_authority_ids).delete_all
     # rubocop:enable Rails/SkipsModelValidations
   end
 
