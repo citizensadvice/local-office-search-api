@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.3.1"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.3"
+gem "rails", "~> 7.1.4"
 
 # Use PostgreSQL as the database for Active Record
 gem "activerecord-postgis-adapter"
@@ -62,7 +62,7 @@ group :development do
 end
 
 group :test do
-  gem "rspec-rails", "~> 6.1.3"
+  gem "rspec-rails", "~> 6.1.4"
 
   gem "simplecov", require: false
 
