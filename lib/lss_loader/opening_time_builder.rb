@@ -1,11 +1,22 @@
 # frozen_string_literal: true
 
 module LssLoader
-  module OpeningTimeBuilder
+  class OpeningTimeBuilder
+    include CsvHelpers
+
+    def initialize(opening_times_csv, valid_offices)
+      @opening_times_csv = opening_times_csv
+      @valid_offices = valid_offices
+    end
+
+    def build
+      @opening_times_csv.filter_map { |row| build_opening_time_from_row(row) }
+    end
+
     private
 
-    def build_opening_time_from_row(row, offices)
-      return unless str_or_nil(row["session_type"]).present? && offices.key?(row["advice_location_salesforce_id"])
+    def build_opening_time_from_row(row)
+      return unless str_or_nil(row["session_type"]).present? && @valid_offices.include?(row["advice_location_salesforce_id"])
 
       range = shift_from_row(row)
 
