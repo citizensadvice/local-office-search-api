@@ -281,6 +281,36 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: served_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.served_areas (
+    id bigint NOT NULL,
+    office_id character(18) NOT NULL,
+    local_authority_id character(9) NOT NULL
+);
+
+
+--
+-- Name: served_areas_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.served_areas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: served_areas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.served_areas_id_seq OWNED BY public.served_areas.id;
+
+
+--
 -- Name: opening_times id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -292,6 +322,13 @@ ALTER TABLE ONLY public.opening_times ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.postcodes ALTER COLUMN id SET DEFAULT nextval('public.postcodes_id_seq'::regclass);
+
+
+--
+-- Name: served_areas id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.served_areas ALTER COLUMN id SET DEFAULT nextval('public.served_areas_id_seq'::regclass);
 
 
 --
@@ -340,6 +377,14 @@ ALTER TABLE ONLY public.postcodes
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: served_areas served_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.served_areas
+    ADD CONSTRAINT served_areas_pkey PRIMARY KEY (id);
 
 
 --
@@ -392,6 +437,28 @@ CREATE UNIQUE INDEX index_postcodes_on_normalised ON public.postcodes USING btre
 
 
 --
+-- Name: index_served_areas_on_local_authority_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_served_areas_on_local_authority_id ON public.served_areas USING btree (local_authority_id);
+
+
+--
+-- Name: index_served_areas_on_office_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_served_areas_on_office_id ON public.served_areas USING btree (office_id);
+
+
+--
+-- Name: served_areas fk_rails_21c56aa565; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.served_areas
+    ADD CONSTRAINT fk_rails_21c56aa565 FOREIGN KEY (office_id) REFERENCES public.offices(id);
+
+
+--
 -- Name: offices fk_rails_5a2ab5b59d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -416,6 +483,14 @@ ALTER TABLE ONLY public.postcodes
 
 
 --
+-- Name: served_areas fk_rails_90a03e3955; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.served_areas
+    ADD CONSTRAINT fk_rails_90a03e3955 FOREIGN KEY (local_authority_id) REFERENCES public.local_authorities(id) DEFERRABLE;
+
+
+--
 -- Name: offices fk_rails_b381f08761; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -427,18 +502,18 @@ ALTER TABLE ONLY public.offices
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public, topology;
+SET search_path TO "$user", public, topology, tiger;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20230531135320'),
-('20230621151704'),
-('20230704120347'),
-('20230705095742'),
-('20230705132647'),
-('20230731104744'),
-('20230803141746'),
-('20230803145002'),
+('20240813152802'),
+('20231120143230'),
 ('20231120111349'),
-('20231120143230');
-
+('20230803145002'),
+('20230803141746'),
+('20230731104744'),
+('20230705132647'),
+('20230705095742'),
+('20230704120347'),
+('20230621151704'),
+('20230531135320');
 
