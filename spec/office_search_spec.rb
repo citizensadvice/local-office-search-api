@@ -7,7 +7,7 @@ RSpec.describe OfficeSearch do
   it "only returns offices in the area when specified" do
     in_area_office = create_office_with_local_authority
     create_office_with_local_authority la_id: "X0001235", la_name: "Testtown"
-    create_postcode "XX4 6LA", in_area_office.local_authority_id
+    create_postcode "XX4 6LA", in_area_office.served_areas.first.local_authority_id
 
     results, = described_class.by_location("XX4 6LA", only_in_same_local_authority: true)
 
@@ -16,7 +16,8 @@ RSpec.describe OfficeSearch do
 
   it "returns all the offices in an area when it's a fuzzy match that matches on local authority names" do
     office = create_office_with_local_authority
-    other_office = create_office name: "Another Citizens Advice", local_authority_id: office.local_authority_id
+    other_office = create_office_in_local_authority name: "Another Citizens Advice",
+                                                    local_authority_id: office.served_areas.first.local_authority_id
 
     results, = described_class.by_location("test")
 
@@ -25,7 +26,8 @@ RSpec.describe OfficeSearch do
 
   it "returns all offices which have a fuzzy match on the LCA name" do
     office = create_office_with_local_authority
-    other_office = create_office name: "Anotherville Citizens Advice", local_authority_id: office.local_authority_id
+    other_office = create_office_in_local_authority name: "Anotherville Citizens Advice",
+                                                    local_authority_id: office.served_areas.first.local_authority_id
 
     results, = described_class.by_location("anotherville")
 
@@ -43,8 +45,8 @@ RSpec.describe OfficeSearch do
 
   it "ensures fuzzy matches respect the only with vacancies flag" do
     office = create_office_with_local_authority
-    office_with_roles = create_office name: "Another Citizens Advice", local_authority_id: office.local_authority_id,
-                                      volunteer_roles: ["trustee"]
+    office_with_roles = create_office_in_local_authority(name: "Another Citizens Advice", volunteer_roles: ["trustee"],
+                                                         local_authority_id: office.served_areas.first.local_authority_id)
 
     results, = described_class.by_location("test", only_with_vacancies: true)
 
@@ -52,9 +54,9 @@ RSpec.describe OfficeSearch do
   end
 
   it "does not return members or outreaches when searching offices" do
-    member = create_office_with_local_authority office_type: :member
-    create_office office_type: :outreach, local_authority_id: member.local_authority_id
-    Postcode.create! canonical: "AB1 2CD", local_authority_id: member.local_authority_id, location: "POINT(-0.78 52.66)"
+    member = create_office_with_local_authority(office_type: :member)
+    create_office_in_local_authority(office_type: :outreach, local_authority_id: member.served_areas.first.local_authority_id)
+    Postcode.create!(canonical: "AB1 2CD", local_authority_id: member.served_areas.first.local_authority_id, location: "POINT(-0.78 52.66)")
 
     results, = described_class.by_location("AB1 2CD")
 
@@ -63,7 +65,15 @@ RSpec.describe OfficeSearch do
 
   def create_office_with_local_authority(la_id: "X0001234", la_name: "Testshire", **office_vals)
     local_authority_id = LocalAuthority.create!(id: la_id, name: la_name).id
-    create_office name: "#{la_name} Citizens Advice", local_authority_id:, **office_vals
+    office = create_office(name: "#{la_name} Citizens Advice", **office_vals)
+    ServedArea.create!(local_authority_id:, office:)
+    office
+  end
+
+  def create_office_in_local_authority(local_authority_id:, **office_vals)
+    office = create_office(**office_vals)
+    ServedArea.create!(local_authority_id:, office:)
+    office
   end
 
   def create_office(vals = {})
@@ -71,6 +81,6 @@ RSpec.describe OfficeSearch do
   end
 
   def create_postcode(canonical, local_authority_id = "X0001234")
-    Postcode.create! canonical:, local_authority_id:, location: "POINT(-0.78 52.66)"
+    Postcode.create!(canonical:, local_authority_id:, location: "POINT(-0.78 52.66)")
   end
 end

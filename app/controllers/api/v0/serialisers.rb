@@ -91,6 +91,7 @@ module Api
         end
       end
 
+      # rubocop:disable Metrics/AbcSize
       def address_block(office, include_local_authority:)
         block = {
           address: office.street,
@@ -100,15 +101,13 @@ module Api
           latLong: office.location.nil? ? [0.0, 0.0] : [office.location.y, office.location.x]
         }
         if include_local_authority
-          block.update({
-            onsDistrictCode: office.local_authority&.id,
-            localAuthority: office.local_authority&.name
-          })
+          local_authority = office.served_areas.first&.local_authority
+          block.update({ onsDistrictCode: local_authority.id, localAuthority: local_authority.name }) if local_authority.present?
         end
         block
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       def opening_time_block(office, time_type)
         days = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
         case time_type

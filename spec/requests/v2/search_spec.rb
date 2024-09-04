@@ -34,11 +34,13 @@ RSpec.describe "Search Local Office API" do
           let(:office) do
             Office.new id: generate_salesforce_id,
                        office_type: :office,
-                       name: "Testshire Citizens Advice",
-                       local_authority_id:
+                       name: "Testshire Citizens Advice"
           end
 
-          before { office.save! }
+          before do
+            office.save!
+            ServedArea.create!(local_authority_id:, office:)
+          end
 
           run_test! do |response|
             expect_result_ids_in_response response, "exact", [office.id]
@@ -49,7 +51,6 @@ RSpec.describe "Search Local Office API" do
               Office.new id: generate_salesforce_id,
                          office_type: :office,
                          name: "Testshire Citizens Advice",
-                         local_authority_id:,
                          allows_drop_ins: true
             end
 
@@ -63,7 +64,6 @@ RSpec.describe "Search Local Office API" do
               Office.new id: generate_salesforce_id,
                          office_type: :office,
                          name: "Testshire Citizens Advice",
-                         local_authority_id:,
                          phone: "01234 567890"
             end
 
@@ -77,7 +77,6 @@ RSpec.describe "Search Local Office API" do
               Office.new id: generate_salesforce_id,
                          office_type: :office,
                          name: "Testshire Citizens Advice",
-                         local_authority_id:,
                          email: "cab@example.com"
             end
 
@@ -118,8 +117,7 @@ RSpec.describe "Search Local Office API" do
           let(:office) do
             Office.new id: generate_salesforce_id,
                        office_type: :office,
-                       name: "Testshire Citizens Advice",
-                       local_authority_id:
+                       name: "Testshire Citizens Advice"
           end
 
           before { office.save! }

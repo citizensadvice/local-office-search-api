@@ -33,8 +33,7 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                      street: "14 Shakespeare Road",
                      city: "Felpersham",
                      postcode: "FX1 7QW",
-                     location: "POINT(-0.7646468 52.0451619)",
-                     local_authority:)
+                     location: "POINT(-0.7646468 52.0451619)")
         end
 
         let(:office) do
@@ -55,8 +54,7 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                      opening_hours_information: "Self help computers 9am to 4pm",
                      email: "felphersham@example.com",
                      website: "http://www.felpershamcab.org.uk",
-                     phone: "01632 555 555",
-                     local_authority:)
+                     phone: "01632 555 555")
         end
 
         let(:outlet) do
@@ -71,8 +69,7 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                      membership_number: "55/5555",
                      office_type: :outreach,
                      about_text: "This location does not exist.",
-                     accessibility_information: ["Wheelchair accessible"],
-                     local_authority:)
+                     accessibility_information: ["Wheelchair accessible"])
         end
 
         let(:id) do
@@ -83,6 +80,10 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
           member.save
           office.save
           outlet.save
+
+          ServedArea.create!(office_id: member.id, local_authority_id: local_authority.id)
+          ServedArea.create!(office_id: office.id, local_authority_id: local_authority.id)
+          ServedArea.create!(office_id: outlet.id, local_authority_id: local_authority.id)
 
           OpeningTimes.create(office_id: office.id, day_of_week: "monday", opening_time_for: "office",
                               range: Tod::Shift.new(Tod::TimeOfDay.new(10), Tod::TimeOfDay.new(12, 30)))
@@ -378,12 +379,12 @@ RSpec.describe "Bureau Details legacy API - Members", swagger_doc: "v0/swagger.y
                      street: "14 Shakespeare Road",
                      city: "Felpersham",
                      postcode: "FX1 7QW",
-                     location: "POINT(-0.7646468 52.0451619)",
-                     local_authority:)
+                     location: "POINT(-0.7646468 52.0451619)")
         end
 
         before do
           member.save!
+          ServedArea.create!(office_id: member.id, local_authority_id: local_authority.id)
         end
 
         # rubocop:disable RSpec/ExampleLength

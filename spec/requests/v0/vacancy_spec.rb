@@ -30,8 +30,10 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
                                   email: "felphersham@example.com",
                                   website: "http://www.felpershamcab.org.uk",
                                   phone: "01632 555 555",
-                                  volunteer_roles: %w[admin_and_customer_service volunteer_recruitment_and_support],
-                                  local_authority:)
+                                  volunteer_roles: %w[admin_and_customer_service volunteer_recruitment_and_support])
+
+          ServedArea.create!(office:, local_authority:)
+
           office.id
         end
 
@@ -130,8 +132,10 @@ RSpec.describe "Bureau Details legacy API - Vacancies", swagger_doc: "v0/swagger
                                   email: "felphersham@example.com",
                                   website: "http://www.felpershamcab.org.uk",
                                   phone: "01632 555 555",
-                                  volunteer_roles: ["Receptionist", "Volunteer recruitment and support"],
-                                  local_authority:)
+                                  volunteer_roles: ["Receptionist", "Volunteer recruitment and support"])
+
+          ServedArea.create!(office:, local_authority:)
+
           office.id
         end
 
