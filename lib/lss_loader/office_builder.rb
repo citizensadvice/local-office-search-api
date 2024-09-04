@@ -21,7 +21,6 @@ module LssLoader
       load_accessibility_info_csv!
       load_volunteer_roles_csv!
       nullify_dangling_parent_ids!
-      nullify_dangling_local_authority_ids!
 
       [@offices.values, @served_areas]
     end
@@ -72,7 +71,6 @@ module LssLoader
         county: str_or_nil(row["county"]),
         postcode: str_or_nil(row["postcode"]),
         location: point_wkt_or_nil(row["latitude"], row["longitude"]),
-        local_authority_id: str_or_nil(row["local_authority_ons_code"]),
         email: str_or_nil(row["enquiries_email"]),
         website: str_or_nil(row["public_website"])
       )
@@ -92,7 +90,6 @@ module LssLoader
         county: str_or_nil(row["county"]),
         postcode: str_or_nil(row["postcode"]),
         location: point_wkt_or_nil(row["latitude"], row["longitude"]),
-        local_authority_id: str_or_nil(row["local_authority_ons_code"]),
         email: str_or_nil(row["enquiries_email"]),
         volunteer_recruitment_email: str_or_nil(row["volunteer_recruitment_email"]),
         website: str_or_nil(row["public_website"]),
@@ -137,11 +134,6 @@ module LssLoader
     def nullify_dangling_parent_ids!
       orphaned_offices = @offices.values.reject { |office| office.parent_id.nil? || @offices.key?(office.parent_id) }
       orphaned_offices.each { |office| office.parent_id = nil }
-    end
-
-    def nullify_dangling_local_authority_ids!
-      orphaned_offices = @offices.values.reject { |office| @valid_local_authority_ids.include? office.local_authority_id }
-      orphaned_offices.each { |office| office.local_authority_id = nil }
     end
 
     def advice_location_row_is_excluded?(row)

@@ -53,9 +53,7 @@ module LssLoader
     end
 
     def defer_integrity_checks_until_commit!
-      office_local_authority_foreign_key = "fk_rails_5a2ab5b59d"
       office_parent_foreign_key = "fk_rails_b381f08761"
-      defer_constraint_until_commit! office_local_authority_foreign_key
       defer_constraint_until_commit! office_parent_foreign_key
     end
   end
