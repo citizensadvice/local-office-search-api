@@ -49,7 +49,7 @@ module OfficeSearch
   def self.build_query_from_location(location, local_authority_id, opts)
     q = Office.where(office_type: :office)
     q = if opts[:only_in_same_local_authority]
-          q.where(local_authority_id:)
+          q.joins(:served_areas).where(served_areas: { local_authority_id: })
         else
           q.limit(10)
         end
@@ -66,7 +66,7 @@ module OfficeSearch
   end
 
   def self.build_fuzzy_query(near, opts)
-    office_with_local_authorities = Office.left_outer_joins(:local_authority)
+    office_with_local_authorities = Office.left_outer_joins(served_areas: :local_authority)
     q = office_with_local_authorities.where(Office.arel_table[:name].matches("%#{near}%"))
     q = q.or(office_with_local_authorities.where(LocalAuthority.arel_table[:name].matches("%#{near}%")))
     q = q.where(office_type: :office)
