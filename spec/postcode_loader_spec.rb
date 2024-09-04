@@ -70,7 +70,8 @@ RSpec.describe PostcodeLoader do
 
     it "successfully renames a local authority when an LCA is assigned to it" do
       LocalAuthority.create! id: "S12000033", name: "City of Aberdeen"
-      Office.create! id: generate_salesforce_id, name: "Aberdeen CAB", office_type: "member", local_authority_id: "S12000033"
+      create_office_in_local_authority id: generate_salesforce_id, name: "Aberdeen CAB", office_type: "member",
+                                       local_authority_id: "S12000033"
 
       load_from_fixture "single"
 
@@ -80,11 +81,11 @@ RSpec.describe PostcodeLoader do
     it "successfully handles removal of a local authority when an LCA is assigned to it" do
       LocalAuthority.create! id: "X00000000", name: "Testtown City Council"
       office_id = generate_salesforce_id
-      Office.create! id: office_id, name: "Aberdeen CAB", office_type: "member", local_authority_id: "X00000000"
+      create_office_in_local_authority id: office_id, name: "Aberdeen CAB", office_type: "member", local_authority_id: "X00000000"
 
       load_from_fixture "single"
 
-      expect(Office.find(office_id).local_authority_id).to be_nil
+      expect(Office.find(office_id).served_areas).to be_empty
     end
   end
 
@@ -103,5 +104,11 @@ RSpec.describe PostcodeLoader do
         LocalAuthority.create!(id: "A#{SecureRandom.hex(4)}", name: "Testtown").id
     end
     Postcode.create!({ location: "POINT(0.7 51.3)" }.update(vals))
+  end
+
+  def create_office_in_local_authority(local_authority_id:, **office_vals)
+    office = Office.create!(**office_vals)
+    ServedArea.create!(office_id: office.id, local_authority_id:)
+    office
   end
 end
