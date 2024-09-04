@@ -62,7 +62,7 @@ group :development do
 end
 
 group :test do
-  gem "rspec-rails", "~> 7.0.0"
+  gem "rspec-rails", "~> 7.0.1"
 
   gem "simplecov", require: false
 
