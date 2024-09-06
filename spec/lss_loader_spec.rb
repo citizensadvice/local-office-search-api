@@ -161,13 +161,6 @@ RSpec.describe LssLoader do
     expect(Office.find("0014K00000an3g3QAA").parent_id).to be_nil
   end
 
-  it "loads in local authority IDs on advice locations" do
-    LocalAuthority.create! id: "E06000023", name: "Bristol, City of"
-    load_from_fixtures locations_csv_filename: "has_local_authority"
-
-    expect(Office.find("0014K000009EMMbQAO").local_authority_id).to eq("E06000023")
-  end
-
   it "loads in local authority IDs on advice locations into the served areas table" do
     LocalAuthority.create! id: "E06000023", name: "Bristol, City of"
     load_from_fixtures locations_csv_filename: "has_local_authority"
@@ -199,16 +192,9 @@ RSpec.describe LssLoader do
                          county: "Kent",
                          postcode: "CT20 1RH",
                          email: "cab@example.com",
-                         website: "www.shepwaycab.co.uk",
-                         local_authority_id: "E07000112"
+                         website: "www.shepwaycab.co.uk"
   end
   # rubocop:enable RSpec/ExampleLength
-
-  it "makes a dangling local authority ID null" do
-    load_from_fixtures members_csv_filename: "minimal"
-
-    expect(Office.find("0014K00000PcC94QAF").local_authority_id).to be_nil
-  end
 
   def create_a_single_office
     id = SecureRandom.hex(9)
@@ -252,7 +238,6 @@ RSpec.describe LssLoader do
   def expect_single_record(vals)
     vals = {
       parent_id: nil,
-      local_authority_id: nil,
       legacy_id: nil,
       membership_number: nil,
       company_number: nil,

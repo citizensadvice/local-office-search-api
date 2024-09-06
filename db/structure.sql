@@ -199,7 +199,6 @@ CREATE TABLE public.offices (
     membership_number character varying,
     company_number character varying,
     charity_number character varying,
-    local_authority_id character(9),
     volunteer_roles text[] DEFAULT '{}'::text[] NOT NULL,
     county text,
     volunteer_recruitment_email text,
@@ -395,13 +394,6 @@ CREATE INDEX index_offices_on_legacy_id ON public.offices USING btree (legacy_id
 
 
 --
--- Name: index_offices_on_local_authority_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_offices_on_local_authority_id ON public.offices USING btree (local_authority_id);
-
-
---
 -- Name: index_offices_on_membership_number_and_office_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -459,14 +451,6 @@ ALTER TABLE ONLY public.served_areas
 
 
 --
--- Name: offices fk_rails_5a2ab5b59d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.offices
-    ADD CONSTRAINT fk_rails_5a2ab5b59d FOREIGN KEY (local_authority_id) REFERENCES public.local_authorities(id) DEFERRABLE;
-
-
---
 -- Name: opening_times fk_rails_67a7efc4d6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -505,6 +489,7 @@ ALTER TABLE ONLY public.offices
 SET search_path TO "$user", public, topology, tiger;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240904130334'),
 ('20240813152802'),
 ('20231120143230'),
 ('20231120111349'),
