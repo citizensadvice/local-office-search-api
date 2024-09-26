@@ -1,0 +1,43 @@
+---
+- - :permit
+  - MIT
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-09-26 12:26:46.031586000 Z
+- - :permit
+  - Apache 2.0
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-09-26 12:26:51.580768000 Z
+- - :permit
+  - Simplified BSD
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-09-26 12:26:58.007767000 Z
+- - :permit
+  - New BSD
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-09-26 12:27:23.783524000 Z
+- - :permit
+  - ruby
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-09-26 12:27:28.160192000 Z
+- - :approve
+  - bundler-audit
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-09-26 12:27:42.189758000 Z
+- - :approve
+  - brakeman
+  - :who:
+    :why:
+    :versions: []
+    :when: 2024-09-26 12:27:48.422850000 Z
