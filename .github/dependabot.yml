@@ -9,6 +9,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    commit-message:
+      prefix: '[dependabot:bundler] '
     groups:
       regular-updates: # Group everything except major version updates and security vulnerabilities
         update-types:
@@ -17,3 +19,15 @@ updates:
       rswag:
         patterns:
           - 'rswag-*'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    commit-message:
+      prefix: '[dependabot:actions] '
+    groups:
+      regular-updates: # Group everything except major version updates and security vulnerabilities
+        update-types:
+          - "minor"
+          - "patch"
