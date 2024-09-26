@@ -1,0 +1,55 @@
+name: Lint and test
+on:
+  pull_request:
+    types: ["opened", "synchronize"]
+
+jobs:
+  lint:
+    runs-on: runs-on
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup ruby"
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: "Ruby lint"
+        run: bundle exec rubocop --format progress --format github
+
+  test:
+    runs-on: runs-on
+    needs: lint
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup ruby"
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: "Rspec"
+        run: bundle exec rspec
+
+  audit:
+    runs-on: runs-on
+    needs: lint
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup ruby"
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: "Bundle audit"
+        run: bundle exec bundle-audit
+
+      - name: "Brakeman audit"
+        run: bundle exec brakeman
+
+      - name: "License audit"
+        run: bundle exec license_finder
