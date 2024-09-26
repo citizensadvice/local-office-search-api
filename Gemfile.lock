@@ -345,7 +345,7 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webrick (1.8.1)
+    webrick (1.8.2)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -402,7 +402,7 @@ DEPENDENCIES
   yabeda-rails (~> 0.9)
 
 RUBY VERSION
-   ruby 3.3.1p55
+   ruby 3.3.5p100
 
 BUNDLED WITH
    2.4.13
