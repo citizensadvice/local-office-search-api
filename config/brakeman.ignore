@@ -1,0 +1,52 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "801062472d8eca070b85d768d4162ce9e6c7e723d6c6bcba80caec0fa8999619",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/postcode.rb",
+      "line": 24,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.execute(\"      INSERT INTO \\\"#{table_name}\\\" (canonical,location,local_authority_id)\\n      VALUES #{vals.map do\n ActiveRecord::Base.sanitize_sql_array([\"(:canonical, :location, :local_authority_id)\", attrs])\n end.join(\",\")}\\n      ON CONFLICT (normalised) DO\\n      UPDATE SET location=EXCLUDED.location, local_authority_id=EXCLUDED.local_authority_id\\n\".squish)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Postcode",
+        "method": "Postcode.bulk_upsert"
+      },
+      "user_input": "vals.map do\n ActiveRecord::Base.sanitize_sql_array([\"(:canonical, :location, :local_authority_id)\", attrs])\n end.join(\",\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "94e1fa4f9ad451359cb975b13da3245d0873c0e5a7a421db71f3454b9bed76fe",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/loader_helpers.rb",
+      "line": 7,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.execute(\"SET CONSTRAINTS #{constraint_id} DEFERRED\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LoaderHelpers",
+        "method": "defer_constraint_until_commit!"
+      },
+      "user_input": "constraint_id",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    }
+  ],
+  "updated": "2024-09-26 13:35:54 +0100",
+  "brakeman_version": "6.2.1"
+}
