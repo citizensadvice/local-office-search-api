@@ -62,6 +62,10 @@ group :development do
 end
 
 group :test do
+  gem "brakeman"
+  gem "bundler-audit"
+  gem "license_finder"
+
   gem "rspec-rails", "~> 7.0.1"
 
   gem "simplecov", require: false
