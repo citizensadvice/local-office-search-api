@@ -21,7 +21,7 @@ services:
         condition: service_healthy
 
   db:
-    image: "postgis/postgis:14-3.2"
+    image: "postgis/postgis:16-3.4"
     ports:
       - "5432"
     environment:

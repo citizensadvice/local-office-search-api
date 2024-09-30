@@ -23,7 +23,7 @@ jobs:
     needs: lint
     services:
       db:
-        image: postgis/postgis:14-3.4
+        image: postgis/postgis:16-3.4
         env:
           POSTGRES_DB: local_office_search_api_testing
           POSTGRES_USER: local_office_search_api

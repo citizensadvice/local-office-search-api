@@ -55,7 +55,7 @@ services:
       - ./traefik.toml:/traefik.toml
 
   db:
-    image: "postgis/postgis:14-3.2"
+    image: "postgis/postgis:16-3.2"
     ports:
       - "5460:5432" # expose on a port so we can run things locally
     environment:
@@ -64,7 +64,7 @@ services:
       - POSTGRES_PASSWORD=develop
 
   testdb:
-    image: "postgis/postgis:14-3.2"
+    image: "postgis/postgis:16-3.4"
     ports:
       - "5462:5432" # expose on a port so our IDE etc can run tests against the db
     environment:
