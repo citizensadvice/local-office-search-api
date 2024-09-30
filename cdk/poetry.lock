@@ -223,6 +223,24 @@ publication = ">=0.0.3"
 typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
+name = "cdk8s-plus-30"
+version = "2.2.5"
+description = "cdk8s+ is a software development framework that provides high level abstractions for authoring Kubernetes applications. cdk8s-plus-30 synthesizes Kubernetes manifests for Kubernetes 1.30.0"
+optional = false
+python-versions = "~=3.8"
+files = [
+    {file = "cdk8s_plus_30-2.2.5-py3-none-any.whl", hash = "sha256:52595cd63c5740ec35136d66eedb09783be5e66ad6a35eebb1b953ce4119adcd"},
+    {file = "cdk8s_plus_30-2.2.5.tar.gz", hash = "sha256:ef7e7a98f13d2d63eeeddbc8d81a0fa08d0d602fa9c35831ac89eacb4a792703"},
+]
+
+[package.dependencies]
+cdk8s = ">=2.68.11,<3.0.0"
+constructs = ">=10.3.0,<11.0.0"
+jsii = ">=1.103.1,<2.0.0"
+publication = ">=0.0.3"
+typeguard = ">=2.13.3,<5.0.0"
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -464,4 +482,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "d28ee7690ab1ec6c344ce690d843321aa5209ec1176e47b220975770ffbd2ea4"
+content-hash = "bcb875629d411bb47bc875ad96102594b459db49920c029fb633b89e2a5b4bb4"
