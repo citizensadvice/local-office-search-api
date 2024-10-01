@@ -20,6 +20,7 @@ jobs:
       - name: Build and push to ECR
         uses: citizensadvice/build-and-private-ecr-push-action@v1
         with:
+          role_arn: "arn:aws:iam::979633842206:role/LocalOfficeSearchApiDeployment"
           dockerfile_context: "."
           repository_name: local-office-search-api
           multiarch_build: "disabled"
