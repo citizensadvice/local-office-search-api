@@ -18,6 +18,11 @@ jobs:
       - name: "Ruby lint"
         run: bundle exec rubocop --format progress --format github
 
+      - name: "Python lint"
+        uses: chartboost/ruff-action@v1
+        with:
+          src: "./cdk"
+
   test:
     runs-on: runs-on
     needs: lint

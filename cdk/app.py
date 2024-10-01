@@ -3,11 +3,8 @@
 import os
 
 from aws_cdk import App, Stage, Environment, Tags
-from aws_cdk.aws_ecr import Repository
-from aws_cdk.aws_iam import AccountPrincipal
 
 from app.local_office_search_api import LocalOfficeSearchApiDeployment
-from infrastructure.ecr import EcrRepository
 from infrastructure.db import LocalOfficeSearchDatabase
 
 
@@ -15,14 +12,11 @@ app = App()
 
 app_version = os.environ.get("IMAGE_TAG", "local")
 
-ACCOUNT_IDS = {
-    "devops": "979633842206",
-    "prod2": "912473634278"
-}
+ACCOUNT_IDS = {"devops": "979633842206", "prod2": "912473634278"}
 
 LSS_FILES = {
     "dev": "sandbox-advicelocationpipe-pipelinebucket263ac468-19wuk9oanxght",
-    "prod": "prod-advicelocationprodbucket-buckete75ea64c-1oasp6hbbkp4j"
+    "prod": "prod-advicelocationprodbucket-buckete75ea64c-1oasp6hbbkp4j",
 }
 
 GEO_DATA_FILES = {
@@ -32,14 +26,11 @@ GEO_DATA_FILES = {
 
 STAGES = [
     Stage(app, "dev", env=Environment(account=ACCOUNT_IDS["devops"], region="eu-west-1")),
-    Stage(app, "prod", env=Environment(account=ACCOUNT_IDS["prod2"], region="eu-west-1"))
+    Stage(app, "prod", env=Environment(account=ACCOUNT_IDS["prod2"], region="eu-west-1")),
 ]
 
 for stage in STAGES:
-    db_stack = LocalOfficeSearchDatabase(
-        stage,
-        "LocalOfficeSearchApiDb"
-    )
+    db_stack = LocalOfficeSearchDatabase(stage, "LocalOfficeSearchApiDb")
     LocalOfficeSearchApiDeployment(
         stage,
         "LocalOfficeSearchApiDeployment",

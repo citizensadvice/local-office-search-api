@@ -18,19 +18,25 @@ from .chart import LocalOfficeSearchApiChart
 
 
 class LocalOfficeSearchApiDeployment(Stack):
-    def __init__(self,
-                 scope: Construct,
-                 construct_id: str,
-                 app_image_version: str,
-                 db: DatabaseCluster,
-                 db_credentials: Credentials,
-                 lss_bucket_name: str,
-                 geo_data_bucket_name: str,
-                 geo_data_postcode_file: str,
-                 **kwargs) -> None:
+    def __init__(
+        self,
+        scope: Construct,
+        construct_id: str,
+        app_image_version: str,
+        db: DatabaseCluster,
+        db_credentials: Credentials,
+        lss_bucket_name: str,
+        geo_data_bucket_name: str,
+        geo_data_postcode_file: str,
+        **kwargs,
+    ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        image_repo = Repository.from_repository_arn(self, "LocalOfficeSearchApiRepo", "arn:aws:ecr:eu-west-1:979633842206:repository/local-office-search-api")
+        image_repo = Repository.from_repository_arn(
+            self,
+            "LocalOfficeSearchApiRepo",
+            "arn:aws:ecr:eu-west-1:979633842206:repository/local-office-search-api",
+        )
 
         vpc = Vpc.from_lookup(
             self,
@@ -50,14 +56,18 @@ class LocalOfficeSearchApiDeployment(Stack):
             role_name="LocalOfficeSearchApiDeploymentEksClusterIntegration",
         ).cluster
 
-        lss_data_bucket = Bucket.from_bucket_name(self, "LssBucket", bucket_name=lss_bucket_name)
-        geo_data_bucket = Bucket.from_bucket_name(self, "GeoDataBucket", bucket_name=geo_data_bucket_name)
+        lss_data_bucket = Bucket.from_bucket_name(
+            self, "LssBucket", bucket_name=lss_bucket_name
+        )
+        geo_data_bucket = Bucket.from_bucket_name(
+            self, "GeoDataBucket", bucket_name=geo_data_bucket_name
+        )
 
         app_secrets_secret = Secret(
             self,
             "AppSecrets",
             secret_name=f"content-platform-LocalOfficeSearchApiAppSecrets-{Stage.of(self).stage_name}",
-            generate_secret_string=SecretStringGenerator()
+            generate_secret_string=SecretStringGenerator(),
         )
 
         self._service_account = ServiceAccount(
@@ -76,7 +86,7 @@ class LocalOfficeSearchApiDeployment(Stack):
         rds_secret_source = ExternalSecretSource(
             source_secret=db_credentials.secret_name,
             secret_mappings={"password": "DB_PASSWORD"},
-            k8s_secret_name="local-office-search-db"
+            k8s_secret_name="local-office-search-db",
         )
 
         app_secret_source = ExternalSecretSource(
@@ -84,9 +94,9 @@ class LocalOfficeSearchApiDeployment(Stack):
             secret_mappings={
                 "SECRET_KEY_BASE": "",
                 "EPISERVER_USERNAME": "",
-                "EPISERVER_PASSWORD": ""
+                "EPISERVER_PASSWORD": "",
             },
-            k8s_secret_name="local-office-search-app"
+            k8s_secret_name="local-office-search-app",
         )
 
         eks_cluster.add_cdk8s_chart(
@@ -98,7 +108,7 @@ class LocalOfficeSearchApiDeployment(Stack):
                 namespace=namespace,
                 secret_sources=[app_secret_source, rds_secret_source],
                 service_account_name=self._service_account.service_account_name,
-            )
+            ),
         )
 
         eks_cluster.add_cdk8s_chart(
@@ -118,5 +128,5 @@ class LocalOfficeSearchApiDeployment(Stack):
                 service_account=self._service_account,
                 rds_secret_name=rds_secret_source.k8s_secret_name,
                 app_secret_name=app_secret_source.k8s_secret_name,
-            )
+            ),
         )
