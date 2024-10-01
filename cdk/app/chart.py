@@ -1,5 +1,6 @@
 import json
 
+from aws_cdk.aws_ecr import Repository
 from aws_cdk.aws_eks import ServiceAccount
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
 from aws_cdk.aws_s3 import Bucket
@@ -7,12 +8,13 @@ from constructs import Construct
 from cdk8s import Chart, Cron, Duration, Size
 from cdk8s_plus_30 import Deployment, RestartPolicy, ServicePort, CronJob, ContainerProps, ImagePullPolicy, \
     ContainerPort, EnvValue, Probe, ContainerResources, CpuResources, Cpu, MemoryResources, \
-    ContainerSecurityContextProps, \
-    HorizontalPodAutoscaler, Metric, NetworkPolicyTraffic, NetworkPolicy, NetworkPolicyRule, NetworkPolicyPort, Pods, \
-    Namespaces, LabelExpression, MetricTarget, EnvFieldPaths, NetworkPolicyIpBlock
+    ContainerSecurityContextProps, HorizontalPodAutoscaler, Metric, NetworkPolicyTraffic, NetworkPolicy, \
+    NetworkPolicyRule, NetworkPolicyPort, Pods, Namespaces, LabelExpression, MetricTarget, EnvFieldPaths, \
+    NetworkPolicyIpBlock
 
 
 class LocalOfficeSearchApiChart(Chart):
+    _APP_NAME = "local-office-search-api"
     _HTTP_PORT = 3060
     _METRICS_PORT = 9394
 
@@ -21,6 +23,7 @@ class LocalOfficeSearchApiChart(Chart):
                  construct_id: str,
                  env: str,
                  namespace: str,
+                 image_repo: Repository,
                  image_version: str,
                  db: DatabaseCluster,
                  db_credentials: Credentials,
@@ -32,14 +35,15 @@ class LocalOfficeSearchApiChart(Chart):
                          construct_id,
                          namespace=namespace,
                          labels={
-                             "app": "local-office-search-api",
+                             "app": self._APP_NAME,
                              "env": env,
                              "tags.datadoghq.com/env": env,
-                             "tags.datadoghq.com/service": "local-office-search-api",
+                             "tags.datadoghq.com/service": self._APP_NAME,
                              "tags.datadoghq.com/version": image_version,
                          })
 
         deployment = self._create_deployment(
+            image_repo=image_repo,
             image_version=image_version,
             db=db,
             db_credentials=db_credentials,
@@ -49,17 +53,18 @@ class LocalOfficeSearchApiChart(Chart):
             service_account=service_account
         )
         deployment.expose_via_service(
-            name="local-office-search-api",
+            name=self._APP_NAME,
             ports=[ServicePort(name="http", port=self._HTTP_PORT)]
         )
 
         metrics_service = deployment.expose_via_service(
-            name="local-office-search-api-metrics",
+            name=f"{self._APP_NAME}-metrics",
             ports=[ServicePort(name="metrics", port=self._METRICS_PORT)]
         )
         metrics_service.metadata.add_label("custom-metrics-enabled", "true")
 
         self._create_scheduled_import(
+            image_repo=image_repo,
             image_version=image_version,
             db=db,
             db_credentials=db_credentials,
@@ -73,6 +78,7 @@ class LocalOfficeSearchApiChart(Chart):
         self._allow_metrics_collection()
 
     def _create_deployment(self,
+                           image_repo: Repository,
                            image_version: str,
                            db: DatabaseCluster,
                            db_credentials: Credentials,
@@ -84,7 +90,8 @@ class LocalOfficeSearchApiChart(Chart):
             self,
             "Deployment",
             containers=[self._server_container_props(
-                "local-office-search-api-server",
+                f"{self._APP_NAME}-server",
+                image_repo=image_repo,
                 image_version=image_version,
                 command_line=["bin/rails", "server", "-p", str(self._HTTP_PORT), "-b", "0.0.0.0"],
                 db=db,
@@ -101,7 +108,7 @@ class LocalOfficeSearchApiChart(Chart):
         deployment.metadata.add_annotation("ad.datadoghq.com/local-office-search-api-server.logs", json.dumps([{
             "source": "ruby",
             "sourcecategory": "sourcecode",
-            "service": "local-office-search-api",
+            "service": self._APP_NAME,
             "log_processing_rules": [{
                 "type": "exclude_at_match",
                 "name": "exclude_metrics_requests",
@@ -116,20 +123,22 @@ class LocalOfficeSearchApiChart(Chart):
         return deployment
 
     def _create_scheduled_import(self,
-                              image_version: str,
-                              db: DatabaseCluster,
-                              db_credentials: Credentials,
-                              lss_data_bucket: Bucket,
-                              geo_data_bucket: Bucket,
-                              geo_data_postcode_file: str,
-                              service_account: ServiceAccount):
+                                 image_repo: Repository,
+                                 image_version: str,
+                                 db: DatabaseCluster,
+                                 db_credentials: Credentials,
+                                 lss_data_bucket: Bucket,
+                                 geo_data_bucket: Bucket,
+                                 geo_data_postcode_file: str,
+                                 service_account: ServiceAccount):
         scheduled_job = CronJob(
             self,
             "ScheduledImport",
             schedule=Cron.schedule(hour="9", minute="55"),
             time_zone="Europe/London",
             containers=[self._server_container_props(
-                "local-office-search-api-server",
+                f"{self._APP_NAME}-scheduled-import",
+                image_repo=image_repo,
                 image_version=image_version,
                 command_line=["bin/rake", "sync_database"],
                 db=db,
@@ -145,11 +154,12 @@ class LocalOfficeSearchApiChart(Chart):
         scheduled_job.metadata.add_annotation("ad.datadoghq.com/local-office-search-api-scheduled-import.logs", json.dumps([{
             "source": "ruby",
             "sourcecategory": "sourcecode",
-            "service": "local-office-search-api",
+            "service": self._APP_NAME,
         }]))
 
     def _server_container_props(self,
                                 name: str,
+                                image_repo: Repository,
                                 image_version: str,
                                 command_line,
                                 db: DatabaseCluster,
@@ -160,7 +170,7 @@ class LocalOfficeSearchApiChart(Chart):
 
         return ContainerProps(
             name=name,
-            image=f"979633842206.dkr.ecr.eu-west-1.amazonaws.com/local-office-search-api:{image_version}",
+            image=f"{image_repo.repository_uri}:{image_version}",
             image_pull_policy=ImagePullPolicy.IF_NOT_PRESENT,
             args=command_line,
             ports=[ContainerPort(name="http", number=self._HTTP_PORT), ContainerPort(name="metrics", number=self._METRICS_PORT)],

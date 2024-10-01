@@ -24,3 +24,5 @@ class EcrRepository(Stack):
 
         for principal in pull_principals:
             repo.grant_pull(principal)
+
+        self.repository = repo

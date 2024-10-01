@@ -3,6 +3,7 @@
 import os
 
 from aws_cdk import App, Stage, Environment, Tags
+from aws_cdk.aws_ecr import Repository
 from aws_cdk.aws_iam import AccountPrincipal
 
 from app.local_office_search_api import LocalOfficeSearchApiDeployment
@@ -33,16 +34,6 @@ STAGES = [
     Stage(app, "dev", env=Environment(account=ACCOUNT_IDS["devops"], region="eu-west-1")),
     Stage(app, "prod", env=Environment(account=ACCOUNT_IDS["prod2"], region="eu-west-1"))
 ]
-
-# shared infra - this is deployed to the devops account, but is used in production and tagged as such
-# so in the workflow, it's deployed in the prod stage
-EcrRepository(
-    app,
-    "LocalOfficeSearchApiEcrRepo",
-    env=Environment(account=ACCOUNT_IDS["devops"], region="eu-west-1"),
-    pull_principals=[AccountPrincipal(ACCOUNT_IDS["prod2"])],
-    tags={"Environment": "prod"},
-)
 
 for stage in STAGES:
     db_stack = LocalOfficeSearchDatabase(

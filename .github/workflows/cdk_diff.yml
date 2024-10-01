@@ -32,9 +32,6 @@ jobs:
         run: |
           set -eo pipefail
           cd ./cdk
-          echo "shareddiff<<EOF" >> $GITHUB_OUTPUT
-          poetry run -- cdk diff --no-color --ci true | tee &>> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
           echo "stackdiff<<EOF" >> $GITHUB_OUTPUT
           poetry run -- cdk diff 'dev/*' --no-color --ci true | tee &>> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -53,16 +50,6 @@ jobs:
           ```
 
           </details>
-
-          <details>
-          <summary>Shared infra CDK Diff</summary>
-
-          ```
-          ${{ steps.test-diff.outputs.shareddiff }}
-          ```
-
-          </details>
-
           EOF
 
       - name: Find Comment

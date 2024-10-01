@@ -1,4 +1,5 @@
 from aws_cdk import Stack, Stage
+from aws_cdk.aws_ecr import Repository
 from aws_cdk.aws_ec2 import Vpc
 from aws_cdk.aws_eks import ServiceAccount
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
@@ -23,6 +24,8 @@ class LocalOfficeSearchApiDeployment(Stack):
                  geo_data_postcode_file: str,
                  **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
+        image_repo = Repository.from_repository_arn(self, "LocalOfficeSearchApiRepo", "arn:aws:ecr:eu-west-1:979633842206:repository/local-office-search-api")
 
         vpc = Vpc.from_lookup(
             self,
@@ -64,6 +67,7 @@ class LocalOfficeSearchApiDeployment(Stack):
                 "LocalOfficeSearchApiChart",
                 namespace=namespace,
                 env=Stage.of(scope).stage_name,
+                image_repo=image_repo,
                 image_version=app_image_version,
                 db=db,
                 db_credentials=db_credentials,
