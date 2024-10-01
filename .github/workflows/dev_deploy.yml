@@ -48,7 +48,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: "arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
+          role-to-assume: "arn:aws:iam::979633842206:role/LocalOfficeSearchApiDeployment"
           role-session-name: local-office-search-api-deploy-dev-workflow
           aws-region: eu-west-1
 
