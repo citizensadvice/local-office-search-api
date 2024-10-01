@@ -29,24 +29,26 @@ class LocalOfficeSearchDatabase(Stack):
         self.db = self._create_postgres_database()
 
     def _create_postgres_database(self):
-        sg = SecurityGroup(self, "DbSecurityGroup", vpc=self._vpc)
+        sg = SecurityGroup(self, "ClusterSecurityGroup", vpc=self._vpc)
         self.db_credentials = Credentials.from_generated_secret(
             "local_office_search_api",
             secret_name=f"content-platform-LocalOfficeSearchDbCredentials-{Stage.of(self).stage_name}",
         )
 
+        engine = DatabaseClusterEngine.aurora_postgres(version=AuroraPostgresEngineVersion.VER_16_3)
+
         db = DatabaseCluster(
             self,
-            "LocalOfficeSearchApiDb",
-            engine=DatabaseClusterEngine.aurora_postgres(
-                version=AuroraPostgresEngineVersion.VER_16_3
-            ),
+            "DbCluster",
+            engine=engine,
             backup=BackupProps(retention=Duration.days(5), preferred_window="23:00-00:00"),
             copy_tags_to_snapshot=True,
             credentials=self.db_credentials,
             default_database_name="local_office_search_api",
-            parameter_group=ParameterGroup.from_parameter_group_name(
-                self, "LocalOfficeSearchApiDbParameterGroup", "aurora-postgresql16"
+            parameter_group=ParameterGroup(
+                self,
+                "ClusterParameterGroup",
+                engine=engine
             ),
             monitoring_interval=Duration.seconds(30),
             storage_encrypted=True,
@@ -54,7 +56,7 @@ class LocalOfficeSearchDatabase(Stack):
             vpc=self._vpc,
             vpc_subnets=SubnetSelection(subnet_type=SubnetType.PRIVATE_WITH_EGRESS),
             writer=ClusterInstance.provisioned(
-                "LocalOfficeSearchApiDbWriter",
+                "DbWriter",
                 instance_type=InstanceType("t3.medium"),
                 allow_major_version_upgrade=True,
                 auto_minor_version_upgrade=True,
