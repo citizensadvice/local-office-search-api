@@ -31,7 +31,7 @@ class LocalOfficeSearchDatabase(Stack):
     def _create_postgres_database(self):
         sg = SecurityGroup(self, "DbSecurityGroup", vpc=self._vpc)
         self.db_credentials = Credentials.from_generated_secret(
-            "local-office-search-api",
+            "local_office_search_api",
             secret_name=f"content-platform-LocalOfficeSearchDbCredentials-{Stage.of(self).stage_name}",
         )
 
