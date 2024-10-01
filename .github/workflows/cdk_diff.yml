@@ -1,0 +1,77 @@
+name: CDK Diff
+
+on:
+  pull_request:
+
+jobs:
+  diff:
+    name: CDK Diff
+    runs-on: runs-on
+    permissions:
+      id-token: write
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "arn:aws:iam::979633842206:role/LocalOfficeSearchApiDeployment"
+          aws-region: eu-west-1
+          role-session-name: local-office-search-api-actions-workflow
+
+      - uses: citizensadvice/python-poetry-setup-action@v1
+        with:
+          install_cdk: true
+          project_root: "./cdk"
+
+      - name: CDK Diff
+        id: test-diff
+        run: |
+          set -eo pipefail
+          cd ./cdk
+          echo "stackdiff<<EOF" >> $GITHUB_OUTPUT
+          poetry run -- cdk diff 'dev/*' --no-color --ci true | tee &>> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Assemble Comment
+        id: assemble-comment
+        run: |
+          cat << 'EOF' | tee ./comment.md
+          # Infrastructure Changes
+
+          <details>
+          <summary>Development CDK Diff</summary>
+
+          ```
+          ${{ steps.test-diff.outputs.stackdiff }}
+          ```
+
+          </details>
+          EOF
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          direction: last
+
+      - name: Add New Comment
+        uses: peter-evans/create-or-update-comment@v4
+        if: steps.find-comment.outputs.comment-id == 0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: "comment.md"
+
+      - name: Update Comment
+        uses: peter-evans/create-or-update-comment@v4
+        if: steps.find-comment.outputs.comment-id
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          body-file: "comment.md"
