@@ -4,6 +4,11 @@ from aws_cdk.aws_ec2 import Vpc
 from aws_cdk.aws_eks import ServiceAccount
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
 from aws_cdk.aws_s3 import Bucket
+from aws_cdk.aws_secretsmanager import Secret, SecretStringGenerator
+from ca_cdk_constructs.eks.external_secrets import (
+    ExternalAwsSecretsChart,
+    ExternalSecretSource,
+)
 from constructs import Construct
 
 from cdk8s import App
@@ -48,7 +53,14 @@ class LocalOfficeSearchApiDeployment(Stack):
         lss_data_bucket = Bucket.from_bucket_name(self, "LssBucket", bucket_name=lss_bucket_name)
         geo_data_bucket = Bucket.from_bucket_name(self, "GeoDataBucket", bucket_name=geo_data_bucket_name)
 
-        service_account = ServiceAccount(
+        app_secrets_secret = Secret(
+            self,
+            "AppSecrets",
+            secret_name=f"content-platform-LocalOfficeSearchApiAppSecrets-{Stage.of(self).stage_name}",
+            generate_secret_string=SecretStringGenerator()
+        )
+
+        self._service_account = ServiceAccount(
             self,
             "LocalOfficeSearchApiServiceAccount",
             namespace=namespace,
@@ -56,14 +68,43 @@ class LocalOfficeSearchApiDeployment(Stack):
             cluster=eks_cluster,
             labels={"app.kubernetes.io/name": "local-office-search-api"},
         )
-        lss_data_bucket.grant_read(service_account)
-        geo_data_bucket.grant_read(service_account)
+        lss_data_bucket.grant_read(self._service_account)
+        geo_data_bucket.grant_read(self._service_account)
 
-        cdk8s_app = App()
+        self._cdk8s_app = App()
+
+        rds_secret_source = ExternalSecretSource(
+            source_secret=db_credentials.secret_name,
+            secret_mappings={"password": "DB_PASSWORD"},
+            k8s_secret_name="local-office-search-db"
+        )
+
+        app_secret_source = ExternalSecretSource(
+            source_secret=app_secrets_secret.secret_name,
+            secret_mappings={
+                "SECRET_KEY_BASE": "",
+                "EPISERVER_USERNAME": "",
+                "EPISERVER_PASSWORD": ""
+            },
+            k8s_secret_name="local-office-search-app"
+        )
+
+        eks_cluster.add_cdk8s_chart(
+            "ExternalSecrets",
+            ExternalAwsSecretsChart(
+                self._cdk8s_app,
+                "LocalOfficeSearchApiExternalSecrets",
+                region=Stack.of(self).region,
+                namespace=namespace,
+                secret_sources=[app_secret_source, rds_secret_source],
+                service_account_name=self._service_account.service_account_name,
+            )
+        )
+
         eks_cluster.add_cdk8s_chart(
             "LocalOfficeSearchApiChart",
             LocalOfficeSearchApiChart(
-                cdk8s_app,
+                self._cdk8s_app,
                 "LocalOfficeSearchApiChart",
                 namespace=namespace,
                 env=Stage.of(scope).stage_name,
@@ -74,6 +115,8 @@ class LocalOfficeSearchApiDeployment(Stack):
                 lss_data_bucket=lss_data_bucket,
                 geo_data_bucket=geo_data_bucket,
                 geo_data_postcode_file=geo_data_postcode_file,
-                service_account=service_account,
+                service_account=self._service_account,
+                rds_secret_name=rds_secret_source.k8s_secret_name,
+                app_secret_name=app_secret_source.k8s_secret_name,
             )
         )

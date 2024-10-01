@@ -4,13 +4,13 @@ from aws_cdk.aws_ecr import Repository
 from aws_cdk.aws_eks import ServiceAccount
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
 from aws_cdk.aws_s3 import Bucket
-from constructs import Construct
 from cdk8s import Chart, Cron, Duration, Size
 from cdk8s_plus_30 import Deployment, RestartPolicy, ServicePort, CronJob, ContainerProps, ImagePullPolicy, \
     ContainerPort, EnvValue, Probe, ContainerResources, CpuResources, Cpu, MemoryResources, \
     ContainerSecurityContextProps, HorizontalPodAutoscaler, Metric, NetworkPolicyTraffic, NetworkPolicy, \
     NetworkPolicyRule, NetworkPolicyPort, Pods, Namespaces, LabelExpression, MetricTarget, EnvFieldPaths, \
-    NetworkPolicyIpBlock
+    NetworkPolicyIpBlock, Secret
+from constructs import Construct
 
 
 class LocalOfficeSearchApiChart(Chart):
@@ -30,7 +30,9 @@ class LocalOfficeSearchApiChart(Chart):
                  lss_data_bucket: Bucket,
                  geo_data_bucket: Bucket,
                  geo_data_postcode_file: str,
-                 service_account: ServiceAccount):
+                 service_account: ServiceAccount,
+                 rds_secret_name: str,
+                 app_secret_name: str):
         super().__init__(scope,
                          construct_id,
                          namespace=namespace,
@@ -42,16 +44,19 @@ class LocalOfficeSearchApiChart(Chart):
                              "tags.datadoghq.com/version": image_version,
                          })
 
-        deployment = self._create_deployment(
-            image_repo=image_repo,
-            image_version=image_version,
-            db=db,
-            db_credentials=db_credentials,
-            lss_data_bucket=lss_data_bucket,
-            geo_data_bucket=geo_data_bucket,
-            geo_data_postcode_file=geo_data_postcode_file,
-            service_account=service_account
-        )
+        self._container_image = f"{image_repo.repository_uri}:{image_version}"
+        self._app_version = image_version
+
+        self._db = db
+        self._db_username = db_credentials.username
+        self._db_secret = Secret.from_secret_name(self, "LocalOfficeSearchDbSecret", name=rds_secret_name)
+        self._app_secret = Secret.from_secret_name(self, "LocalOfficeSearchApiAppSecrets", name=app_secret_name)
+        self._service_account = service_account
+        self._lss_data_bucket_name = lss_data_bucket.bucket_name
+        self._geo_data_bucket_name = geo_data_bucket.bucket_name
+        self._geo_data_postcode_file = geo_data_postcode_file
+
+        deployment = self._create_deployment()
         deployment.expose_via_service(
             name=self._APP_NAME,
             ports=[ServicePort(name="http", port=self._HTTP_PORT)]
@@ -63,44 +68,20 @@ class LocalOfficeSearchApiChart(Chart):
         )
         metrics_service.metadata.add_label("custom-metrics-enabled", "true")
 
-        self._create_scheduled_import(
-            image_repo=image_repo,
-            image_version=image_version,
-            db=db,
-            db_credentials=db_credentials,
-            lss_data_bucket=lss_data_bucket,
-            geo_data_bucket=geo_data_bucket,
-            geo_data_postcode_file=geo_data_postcode_file,
-            service_account=service_account
-        )
+        self._create_scheduled_import()
         self._configure_autoscaler(deployment)
         self._allow_external_traffic()
         self._allow_metrics_collection()
 
-    def _create_deployment(self,
-                           image_repo: Repository,
-                           image_version: str,
-                           db: DatabaseCluster,
-                           db_credentials: Credentials,
-                           lss_data_bucket: Bucket,
-                           geo_data_bucket: Bucket,
-                           geo_data_postcode_file: str,
-                           service_account: ServiceAccount):
+    def _create_deployment(self):
         deployment = Deployment(
             self,
             "Deployment",
             containers=[self._server_container_props(
                 f"{self._APP_NAME}-server",
-                image_repo=image_repo,
-                image_version=image_version,
                 command_line=["bin/rails", "server", "-p", str(self._HTTP_PORT), "-b", "0.0.0.0"],
-                db=db,
-                db_credentials=db_credentials,
-                lss_data_bucket=lss_data_bucket,
-                geo_data_bucket=geo_data_bucket,
-                geo_data_postcode_file=geo_data_postcode_file,
             )],
-            service_account=service_account,
+            service_account=self._service_account,
             restart_policy=RestartPolicy.ALWAYS,
             termination_grace_period=Duration.seconds(60),
         )
@@ -122,15 +103,7 @@ class LocalOfficeSearchApiChart(Chart):
 
         return deployment
 
-    def _create_scheduled_import(self,
-                                 image_repo: Repository,
-                                 image_version: str,
-                                 db: DatabaseCluster,
-                                 db_credentials: Credentials,
-                                 lss_data_bucket: Bucket,
-                                 geo_data_bucket: Bucket,
-                                 geo_data_postcode_file: str,
-                                 service_account: ServiceAccount):
+    def _create_scheduled_import(self):
         scheduled_job = CronJob(
             self,
             "ScheduledImport",
@@ -138,16 +111,9 @@ class LocalOfficeSearchApiChart(Chart):
             time_zone="Europe/London",
             containers=[self._server_container_props(
                 f"{self._APP_NAME}-scheduled-import",
-                image_repo=image_repo,
-                image_version=image_version,
                 command_line=["bin/rake", "sync_database"],
-                db=db,
-                db_credentials=db_credentials,
-                lss_data_bucket=lss_data_bucket,
-                geo_data_bucket=geo_data_bucket,
-                geo_data_postcode_file=geo_data_postcode_file,
             )],
-            service_account=service_account,
+            service_account=self._service_account,
             restart_policy=RestartPolicy.NEVER,
         )
 
@@ -157,45 +123,14 @@ class LocalOfficeSearchApiChart(Chart):
             "service": self._APP_NAME,
         }]))
 
-    def _server_container_props(self,
-                                name: str,
-                                image_repo: Repository,
-                                image_version: str,
-                                command_line,
-                                db: DatabaseCluster,
-                                db_credentials: Credentials,
-                                lss_data_bucket: Bucket,
-                                geo_data_bucket: Bucket,
-                                geo_data_postcode_file: str):
-
+    def _server_container_props(self, name: str, command_line):
         return ContainerProps(
             name=name,
-            image=f"{image_repo.repository_uri}:{image_version}",
+            image=self._container_image,
             image_pull_policy=ImagePullPolicy.IF_NOT_PRESENT,
             args=command_line,
             ports=[ContainerPort(name="http", number=self._HTTP_PORT), ContainerPort(name="metrics", number=self._METRICS_PORT)],
-            env_variables={
-                "DD_ENV": EnvValue.from_field_ref(EnvFieldPaths.POD_LABEL, key="tags.datadoghq.com/env"),
-                "DD_SERVICE": EnvValue.from_field_ref(EnvFieldPaths.POD_LABEL, key="tags.datadoghq.com/service"),
-                "DD_VERSION": EnvValue.from_field_ref(EnvFieldPaths.POD_LABEL, key="tags.datadoghq.com/version"),
-                "DD_AGENT_HOST": EnvValue.from_field_ref(EnvFieldPaths.NODE_IP),
-                "RAILS_MAX_THREADS": EnvValue.from_value("10"),
-                "RAILS_ENV": EnvValue.from_value("production"),
-                "RACK_ENV": EnvValue.from_value("production"),
-                "NODE_ENV": EnvValue.from_value("production"),
-                "SECRET_KEY_BASE": EnvValue.from_value('<%= vault_ref "RAILS_MASTER_KEY" %>'), ## TODO: figure out how to pass through external secret here??
-                "RAILS_LOG_TO_STDOUT": EnvValue.from_value("true"),
-                "LSS_DATA_BUCKET": EnvValue.from_value(lss_data_bucket.bucket_name),
-                "GEO_DATA_BUCKET": EnvValue.from_value(geo_data_bucket.bucket_name),
-                "GEO_DATA_POSTCODES_FILE": EnvValue.from_value(geo_data_postcode_file),
-                "LOCAL_OFFICE_SEARCH_EPISERVER_USER": EnvValue.from_value('<%= vault_ref "LOCAL_OFFICE_SEARCH_EPISERVER_USER" %>'), ## TODO
-                "LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD": EnvValue.from_value('<%= vault_ref "LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD" %>'), ## TODO
-                "LOCAL_OFFICE_SEARCH_DB_USER": EnvValue.from_value(db_credentials.username),
-                "LOCAL_OFFICE_SEARCH_DB_PASSWORD": EnvValue.from_value(""), ## TODO EnvValue.from_secret_value(db_credentials),
-                "LOCAL_OFFICE_SEARCH_DB_HOST": EnvValue.from_value(db.cluster_endpoint.hostname),
-                "LOCAL_OFFICE_SEARCH_DB_PORT": EnvValue.from_value(str(db.cluster_endpoint.port)),
-                "LOCAL_OFFICE_SEARCH_DB_NAME": EnvValue.from_value("local_office_search_api"),
-            },
+            env_variables=self._app_env_vars(),
             readiness=Probe.from_http_get(
                 path="/status",
                 port=self._HTTP_PORT,
@@ -211,6 +146,30 @@ class LocalOfficeSearchApiChart(Chart):
             ),
             security_context=ContainerSecurityContextProps(user=3000)
         )
+
+    def _app_env_vars(self):
+        return {
+            "DD_ENV": EnvValue.from_field_ref(EnvFieldPaths.POD_LABEL, key="tags.datadoghq.com/env"),
+            "DD_SERVICE": EnvValue.from_field_ref(EnvFieldPaths.POD_LABEL, key="tags.datadoghq.com/service"),
+            "DD_VERSION": EnvValue.from_field_ref(EnvFieldPaths.POD_LABEL, key="tags.datadoghq.com/version"),
+            "DD_AGENT_HOST": EnvValue.from_field_ref(EnvFieldPaths.NODE_IP),
+            "RAILS_MAX_THREADS": EnvValue.from_value("10"),
+            "RAILS_ENV": EnvValue.from_value("production"),
+            "RACK_ENV": EnvValue.from_value("production"),
+            "NODE_ENV": EnvValue.from_value("production"),
+            "SECRET_KEY_BASE": self._app_secret.env_value("SECRET_KEY_BASE"),
+            "RAILS_LOG_TO_STDOUT": EnvValue.from_value("true"),
+            "LSS_DATA_BUCKET": EnvValue.from_value(self._lss_data_bucket_name),
+            "GEO_DATA_BUCKET": EnvValue.from_value(self._geo_data_bucket_name),
+            "GEO_DATA_POSTCODES_FILE": EnvValue.from_value(self._geo_data_postcode_file),
+            "LOCAL_OFFICE_SEARCH_EPISERVER_USER": self._app_secret.env_value("EPISERVER_USERNAME"),
+            "LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD": self._app_secret.env_value("EPISERVER_PASSWORD"),
+            "LOCAL_OFFICE_SEARCH_DB_USER": EnvValue.from_value(self._db_username),
+            "LOCAL_OFFICE_SEARCH_DB_PASSWORD": self._db_secret.env_value("DB_PASSWORD"),
+            "LOCAL_OFFICE_SEARCH_DB_HOST": EnvValue.from_value(self._db.cluster_endpoint.hostname),
+            "LOCAL_OFFICE_SEARCH_DB_PORT": EnvValue.from_value(str(self._db.cluster_endpoint.port)),
+            "LOCAL_OFFICE_SEARCH_DB_NAME": EnvValue.from_value("local_office_search_api"),
+        }
 
     def _configure_autoscaler(self, deployment):
         HorizontalPodAutoscaler(
