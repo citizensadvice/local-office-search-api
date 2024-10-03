@@ -4,7 +4,7 @@ import typing
 from aws_cdk.aws_ecr import Repository
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
 from aws_cdk.aws_s3 import Bucket
-from cdk8s import Chart, Cron, Duration, Size
+from cdk8s import Chart, Cron, Duration, Size, ApiObjectMetadataDefinition
 from cdk8s_plus_30 import (
     Deployment,
     RestartPolicy,
@@ -59,17 +59,19 @@ class LocalOfficeSearchApiChart(Chart):
         rds_secret_name: str,
         app_secret_name: str,
     ):
+        self._labels = {
+            "app": self._APP_NAME,
+            "env": env,
+            "tags.datadoghq.com/env": env,
+            "tags.datadoghq.com/service": self._APP_NAME,
+            "tags.datadoghq.com/version": image_version,
+        }
+
         super().__init__(
             scope,
             construct_id,
             namespace=namespace,
-            labels={
-                "app": self._APP_NAME,
-                "env": env,
-                "tags.datadoghq.com/env": env,
-                "tags.datadoghq.com/service": self._APP_NAME,
-                "tags.datadoghq.com/version": image_version,
-            },
+            labels=self._labels,
         )
 
         self._container_image = f"{image_repo.repository_uri}:{image_version}"
@@ -120,6 +122,9 @@ class LocalOfficeSearchApiChart(Chart):
             termination_grace_period=Duration.seconds(60),
         )
 
+        self._add_labels(deployment.metadata)
+        self._add_labels(deployment.pod_metadata)
+        deployment.pod_metadata.add_label("component", "local-office-search-api-server")
         deployment.metadata.add_annotation(
             "ad.datadoghq.com/local-office-search-api-server.logs",
             json.dumps(
@@ -162,6 +167,10 @@ class LocalOfficeSearchApiChart(Chart):
             service_account=self._service_account,
             restart_policy=RestartPolicy.NEVER,
         )
+
+        self._add_labels(scheduled_job.metadata)
+        self._add_labels(scheduled_job.pod_metadata)
+        scheduled_job.pod_metadata.add_label("component", "local-office-search-api-scheduled-import")
 
         scheduled_job.metadata.add_annotation(
             "ad.datadoghq.com/local-office-search-api-scheduled-import.logs",
@@ -303,3 +312,7 @@ class LocalOfficeSearchApiChart(Chart):
                 ]
             ),
         )
+
+    def _add_labels(self, metadata: ApiObjectMetadataDefinition):
+        for key, value in self._labels:
+            metadata.add_label(key, value)

@@ -131,7 +131,7 @@ class LocalOfficeSearchApiDeployment(Stack):
                 self._cdk8s_app,
                 "LocalOfficeSearchApiChart",
                 namespace=namespace,
-                env=Stage.of(scope).stage_name,
+                env=Stage.of(self).stage_name,
                 image_repo=image_repo,
                 image_version=app_image_version,
                 db=db,
