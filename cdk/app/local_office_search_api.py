@@ -81,6 +81,15 @@ class LocalOfficeSearchApiDeployment(Stack):
         lss_data_bucket.grant_read(self._service_account)
         geo_data_bucket.grant_read(self._service_account)
 
+        external_secrets_service_account = ServiceAccount(
+            self,
+            "LocalOfficeSearchApiReadExternalSecrets",
+            namespace=namespace,
+            name="local-office-search-api-read-external-secrets",
+            cluster=eks_cluster,
+            labels={"app.kubernetes.io/name": "local-office-search-api"},
+        )
+
         self._cdk8s_app = App()
 
         rds_secret_source = ExternalSecretSource(
@@ -88,6 +97,10 @@ class LocalOfficeSearchApiDeployment(Stack):
             secret_mappings={"password": "DB_PASSWORD"},
             k8s_secret_name="local-office-search-db",
         )
+        db_credentials_secret = Secret.from_secret_name_v2(
+            self, "LocalOfficeSearchDbSecret", secret_name=db_credentials.secret_name
+        )
+        db_credentials_secret.grant_read(external_secrets_service_account)
 
         app_secret_source = ExternalSecretSource(
             source_secret=app_secrets_secret.secret_name,
@@ -98,6 +111,7 @@ class LocalOfficeSearchApiDeployment(Stack):
             },
             k8s_secret_name="local-office-search-app",
         )
+        app_secrets_secret.grant_read(external_secrets_service_account)
 
         eks_cluster.add_cdk8s_chart(
             "ExternalSecrets",
@@ -107,7 +121,7 @@ class LocalOfficeSearchApiDeployment(Stack):
                 region=Stack.of(self).region,
                 namespace=namespace,
                 secret_sources=[app_secret_source, rds_secret_source],
-                service_account_name=self._service_account.service_account_name,
+                service_account_name=external_secrets_service_account.service_account_name,
             ),
         )
 

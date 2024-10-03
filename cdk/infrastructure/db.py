@@ -35,7 +35,9 @@ class LocalOfficeSearchDatabase(Stack):
             secret_name=f"content-platform-LocalOfficeSearchDbCredentials-{Stage.of(self).stage_name}",
         )
 
-        engine = DatabaseClusterEngine.aurora_postgres(version=AuroraPostgresEngineVersion.VER_16_3)
+        engine = DatabaseClusterEngine.aurora_postgres(
+            version=AuroraPostgresEngineVersion.VER_16_3
+        )
 
         db = DatabaseCluster(
             self,
@@ -45,11 +47,7 @@ class LocalOfficeSearchDatabase(Stack):
             copy_tags_to_snapshot=True,
             credentials=self.db_credentials,
             default_database_name="local_office_search_api",
-            parameter_group=ParameterGroup(
-                self,
-                "ClusterParameterGroup",
-                engine=engine
-            ),
+            parameter_group=ParameterGroup(self, "ClusterParameterGroup", engine=engine),
             monitoring_interval=Duration.seconds(30),
             storage_encrypted=True,
             security_groups=[sg],
