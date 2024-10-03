@@ -314,5 +314,5 @@ class LocalOfficeSearchApiChart(Chart):
         )
 
     def _add_labels(self, metadata: ApiObjectMetadataDefinition):
-        for key, value in self._labels:
+        for key, value in self._labels.items():
             metadata.add_label(key, value)
