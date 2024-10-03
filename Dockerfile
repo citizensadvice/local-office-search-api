@@ -25,4 +25,6 @@ RUN addgroup --gid 1000 ruby && \
 
 COPY . /app
 
+RUN chmod -R 777 /app/tmp /app/log
+
 USER 1000
