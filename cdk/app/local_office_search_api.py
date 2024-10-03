@@ -1,7 +1,7 @@
 from aws_cdk import Stack, Stage
 from aws_cdk.aws_ecr import Repository
 from aws_cdk.aws_ec2 import Vpc
-from aws_cdk.aws_eks import ServiceAccount
+from aws_cdk.aws_eks import ServiceAccount as AwsServiceAccount
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
 from aws_cdk.aws_s3 import Bucket
 from aws_cdk.aws_secretsmanager import Secret, SecretStringGenerator
@@ -70,7 +70,7 @@ class LocalOfficeSearchApiDeployment(Stack):
             generate_secret_string=SecretStringGenerator(),
         )
 
-        self._service_account = ServiceAccount(
+        self._service_account = AwsServiceAccount(
             self,
             "LocalOfficeSearchApiServiceAccount",
             namespace=namespace,
@@ -81,7 +81,7 @@ class LocalOfficeSearchApiDeployment(Stack):
         lss_data_bucket.grant_read(self._service_account)
         geo_data_bucket.grant_read(self._service_account)
 
-        external_secrets_service_account = ServiceAccount(
+        external_secrets_service_account = AwsServiceAccount(
             self,
             "LocalOfficeSearchApiReadExternalSecrets",
             namespace=namespace,
@@ -139,7 +139,7 @@ class LocalOfficeSearchApiDeployment(Stack):
                 lss_data_bucket=lss_data_bucket,
                 geo_data_bucket=geo_data_bucket,
                 geo_data_postcode_file=geo_data_postcode_file,
-                service_account=self._service_account,
+                service_account_name=self._service_account.service_account_name,
                 rds_secret_name=rds_secret_source.k8s_secret_name,
                 app_secret_name=app_secret_source.k8s_secret_name,
             ),

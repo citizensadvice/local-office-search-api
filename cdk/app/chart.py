@@ -2,7 +2,6 @@ import json
 import typing
 
 from aws_cdk.aws_ecr import Repository
-from aws_cdk.aws_eks import ServiceAccount
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
 from aws_cdk.aws_s3 import Bucket
 from cdk8s import Chart, Cron, Duration, Size
@@ -33,7 +32,7 @@ from cdk8s_plus_30 import (
     MetricTarget,
     EnvFieldPaths,
     NetworkPolicyIpBlock,
-    Secret,
+    Secret, ServiceAccount,
 )
 from constructs import Construct
 
@@ -56,7 +55,7 @@ class LocalOfficeSearchApiChart(Chart):
         lss_data_bucket: Bucket,
         geo_data_bucket: Bucket,
         geo_data_postcode_file: str,
-        service_account: ServiceAccount,
+        service_account_name: str,
         rds_secret_name: str,
         app_secret_name: str,
     ):
@@ -84,7 +83,9 @@ class LocalOfficeSearchApiChart(Chart):
         self._app_secret = Secret.from_secret_name(
             self, "LocalOfficeSearchApiAppSecrets", name=app_secret_name
         )
-        self._service_account = service_account
+        self._service_account = ServiceAccount.from_service_account_name(
+            self, "LocalOfficeSearchApiAppServiceAccount", service_account_name
+        )
         self._lss_data_bucket_name = lss_data_bucket.bucket_name
         self._geo_data_bucket_name = geo_data_bucket.bucket_name
         self._geo_data_postcode_file = geo_data_postcode_file
