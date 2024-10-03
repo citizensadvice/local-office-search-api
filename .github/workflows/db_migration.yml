@@ -1,0 +1,32 @@
+name: apply DB migrations
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'environment'
+        required: true
+        type: environment
+
+jobs:
+  build:
+    name: apply DB migration
+    runs-on: runs-on
+    permissions:
+      id-token: write
+      contents: read
+    environment:
+      name: ${{ inputs.env }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
+          role-session-name: local-office-search-api-${{ inputs.env }}-db-migrate-workflow
+          aws-region: eu-west-1
+
+      - name: Generate Kube Config
+        run: aws eks update-kubeconfig --name=${{ env.EKS_CLUSTER }}
+
+      - name: run DB migration action
+        run: kubectl -n ${{ inputs.env }}-local-office-search-api exec $(kubectl -n ${{ inputs.env }}-local-office-search-api get pods -l component=local-office-search-api-server --output=jsonpath={.items[0].metadata.name}) -- bin/rake db:migrate
