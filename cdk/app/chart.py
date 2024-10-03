@@ -200,7 +200,7 @@ class LocalOfficeSearchApiChart(Chart):
                 cpu=CpuResources(request=Cpu.millis(400), limit=Cpu.millis(800)),
                 memory=MemoryResources(request=Size.mebibytes(512), limit=Size.gibibytes(1)),
             ),
-            security_context=ContainerSecurityContextProps(user=3000),
+            security_context=ContainerSecurityContextProps(user=1000, read_only_root_filesystem=False),
         )
 
     def _app_env_vars(self):
