@@ -4,11 +4,12 @@ module LssLoader
   class OfficeBuilder
     include CsvHelpers
 
-    def initialize(members_csv, advice_locations_csv, accessibility_info_csv, volunteer_roles_csv)
+    def initialize(members_csv:, advice_locations_csv:, accessibility_info_csv:, volunteer_roles_csv:, local_authorities_csv:)
       @members_csv = members_csv
       @advice_locations_csv = advice_locations_csv
       @accessibility_info_csv = accessibility_info_csv
       @volunteer_roles_csv = volunteer_roles_csv
+      @local_authorities_csv = local_authorities_csv
     end
 
     def build
@@ -20,6 +21,7 @@ module LssLoader
       load_advice_locations_csv!
       load_accessibility_info_csv!
       load_volunteer_roles_csv!
+      load_local_authorities_csv!
       nullify_dangling_parent_ids!
 
       [@offices.values, @served_areas]
@@ -39,7 +41,6 @@ module LssLoader
         next if advice_location_row_is_excluded?(row)
 
         build_office_from_advice_location_row(row)
-        build_served_areas_from_advice_location_row(row)
       end
     end
 
@@ -52,6 +53,16 @@ module LssLoader
     def load_volunteer_roles_csv!
       @volunteer_roles_csv.each do |row|
         apply_volunteer_roles_from_row(row)
+      end
+    end
+
+    def load_local_authorities_csv!
+      @local_authorities_csv.each do |row|
+        office_id = row["salesforce_advice_location_id"]
+        local_authority_id = str_or_nil(row["local_authority_ons_code"])
+        if @offices.include?(office_id) && @valid_local_authority_ids.include?(local_authority_id)
+          @served_areas << ServedArea.new(office_id:, local_authority_id:)
+        end
       end
     end
 
@@ -102,21 +113,10 @@ module LssLoader
     # rubocop:enable Metrics/AbcSize
 
     def build_served_areas_from_member_row(row)
-      ["local_authority_ons_code"].each do |served_area_column|
-        local_authority_id = str_or_nil(row[served_area_column])
-        if @valid_local_authority_ids.include?(local_authority_id)
-          @served_areas << ServedArea.new(office_id: row["salesforce_id"], local_authority_id:)
-        end
-      end
-    end
+      local_authority_id = str_or_nil(row["local_authority_ons_code"])
+      return unless @valid_local_authority_ids.include?(local_authority_id)
 
-    def build_served_areas_from_advice_location_row(row)
-      ["local_authority_ons_code"].each do |served_area_column|
-        local_authority_id = str_or_nil(row[served_area_column])
-        if @valid_local_authority_ids.include?(local_authority_id)
-          @served_areas << ServedArea.new(office_id: row["salesforce_advice_location_id"], local_authority_id:)
-        end
-      end
+      @served_areas << ServedArea.new(office_id: row["salesforce_id"], local_authority_id:)
     end
 
     def apply_accessibility_info_from_row(row)

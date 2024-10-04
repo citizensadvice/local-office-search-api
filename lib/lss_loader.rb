@@ -12,14 +12,22 @@ module LssLoader
     include LoaderHelpers
     include Validators
 
-    def initialize(members_csv:, advice_locations_csv:, opening_hours_csv:, volunteer_roles_csv:, accessibility_info_csv:)
+    # rubocop:disable Metrics/ParameterLists
+    def initialize(members_csv:,
+                   advice_locations_csv:,
+                   opening_hours_csv:,
+                   volunteer_roles_csv:,
+                   accessibility_info_csv:,
+                   local_authorities_csv:)
       @members_csv = CSV.new(members_csv, headers: true, return_headers: true)
       @advice_locations_csv = CSV.new(advice_locations_csv, headers: true, return_headers: true)
       @opening_hours_csv = CSV.new(opening_hours_csv, headers: true, return_headers: true)
       @volunteer_roles_csv = CSV.new(volunteer_roles_csv, headers: true, return_headers: true)
       @accessibility_info_csv = CSV.new(accessibility_info_csv, headers: true, return_headers: true)
+      @local_authorities_csv = CSV.new(local_authorities_csv, headers: true, return_headers: true)
       initialise_csv_headers!
     end
+    # rubocop:enable Metrics/ParameterLists
 
     def load!
       ActiveRecord::Base.transaction do
@@ -27,7 +35,11 @@ module LssLoader
         validate_csv_headers!
         clear_existing_records!
 
-        offices, served_areas = OfficeBuilder.new(@members_csv, @advice_locations_csv, @accessibility_info_csv, @volunteer_roles_csv).build
+        offices, served_areas = OfficeBuilder.new(members_csv: @members_csv,
+                                                  advice_locations_csv: @advice_locations_csv,
+                                                  accessibility_info_csv: @accessibility_info_csv,
+                                                  volunteer_roles_csv: @volunteer_roles_csv,
+                                                  local_authorities_csv: @local_authorities_csv).build
         opening_times = OpeningTimeBuilder.new(@opening_hours_csv, offices.map(&:id)).build
 
         offices.map(&:save!)
@@ -44,6 +56,7 @@ module LssLoader
       @opening_hours_csv.shift if @opening_hours_csv.headers == true
       @volunteer_roles_csv.shift if @volunteer_roles_csv.headers == true
       @accessibility_info_csv.shift if @accessibility_info_csv.headers == true
+      @local_authorities_csv.shift if @local_authorities_csv.headers == true
     end
 
     def clear_existing_records!
