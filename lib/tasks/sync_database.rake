@@ -8,19 +8,19 @@ desc "Sync database with data sources"
 task sync_database: :environment do
   s3_loader = S3Loader.new
 
-  # raise "GEO_DATA_BUCKET is not specified, unable to continue" if Rails.configuration.geo_data_bucket.nil?
-  # raise "GEO_DATA_POSTCODES_FILE is not specified, unable to continue" if Rails.configuration.geo_data_postcodes_file.nil?
-  #
-  # Rails.logger.info("Opening geodata files from S3...")
-  # begin
-  #   postcode_csv = s3_loader.object_as_io Rails.configuration.geo_data_bucket, Rails.configuration.geo_data_postcodes_file
-  #
-  #   Rails.logger.info("Starting postcode import...")
-  #   postcode_loader = PostcodeLoader.new postcode_csv
-  #   postcode_loader.load!
-  # ensure
-  #   postcode_csv&.close
-  # end
+  raise "GEO_DATA_BUCKET is not specified, unable to continue" if Rails.configuration.geo_data_bucket.nil?
+  raise "GEO_DATA_POSTCODES_FILE is not specified, unable to continue" if Rails.configuration.geo_data_postcodes_file.nil?
+
+  Rails.logger.info("Opening geodata files from S3...")
+  begin
+    postcode_csv = s3_loader.object_as_io Rails.configuration.geo_data_bucket, Rails.configuration.geo_data_postcodes_file
+
+    Rails.logger.info("Starting postcode import...")
+    postcode_loader = PostcodeLoader.new postcode_csv
+    postcode_loader.load!
+  ensure
+    postcode_csv&.close
+  end
 
   raise "LSS_DATA_BUCKET is not specified, unable to continue" if Rails.configuration.lss_data_bucket.nil?
 

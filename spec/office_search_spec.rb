@@ -63,6 +63,16 @@ RSpec.describe OfficeSearch do
     expect(results.pluck(:id)).to eq([])
   end
 
+  it "only returns a single copy of a particular LCA" do
+    office = create_office_with_local_authority
+    local_authority_id = LocalAuthority.create!(id: "X0001235", name: "Testtown").id
+    ServedArea.create!(local_authority_id:, office:)
+
+    results, = described_class.by_location("test")
+
+    expect(results.length).to eq(1)
+  end
+
   def create_office_with_local_authority(la_id: "X0001234", la_name: "Testshire", **office_vals)
     local_authority_id = LocalAuthority.create!(id: la_id, name: la_name).id
     office = create_office(name: "#{la_name} Citizens Advice", **office_vals)
