@@ -8,6 +8,7 @@ module LssLoader
       raise LssLoadError, "Opening Hours CSV file was not in expected format" unless opening_hours_csv_has_expected_headers?
       raise LssLoadError, "Volunteer roles CSV file was not in expected format" unless volunteer_roles_csv_has_expected_headers?
       raise LssLoadError, "Accessibility info CSV file was not in expected format" unless accessibility_info_csv_has_expected_headers?
+      raise LssLoadError, "Local authorities CSV file was not in expected format" unless local_authorities_csv_has_expected_headers?
     end
 
     private
@@ -47,6 +48,11 @@ module LssLoader
 
     def accessibility_info_csv_has_expected_headers?
       @accessibility_info_csv.headers == %w[salesforce_advice_location_id advice_location_accessibility transformation_date]
+    end
+
+    def local_authorities_csv_has_expected_headers?
+      @local_authorities_csv.headers == %w[salesforce_advice_location_id local_authority_code_type local_authority_ons_code
+                                           transformation_date]
     end
   end
 end

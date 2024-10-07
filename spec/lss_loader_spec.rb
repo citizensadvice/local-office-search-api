@@ -163,7 +163,7 @@ RSpec.describe LssLoader do
 
   it "loads in local authority IDs on advice locations into the served areas table" do
     LocalAuthority.create! id: "E06000023", name: "Bristol, City of"
-    load_from_fixtures locations_csv_filename: "has_local_authority"
+    load_from_fixtures locations_csv_filename: "minimal", local_authorities_csv_filename: "minimal"
 
     expect(Office.find("0014K000009EMMbQAO").served_areas.first&.local_authority_id).to eq("E06000023")
   end
@@ -202,9 +202,13 @@ RSpec.describe LssLoader do
     id
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-  def load_from_fixtures(members_csv_filename: "empty", locations_csv_filename: "empty", opening_hours_csv_filename: "empty",
-                         accessibility_info_csv_filename: "empty", volunteer_roles_csv_filename: "empty")
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
+  def load_from_fixtures(members_csv_filename: "empty",
+                         locations_csv_filename: "empty",
+                         opening_hours_csv_filename: "empty",
+                         accessibility_info_csv_filename: "empty",
+                         volunteer_roles_csv_filename: "empty",
+                         local_authorities_csv_filename: "empty")
     members_csv = File.open(File.expand_path("fixtures/members/#{members_csv_filename}.csv", File.dirname(__FILE__)))
     advice_locations_csv = File.open(File.expand_path("fixtures/advice_locations/#{locations_csv_filename}.csv", File.dirname(__FILE__)))
     opening_hours_csv = File.open(File.expand_path("fixtures/opening_hours/#{opening_hours_csv_filename}.csv", File.dirname(__FILE__)))
@@ -214,11 +218,15 @@ RSpec.describe LssLoader do
     volunteer_roles_csv = File.open(
       File.expand_path("fixtures/volunteer_roles/#{volunteer_roles_csv_filename}.csv", File.dirname(__FILE__))
     )
+    local_authorities_csv = File.open(
+      File.expand_path("fixtures/local_authorities/#{local_authorities_csv_filename}.csv", File.dirname(__FILE__))
+    )
     lss_loader = LssLoader::LssLoader.new(members_csv:,
                                           advice_locations_csv:,
                                           opening_hours_csv:,
                                           accessibility_info_csv:,
-                                          volunteer_roles_csv:)
+                                          volunteer_roles_csv:,
+                                          local_authorities_csv:)
     lss_loader.load!
   ensure
     members_csv&.close
@@ -226,8 +234,9 @@ RSpec.describe LssLoader do
     opening_hours_csv&.close
     accessibility_info_csv&.close
     volunteer_roles_csv&.close
+    local_authorities_csv&.close
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
 
   def load_from_fixtures_with_error(**opts)
     expect do

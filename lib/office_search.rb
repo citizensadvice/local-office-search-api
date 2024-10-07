@@ -66,7 +66,7 @@ module OfficeSearch
   end
 
   def self.build_fuzzy_query(near, opts)
-    office_with_local_authorities = Office.left_outer_joins(served_areas: :local_authority)
+    office_with_local_authorities = Office.left_outer_joins(served_areas: :local_authority).distinct
     q = office_with_local_authorities.where(Office.arel_table[:name].matches("%#{near}%"))
     q = q.or(office_with_local_authorities.where(LocalAuthority.arel_table[:name].matches("%#{near}%")))
     q = q.where(office_type: :office)
