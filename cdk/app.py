@@ -24,6 +24,11 @@ GEO_DATA_FILES = {
     "prod": ("prod-onsgeodata-buckete75ea64c-phllx3dqnkmx", "geo_postcodes_prod.csv"),
 }
 
+API_V0_HOSTNAMES = {
+    "dev": "bureaudetails.qa.citizensadvice.org.uk",
+    "prod": "bureaudetails.prod.content.citizensadvice.org.uk",
+}
+
 STAGES = [
     Stage(app, "dev", env=Environment(account=ACCOUNT_IDS["devops"], region="eu-west-1")),
     Stage(app, "prod", env=Environment(account=ACCOUNT_IDS["prod2"], region="eu-west-1")),
@@ -40,6 +45,7 @@ for stage in STAGES:
         lss_bucket_name=LSS_FILES[stage.stage_name],
         geo_data_bucket_name=GEO_DATA_FILES[stage.stage_name][0],
         geo_data_postcode_file=GEO_DATA_FILES[stage.stage_name][1],
+        api_v0_host=API_V0_HOSTNAMES[stage.stage_name],
     )
 
 for child in app.node.children:
