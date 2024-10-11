@@ -280,6 +280,39 @@ class LocalOfficeSearchApiChart(Chart):
         ingress = Ingress(self, "LocalOfficeSearchApiV0Ingress", class_name="alb")
         ingress.add_host_rule(host, "/api/v0/", IngressBackend.from_service(app_service))
 
+        ingress.metadata.add_annotation("alb.ingress.kubernetes.io/scheme", "internet-facing")
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/healthcheck-path", "/status"
+        )
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/actions.ssl-redirect",
+            json.dumps(
+                {
+                    "Type": "redirect",
+                    "RedirectConfig": {
+                        "Protocol": "HTTPS",
+                        "Port": "443",
+                        "StatusCode": "HTTP_301",
+                    },
+                }
+            ),
+        )
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/ssl-policy", "ELBSecurityPolicy-TLS-1-2-2017-01"
+        )
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/tags",
+            ",".join(
+                f"{key}={value}"
+                for key, value in {
+                    "Environment": self._labels["env"],
+                    "Product": "corporate_site",
+                    "Component": "local_office_search_api",
+                    "TechnicalOwner": "contentplatform@citizensadvice.org.uk",
+                }.items()
+            ),
+        )
+
     def _configure_autoscaler(self, deployment: Deployment):
         HorizontalPodAutoscaler(
             self,
