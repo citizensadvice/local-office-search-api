@@ -1,0 +1,16 @@
+name: Prod Deployment
+
+on:
+  workflow_run:
+    workflows: ["Dev Deployment"]
+    types:
+      - completed
+env:
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  deploy:
+    name: Deploy prod
+    uses: ./.github/workflows/deploy_stage.yml
+    with:
+      stage: prod
