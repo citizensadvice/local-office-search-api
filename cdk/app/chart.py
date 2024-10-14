@@ -64,6 +64,7 @@ class LocalOfficeSearchApiChart(Chart):
         rds_secret_name: str,
         app_secret_name: str,
         api_v0_host: str,
+        api_v0_cert_arn: str,
     ):
         self._labels = {
             "app": self._APP_NAME,
@@ -100,7 +101,7 @@ class LocalOfficeSearchApiChart(Chart):
 
         deployment = self._create_deployment()
         app_service = self._expose_services(deployment)
-        self._expose_v0_api(api_v0_host, app_service)
+        self._expose_v0_api(api_v0_host, api_v0_cert_arn, app_service)
 
         self._create_scheduled_import()
         self._configure_autoscaler(deployment)
@@ -276,7 +277,7 @@ class LocalOfficeSearchApiChart(Chart):
 
         return service
 
-    def _expose_v0_api(self, host: str, app_service: Service):
+    def _expose_v0_api(self, host: str, cert_arn: str, app_service: Service):
         ingress = Ingress(self, "LocalOfficeSearchApiV0Ingress", class_name="alb")
         ingress.add_host_rule(host, "/api/v0/", IngressBackend.from_service(app_service))
 
@@ -300,6 +301,7 @@ class LocalOfficeSearchApiChart(Chart):
         ingress.metadata.add_annotation(
             "alb.ingress.kubernetes.io/ssl-policy", "ELBSecurityPolicy-TLS-1-2-2017-01"
         )
+        ingress.metadata.add_annotation("alb.ingress.kubernetes.io/certificate-arn", cert_arn)
         ingress.metadata.add_annotation(
             "alb.ingress.kubernetes.io/tags",
             ",".join(

@@ -14,19 +14,21 @@ app_version = os.environ.get("IMAGE_TAG", "local")
 
 ACCOUNT_IDS = {"devops": "979633842206", "prod2": "912473634278"}
 
-LSS_FILES = {
-    "dev": "sandbox-advicelocationpipe-pipelinebucket263ac468-19wuk9oanxght",
-    "prod": "prod-advicelocationprodbucket-buckete75ea64c-1oasp6hbbkp4j",
-}
-
-GEO_DATA_FILES = {
-    "dev": ("uat-geo-data-postcodes-raw-eu-west-1", "Geo_postcodes_csv_uat.csv"),
-    "prod": ("prod-onsgeodata-buckete75ea64c-phllx3dqnkmx", "geo_postcodes_prod.csv"),
-}
-
-API_V0_HOSTNAMES = {
-    "dev": "bureaudetails.qa.citizensadvice.org.uk",
-    "prod": "bureaudetails.prod.content.citizensadvice.org.uk",
+STAGE_VARS = {
+    "dev": {
+        "lss_bucket_name": "sandbox-advicelocationpipe-pipelinebucket263ac468-19wuk9oanxght",
+        "geo_data_bucket_name": "uat-geo-data-postcodes-raw-eu-west-1",
+        "geo_data_postcode_file": "Geo_postcodes_csv_uat.csv",
+        "api_v0_host": "bureaudetails.qa.citizensadvice.org.uk",
+        "api_v0_cert_arn": "arn:aws:acm:eu-west-1:979633842206:certificate/53339880-7787-4488-aa6d-4d9854fa13dc",  # *.qa.citizensadvice.org.uk
+    },
+    "prod": {
+        "lss_bucket_name": "prod-advicelocationprodbucket-buckete75ea64c-1oasp6hbbkp4j",
+        "geo_data_bucket_name": "prod-onsgeodata-buckete75ea64c-phllx3dqnkmx",
+        "geo_data_postcode_file": "geo_postcodes_prod.csv",
+        "api_v0_host": "bureaudetails.prod.content.citizensadvice.org.uk",
+        "api_v0_cert_arn": "arn:aws:acm:eu-west-1:912473634278:certificate/f2d8f90a-1d29-4b07-9a03-41e530a470d9",  # *.prod.content.citizensadvice.org.uk
+    },
 }
 
 STAGES = [
@@ -42,10 +44,7 @@ for stage in STAGES:
         app_image_version=app_version,
         db=db_stack.db,
         db_credentials=db_stack.db_credentials,
-        lss_bucket_name=LSS_FILES[stage.stage_name],
-        geo_data_bucket_name=GEO_DATA_FILES[stage.stage_name][0],
-        geo_data_postcode_file=GEO_DATA_FILES[stage.stage_name][1],
-        api_v0_host=API_V0_HOSTNAMES[stage.stage_name],
+        **STAGE_VARS[stage.stage_name],
     )
 
 for child in app.node.children:
