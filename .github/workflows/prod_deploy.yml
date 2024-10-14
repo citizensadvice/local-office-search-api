@@ -5,12 +5,12 @@ on:
     workflows: ["Dev Deployment"]
     types:
       - completed
-env:
-  IMAGE_TAG: ${{ github.sha }}
 
 jobs:
   deploy:
     name: Deploy prod
     uses: ./.github/workflows/deploy_stage.yml
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     with:
       stage: prod
+    secrets: inherit
