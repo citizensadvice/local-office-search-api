@@ -1,0 +1,69 @@
+name: Stage Deployment
+run-name: Deploy ${{ inputs.stage }}
+
+on:
+  workflow_call:
+    inputs:
+      stage:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy infrastructure and chart
+    runs-on: runs-on
+    permissions:
+      id-token: write
+      contents: read
+    environment:
+      name: ${{ inputs.stage }}
+    steps:
+      - name: Sleep for 1 minute
+        run: echo "Waiting for 60 seconds to allow for abort of prod deployment" && sleep 60
+        shell: bash
+        if: inputs.stage == 'prod'
+
+      - uses: actions/checkout@v4
+
+      - uses: citizensadvice/python-poetry-setup-action@v1
+        with:
+          install_cdk: true
+          project_root: "./cdk"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
+          role-session-name: local-office-search-api-deploy-${{ inputs.stage }}-workflow
+          aws-region: eu-west-1
+
+      - name: Deploy CDK
+        run: |
+          set -eo pipefail
+          cd ./cdk
+          poetry run cdk deploy "${{ inputs.stage }}/**" --concurrency 2 --require-approval never
+
+      - name: Notify Slack
+        uses: citizensadvice/message-slack-action@v1
+        with:
+          slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          channel_id: "C02K26YCER1" #content-platform_builds
+          title: ":rocket: Deployed ${{ inputs.stage }}: Local Office Search API :rocket:"
+          message: |
+            The Local Office Search API on ${{ inputs.stage }} has been deployed!
+
+  slack-failure:
+    name: Slack Notification (Failure)
+    runs-on: runs-on
+    if: failure()
+    steps:
+      - name: Notify Slack
+        uses: citizensadvice/message-slack-action@v1
+        with:
+          slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          channel_id: "C02K26YCER1" #content-platform_builds
+          title: ":fire: Deploy failed (${{ inputs.stage }}): Local Office Search API :fire:"
+          message: |
+            The Local Office Search API on ${{ inputs.stage }} failed to deployed :pensive:

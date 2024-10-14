@@ -28,63 +28,9 @@ jobs:
           auth_token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    name: Deploy infrastructure and chart
+    name: Deploy dev
     needs:
       - build
-    runs-on: runs-on
-    permissions:
-      id-token: write
-      contents: read
-    environment:
-      name: dev
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: citizensadvice/python-poetry-setup-action@v1
-        with:
-          install_cdk: true
-          project_root: "./cdk"
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: "arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
-          role-session-name: local-office-search-api-deploy-dev-workflow
-          aws-region: eu-west-1
-
-      - name: Deploy CDK
-        run: |
-          set -eo pipefail
-          cd ./cdk
-          poetry run cdk deploy "dev/**" LocalOfficeSearchApiEcrRepo --concurrency 2 --ci --require-approval never
-
-  slack-success:
-    name: Slack Notification (Success)
-    needs: deploy
-    runs-on: runs-on
-    steps:
-      - name: Notify Slack
-        uses: citizensadvice/message-slack-action@v1
-        with:
-          slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          channel_id: "C02K26YCER1" #content-platform_builds
-          title: ":rocket: Deployed Dev: Local Office Search API :rocket:"
-          message: |
-            The Local Office Search API on dev has been deployed!
-
-  slack-failure:
-    name: Slack Notification (Failure)
-    needs: build
-    runs-on: runs-on
-    if: failure()
-    steps:
-      - name: Notify Slack
-        uses: citizensadvice/message-slack-action@v1
-        with:
-          slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          channel_id: "C02K26YCER1" #content-platform_builds
-          title: ":fire: Deploy failed (DEV): Local Office Search API :fire:"
-          message: |
-            The Local Office Search API on dev failed to deployed :pensive:
+    uses: ./.github/workflows/deploy_stage.yml
+    with:
+      stage: dev
