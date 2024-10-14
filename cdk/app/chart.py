@@ -32,7 +32,12 @@ from cdk8s_plus_30 import (
     MetricTarget,
     EnvFieldPaths,
     NetworkPolicyIpBlock,
-    Secret, ServiceAccount,
+    Secret,
+    ServiceAccount,
+    ServiceType,
+    Service,
+    Ingress,
+    IngressBackend,
 )
 from constructs import Construct
 
@@ -58,6 +63,7 @@ class LocalOfficeSearchApiChart(Chart):
         service_account_name: str,
         rds_secret_name: str,
         app_secret_name: str,
+        api_v0_host: str,
     ):
         self._labels = {
             "app": self._APP_NAME,
@@ -93,7 +99,8 @@ class LocalOfficeSearchApiChart(Chart):
         self._geo_data_postcode_file = geo_data_postcode_file
 
         deployment = self._create_deployment()
-        self._expose_services(deployment)
+        app_service = self._expose_services(deployment)
+        self._expose_v0_api(api_v0_host, app_service)
 
         self._create_scheduled_import()
         self._configure_autoscaler(deployment)
@@ -170,7 +177,9 @@ class LocalOfficeSearchApiChart(Chart):
 
         self._add_labels(scheduled_job.metadata)
         self._add_labels(scheduled_job.pod_metadata)
-        scheduled_job.pod_metadata.add_label("component", "local-office-search-api-scheduled-import")
+        scheduled_job.pod_metadata.add_label(
+            "component", "local-office-search-api-scheduled-import"
+        )
 
         scheduled_job.metadata.add_annotation(
             "ad.datadoghq.com/local-office-search-api-scheduled-import.logs",
@@ -209,7 +218,9 @@ class LocalOfficeSearchApiChart(Chart):
                 cpu=CpuResources(request=Cpu.millis(400), limit=Cpu.millis(800)),
                 memory=MemoryResources(request=Size.mebibytes(512), limit=Size.gibibytes(1)),
             ),
-            security_context=ContainerSecurityContextProps(user=1000, read_only_root_filesystem=False),
+            security_context=ContainerSecurityContextProps(
+                user=1000, read_only_root_filesystem=False
+            ),
         )
 
     def _app_env_vars(self):
@@ -251,8 +262,10 @@ class LocalOfficeSearchApiChart(Chart):
         }
 
     def _expose_services(self, deployment: Deployment):
-        deployment.expose_via_service(
-            name=self._APP_NAME, ports=[ServicePort(name="http", port=self._HTTP_PORT)]
+        service = deployment.expose_via_service(
+            name=self._APP_NAME,
+            ports=[ServicePort(name="http", port=self._HTTP_PORT)],
+            service_type=ServiceType.NODE_PORT,
         )
 
         metrics_service = deployment.expose_via_service(
@@ -260,6 +273,45 @@ class LocalOfficeSearchApiChart(Chart):
             ports=[ServicePort(name="metrics", port=self._METRICS_PORT)],
         )
         metrics_service.metadata.add_label("custom-metrics-enabled", "true")
+
+        return service
+
+    def _expose_v0_api(self, host: str, app_service: Service):
+        ingress = Ingress(self, "LocalOfficeSearchApiV0Ingress", class_name="alb")
+        ingress.add_host_rule(host, "/api/v0/", IngressBackend.from_service(app_service))
+
+        ingress.metadata.add_annotation("alb.ingress.kubernetes.io/scheme", "internet-facing")
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/healthcheck-path", "/status"
+        )
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/actions.ssl-redirect",
+            json.dumps(
+                {
+                    "Type": "redirect",
+                    "RedirectConfig": {
+                        "Protocol": "HTTPS",
+                        "Port": "443",
+                        "StatusCode": "HTTP_301",
+                    },
+                }
+            ),
+        )
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/ssl-policy", "ELBSecurityPolicy-TLS-1-2-2017-01"
+        )
+        ingress.metadata.add_annotation(
+            "alb.ingress.kubernetes.io/tags",
+            ",".join(
+                f"{key}={value}"
+                for key, value in {
+                    "Environment": self._labels["env"],
+                    "Product": "corporate_site",
+                    "Component": "local_office_search_api",
+                    "TechnicalOwner": "contentplatform@citizensadvice.org.uk",
+                }.items()
+            ),
+        )
 
     def _configure_autoscaler(self, deployment: Deployment):
         HorizontalPodAutoscaler(
