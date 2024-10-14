@@ -9,8 +9,8 @@ on:
         type: environment
 
 jobs:
-  build:
-    name: apply DB migration
+  run_task:
+    name: run Rake task
     runs-on: runs-on
     permissions:
       id-token: write
@@ -28,5 +28,5 @@ jobs:
       - name: Generate Kube Config
         run: aws eks update-kubeconfig --name=${{ vars.EKS_CLUSTER }}
 
-      - name: run DB migration action
+      - name: run DB migration task
         run: kubectl -n ${{ inputs.env }}-local-office-search-api exec $(kubectl -n ${{ inputs.env }}-local-office-search-api get pods -l component=local-office-search-api-server --output=jsonpath={.items[0].metadata.name}) -- bin/rake db:migrate

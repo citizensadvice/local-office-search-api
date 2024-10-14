@@ -9,8 +9,8 @@ on:
         type: environment
 
 jobs:
-  build:
-    name: apply DB migration
+  run_task:
+    name: run Rake task
     runs-on: runs-on
     permissions:
       id-token: write
@@ -21,12 +21,12 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: "arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
+          role-to-assume: "arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
           role-session-name: local-office-search-api-${{ inputs.env }}-sync-workflow
           aws-region: eu-west-1
 
       - name: Generate Kube Config
-        run: aws eks update-kubeconfig --name=${{ env.EKS_CLUSTER }}
+        run: aws eks update-kubeconfig --name=${{ vars.EKS_CLUSTER }}
 
-      - name: run DB migration action
+      - name: run sync_database task
         run: kubectl -n ${{ inputs.env }}-local-office-search-api exec $(kubectl -n ${{ inputs.env }}-local-office-search-api get pods -l component=local-office-search-api-server --output=jsonpath={.items[0].metadata.name}) -- bin/rake sync_database
