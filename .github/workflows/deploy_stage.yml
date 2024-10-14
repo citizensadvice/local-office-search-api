@@ -44,7 +44,7 @@ jobs:
           poetry run cdk deploy "${{ inputs.stage }}/**" --concurrency 2 --require-approval never
 
   slack-success:
-    name: Slack Notification (Failure)
+    name: Slack Notification (Success)
     runs-on: runs-on
     needs:
       - deploy
