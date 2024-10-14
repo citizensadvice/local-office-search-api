@@ -43,6 +43,12 @@ jobs:
           cd ./cdk
           poetry run cdk deploy "${{ inputs.stage }}/**" --concurrency 2 --require-approval never
 
+  slack-success:
+    name: Slack Notification (Failure)
+    runs-on: runs-on
+    needs:
+      - deploy
+    steps:
       - name: Notify Slack
         uses: citizensadvice/message-slack-action@v1
         with:
@@ -56,6 +62,8 @@ jobs:
   slack-failure:
     name: Slack Notification (Failure)
     runs-on: runs-on
+    needs:
+      - deploy
     if: failure()
     steps:
       - name: Notify Slack
