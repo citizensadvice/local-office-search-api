@@ -19,7 +19,7 @@ STAGE_VARS = {
         "lss_bucket_name": "sandbox-advicelocationpipe-pipelinebucket263ac468-19wuk9oanxght",
         "geo_data_bucket_name": "uat-geo-data-postcodes-raw-eu-west-1",
         "geo_data_postcode_file": "Geo_postcodes_csv_uat.csv",
-        "api_v0_host": "bureaudetails.qa.citizensadvice.org.uk",
+        "api_v0_host": "bureau-details.develop.content.citizensadvice.org.uk",
         "api_v0_cert_arn": "arn:aws:acm:eu-west-1:979633842206:certificate/53339880-7787-4488-aa6d-4d9854fa13dc",  # *.qa.citizensadvice.org.uk
     },
     "prod": {
