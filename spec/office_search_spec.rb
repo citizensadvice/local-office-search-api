@@ -34,6 +34,16 @@ RSpec.describe OfficeSearch do
     expect(results.pluck(:id)).to contain_exactly(other_office.id)
   end
 
+  it "normalises the fuzzy match to trim whitespace" do
+    office = create_office_with_local_authority
+    other_office = create_office_in_local_authority name: "Anotherville Citizens Advice",
+                                                    local_authority_id: office.served_areas.first.local_authority_id
+
+    results, = described_class.by_location(" anotherville ")
+
+    expect(results.pluck(:id)).to contain_exactly(other_office.id)
+  end
+
   it "returns both a mix of if the office name matches and if the local authority matches" do
     office = create_office_with_local_authority
     other_office = create_office name: "Testtown Citizens Advice"

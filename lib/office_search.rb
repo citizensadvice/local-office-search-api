@@ -59,7 +59,7 @@ module OfficeSearch
   end
 
   def self.by_fuzzy_location(near, opts)
-    fuzzy_query = build_fuzzy_query(near, opts)
+    fuzzy_query = build_fuzzy_query(normalise_fuzzy_term(near), opts)
     raise UnknownLocationError if fuzzy_query.empty?
 
     fuzzy_query
@@ -72,5 +72,9 @@ module OfficeSearch
     q = q.where(office_type: :office)
     q = q.where.not(volunteer_roles: []) if opts[:only_with_vacancies]
     q.limit(10)
+  end
+
+  def self.normalise_fuzzy_term(near)
+    near.strip
   end
 end
