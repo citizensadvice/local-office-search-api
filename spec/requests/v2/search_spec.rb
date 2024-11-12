@@ -3,13 +3,52 @@
 require "swagger_helper"
 require_relative "schema"
 
-RSpec.describe "Search Local Office API" do
+RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
   path "/api/v2/offices/" do
     get "Searches for offices" do
       produces "application/json"
-      parameter name: :q, in: :query, type: :string, required: true, description: "the search terms to use"
+      parameter name: :q, in: :query, type: :string, required: false,
+                description: "the search terms to use (when not specified returns all)"
+      parameter name: :include_outreach, in: :query, type: :boolean, required: false, default: false,
+                description: "include outreaches when listing offices"
 
-      response "200", "a list of search results" do
+      response "200", "all offices when no query string is set" do
+        let(:local_authority_id) { LocalAuthority.create!(id: "X0001234", name: "Testshire").id }
+
+        let(:office) do
+          Office.new id: generate_salesforce_id,
+                     office_type: :office,
+                     name: "Testshire Citizens Advice"
+        end
+
+        let(:outreach) do
+          Office.new id: generate_salesforce_id,
+                     office_type: :outreach,
+                     name: "Testshire Citizens Advice outreach"
+        end
+
+        before do
+          office.save!
+          outreach.save!
+          ServedArea.create!(local_authority_id:, office:)
+        end
+
+        context "when include_outreach is not specified (default false)" do
+          run_test! do |response|
+            expect_result_ids_in_response response, "all", [office.id]
+          end
+        end
+
+        context "when include_outreach is true" do
+          let(:include_outreach) { true }
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "all", [office.id, outreach.id]
+          end
+        end
+      end
+
+      response "200", "a list of search results when a query string is specified" do
         schema ApiV2Schema::SEARCH_RESULTS
 
         context "when the location is known, but there is no LCA in that area" do

@@ -2,7 +2,7 @@
 openapi: 3.0.1
 info:
   title: Local Office Search API
-  version: v1
+  version: v2
 paths:
   "/status":
     get:
@@ -420,13 +420,20 @@ paths:
       parameters:
       - name: q
         in: query
-        required: true
-        description: the search terms to use
+        required: false
+        description: the search terms to use (when not specified returns all)
         schema:
           type: string
+      - name: include_outreach
+        in: query
+        required: false
+        default: false
+        description: include outreaches when listing offices
+        schema:
+          type: boolean
       responses:
         '200':
-          description: a list of search results
+          description: a list of search results when a query string is specified
           content:
             application/json:
               schema:
@@ -437,15 +444,18 @@ paths:
                   match_type:
                     type: string
                     enum:
+                    - all
                     - exact
                     - fuzzy
                     - unknown
                     - out_of_area_scotland
                     - out_of_area_ni
-                    description: "\n                                * `exact` means
-                      the search term matched an exact location, so only offices which
-                      serve the exact location\n                                   are
-                      shown (this could include no locations).\n                                *
+                    description: "\n                                * `all` means
+                      no search term was specified so all offices are returned.\n
+                      \                               * `exact` means the search term
+                      matched an exact location, so only offices which serve the exact
+                      location\n                                   are shown (this
+                      could include no locations).\n                                *
                       `fuzzy` means the search term matched a wider locality and not
                       an individual point, so the results may\n                                   include
                       offices which can not serve that exact location.\n                                *

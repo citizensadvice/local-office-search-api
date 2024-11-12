@@ -16,10 +16,14 @@ module Api
       end
 
       def search
-        if search_q_is_valid?
-          render json: search_response(params[:q])
+        if search_criteria_specified?
+          if search_q_is_valid?
+            render json: search_response(params[:q])
+          else
+            render status: :bad_request, json: missing_search_param_json
+          end
         else
-          render status: :bad_request, json: missing_search_param_json
+          render json: all_offices(include_outreach: ActiveModel::Type::Boolean.new.cast(params[:include_outreach]))
         end
       end
 
@@ -29,8 +33,19 @@ module Api
         params[:id].match(/^\d+$/)
       end
 
+      def search_criteria_specified?
+        params.key?(:q)
+      end
+
       def search_q_is_valid?
         !(params[:q] || "").empty?
+      end
+
+      def all_offices(include_outreach: false)
+        office_types = [:office]
+        office_types << :outreach if include_outreach
+
+        { match_type: "all", results: Office.where(office_type: office_types).map { |office| office_as_search_result_json(office) } }
       end
 
       def search_response(query)
