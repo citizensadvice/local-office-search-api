@@ -38,6 +38,15 @@ module Api
         }
       end
 
+      def volunteering_opportunity_as_search_result_json(office, distance_from)
+        {
+          id: office.id,
+          office: office_as_search_result_json(office),
+          roles: office.volunteer_roles,
+          distance: distance_in_miles(distance_from, office.location)
+        }
+      end
+
       private
 
       def build_relations_json(office)
@@ -65,6 +74,14 @@ module Api
         methods << "phone" unless office.phone.nil?
         methods << "email" unless office.email.nil?
         methods
+      end
+
+      def distance_in_miles(location1, location2)
+        if location1.nil? || location2.nil?
+          nil
+        else
+          (location1.distance(location2) / 1609.34).round(2)
+        end
       end
     end
   end

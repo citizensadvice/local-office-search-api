@@ -13,6 +13,8 @@ RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
                 description: "include outreaches when listing offices"
 
       response "200", "all offices when no query string is set" do
+        schema ApiV2Schema::OFFICE_SEARCH_RESULTS
+
         let(:local_authority_id) { LocalAuthority.create!(id: "X0001234", name: "Testshire").id }
 
         let(:office) do
@@ -49,7 +51,7 @@ RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
       end
 
       response "200", "a list of search results when a query string is specified" do
-        schema ApiV2Schema::SEARCH_RESULTS
+        schema ApiV2Schema::OFFICE_SEARCH_RESULTS
 
         context "when the location is known, but there is no LCA in that area" do
           let(:local_authority_id) { LocalAuthority.create!(id: "X0001234", name: "Testshire").id }
@@ -171,6 +173,97 @@ RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
 
           run_test! do |response|
             expect_result_ids_in_response response, "unknown", []
+          end
+        end
+      end
+
+      response "400", "If query is not specified" do
+        schema ApiV2Schema::JSON_PROBLEM
+
+        let(:q) { "" }
+
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v2/volunteering-opportunities/" do
+    get "Searches for volunteering opportunities" do
+      produces "application/json"
+      parameter name: :q, in: :query, type: :string, required: true,
+                description: "the search terms to use"
+
+      response "200", "a list of search results when a query string is specified" do
+        schema ApiV2Schema::VOLUNTEERING_SEARCH_RESULTS
+
+        context "when a fuzzy search is done" do
+          let(:q) { "Testshire" }
+
+          let(:office) do
+            Office.new id: generate_salesforce_id,
+                       office_type: :office,
+                       name: "Testshire Citizens Advice",
+                       volunteer_roles: ["admin_and_customer_service"]
+          end
+
+          before do
+            office.save!
+          end
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "fuzzy", [office.id]
+          end
+        end
+
+        context "when there are offices with no volunteering opportunities" do
+          let(:q) { "Testshire" }
+
+          let(:office) do
+            Office.new id: generate_salesforce_id,
+                       office_type: :office,
+                       name: "Testshire Citizens Advice",
+                       volunteer_roles: ["admin_and_customer_service"]
+          end
+
+          before do
+            Office.new(id: generate_salesforce_id, office_type: :office, name: "Testshire Testtown")
+            office.save!
+          end
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "fuzzy", [office.id]
+          end
+        end
+
+        context "when an exact search is done" do
+          let(:q) { "AA1 1AA" }
+
+          let(:nearest_office) do
+            Office.new(id: generate_salesforce_id,
+                       office_type: :office,
+                       name: "Testshire Citizens Advice",
+                       volunteer_roles: ["admin_and_customer_service"],
+                       location: "POINT(2.0 2.0)")
+          end
+
+          let(:far_office) do
+            Office.new(id: generate_salesforce_id,
+                       office_type: :office,
+                       name: "Othertown Citizens Advice",
+                       volunteer_roles: ["admin_and_customer_service"],
+                       location: "POINT(3.0 3.0)")
+          end
+
+          before do
+            Postcode.create!(canonical: "AA1 1AA",
+                             local_authority_id: LocalAuthority.create!(id: "X00000001", name: "Testshire").id,
+                             location: "POINT(1.0 1.0)")
+            nearest_office.save!
+            far_office.save!
+          end
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "exact", [nearest_office.id, far_office.id]
           end
         end
       end

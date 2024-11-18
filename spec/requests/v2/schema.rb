@@ -107,6 +107,8 @@ module ApiV2Schema
              researching_and_campaigning media volunteer]
   }.freeze
 
+  VOLUNTEER_ROLES = { type: :array, items: VOLUNTEER_ROLE }.freeze
+
   VOLUNTEERING_OPPORTUNITY = {
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v2/volunteering-opportunity",
@@ -114,14 +116,14 @@ module ApiV2Schema
     properties: {
       id: { type: :string },
       office: OFFICE.except(:$schema),
-      roles: { type: :array, items: VOLUNTEER_ROLE },
+      roles: VOLUNTEER_ROLES,
       volunteer_recruitment_email: { type: :string }
     },
     required: %i[id office roles volunteer_recruitment_email],
     additionalProperties: false
   }.freeze
 
-  SEARCH_RESULT = {
+  OFFICE_SEARCH_RESULT = {
     type: :object,
     properties: {
       id: { type: :string },
@@ -132,9 +134,9 @@ module ApiV2Schema
     additionalProperties: false
   }.freeze
 
-  SEARCH_RESULTS = {
+  OFFICE_SEARCH_RESULTS = {
     "$schema": "https://json-schema.org/draft/2019-09/schema",
-    "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v2/results",
+    "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v2/results/office",
     type: :object,
     properties: {
       match_type: { type: :string, enum: %w[all exact fuzzy unknown out_of_area_scotland out_of_area_ni],
@@ -149,7 +151,42 @@ module ApiV2Schema
                                 * `out_of_area_scotland` and `out_of_area_ni` means the search term matched exactly, but to a location in
                                   Scotland or Northern Ireland which is not in the network coverage area.
                                 ) },
-      results: { type: :array, items: SEARCH_RESULT }
+      results: { type: :array, items: OFFICE_SEARCH_RESULT }
+    },
+    required: %i[match_type results],
+    additionalProperties: false
+  }.freeze
+
+  VOLUNTEERING_SEARCH_RESULT = {
+    type: :object,
+    properties: {
+      id: { type: :string },
+      office: OFFICE_SEARCH_RESULT,
+      distance: { type: %i[number null] },
+      roles: VOLUNTEER_ROLES
+    },
+    required: %i[id office distance roles],
+    additionalProperties: false
+  }.freeze
+
+  VOLUNTEERING_SEARCH_RESULTS = {
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v2/results/volunteering-opportunity",
+    type: :object,
+    properties: {
+      match_type: { type: :string, enum: %w[all exact fuzzy unknown out_of_area_scotland out_of_area_ni],
+                    description: %(
+                                * `all` means no search term was specified so all volunteering opportunities are returned.
+                                * `exact` means the search term matched an exact location, so volunteering opportunities are ordered around
+                                   this location
+                                * `fuzzy` means the search term matched a wider locality and not an individual point, so the results may
+                                   only include offices which match that location and not other nearby ones
+                                * `unknown` means the search term was unable to be interpreted or matched to a location
+                                  (so there are no results).
+                                * `out_of_area_scotland` and `out_of_area_ni` means the search term matched exactly, but to a location in
+                                  Scotland or Northern Ireland which is not in the network coverage area.
+                                ) },
+      results: { type: :array, items: VOLUNTEERING_SEARCH_RESULT }
     },
     required: %i[match_type results],
     additionalProperties: false
