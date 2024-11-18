@@ -19,6 +19,8 @@ Rails.application.routes.draw do
     namespace :v2 do
       get "/offices/", to: "office#search"
       get "/offices/:id", to: "office#show", as: :office
+
+      get "/volunteering-opportunities/:id", to: "volunteering_opportunity#show"
     end
   end
 end

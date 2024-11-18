@@ -100,6 +100,27 @@ module ApiV2Schema
     additionalProperties: false
   }.freeze
 
+  VOLUNTEER_ROLE = {
+    type: :string,
+    # defined in data science reference document: https://docs.google.com/spreadsheets/d/1_anZsdL6AX7YuysMkHsjyQkUkpLt72NsYe-oCJ25kDE/edit?gid=489969943#gid=489969943
+    enum: %w[admin_and_customer_service giving_information_advice_and_client support fundraising volunteer_recruitment_and_support trustee
+             researching_and_campaigning media volunteer]
+  }.freeze
+
+  VOLUNTEERING_OPPORTUNITY = {
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v2/volunteering-opportunity",
+    type: :object,
+    properties: {
+      id: { type: :string },
+      office: OFFICE.except(:$schema),
+      roles: { type: :array, items: VOLUNTEER_ROLE },
+      volunteer_recruitment_email: { type: :string }
+    },
+    required: %i[id office roles volunteer_recruitment_email],
+    additionalProperties: false
+  }.freeze
+
   SEARCH_RESULT = {
     type: :object,
     properties: {

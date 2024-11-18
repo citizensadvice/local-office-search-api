@@ -29,6 +29,15 @@ module Api
         }
       end
 
+      def volunteering_opportunity_as_json(office)
+        {
+          id: office.id,
+          office: office_as_json(office),
+          roles: office.volunteer_roles,
+          volunteer_recruitment_email: office.volunteer_recruitment_email
+        }
+      end
+
       private
 
       def build_relations_json(office)
