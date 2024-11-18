@@ -3,7 +3,7 @@
 require "swagger_helper"
 require_relative "schema"
 
-RSpec.describe "Lookup Local Office API" do
+RSpec.describe "Lookup Local Office API", swagger_doc: "v2/swagger.yaml" do
   path "/api/v2/offices/{id}" do
     get "Retrieves a single office" do
       produces "application/json"

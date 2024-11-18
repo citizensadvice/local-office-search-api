@@ -116,8 +116,9 @@ module ApiV2Schema
     "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v2/results",
     type: :object,
     properties: {
-      match_type: { type: :string, enum: %w[exact fuzzy unknown out_of_area_scotland out_of_area_ni],
+      match_type: { type: :string, enum: %w[all exact fuzzy unknown out_of_area_scotland out_of_area_ni],
                     description: %(
+                                * `all` means no search term was specified so all offices are returned.
                                 * `exact` means the search term matched an exact location, so only offices which serve the exact location
                                    are shown (this could include no locations).
                                 * `fuzzy` means the search term matched a wider locality and not an individual point, so the results may

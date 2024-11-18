@@ -20,11 +20,11 @@ RSpec.configure do |config|
   # document below. You can override this behavior by adding a swagger_doc tag to the
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.openapi_specs = {
-    "v1/swagger.yaml" => {
+    "v2/swagger.yaml" => {
       openapi: "3.0.1",
       info: {
         title: "Local Office Search API",
-        version: "v1"
+        version: "v2"
       },
       paths: {},
       servers: [
