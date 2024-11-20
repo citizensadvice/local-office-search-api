@@ -438,7 +438,7 @@ paths:
             application/json:
               schema:
                 "$schema": https://json-schema.org/draft/2019-09/schema
-                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v2/results
+                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v2/results/office
                 type: object
                 properties:
                   match_type:
@@ -475,6 +475,22 @@ paths:
                           type: string
                         name:
                           type: string
+                        street:
+                          type:
+                          - string
+                          - 'null'
+                        city:
+                          type:
+                          - string
+                          - 'null'
+                        county:
+                          type:
+                          - string
+                          - 'null'
+                        postcode:
+                          type:
+                          - string
+                          - 'null'
                         contact_methods:
                           type: array
                           items:
@@ -486,6 +502,10 @@ paths:
                       required:
                       - id
                       - name
+                      - street
+                      - city
+                      - county
+                      - postcode
                       - contact_methods
                       additionalProperties: false
                 required:
@@ -494,6 +514,575 @@ paths:
                 additionalProperties: false
         '400':
           description: If query is not specified
+          content:
+            application/json:
+              schema:
+                "$schema": https://json-schema.org/draft/2019-09/schema
+                "$id": https://www.rfc-editor.org/rfc/rfc7807
+                type: object
+                properties:
+                  type:
+                    type: string
+                    format: uri
+                  title:
+                    type: string
+                  status:
+                    type: number
+                required:
+                - type
+                additionalProperties: false
+  "/api/v2/volunteering-opportunities/":
+    get:
+      summary: Searches for volunteering opportunities
+      parameters:
+      - name: q
+        in: query
+        required: true
+        description: the search terms to use
+        schema:
+          type: string
+      responses:
+        '200':
+          description: a list of search results when a query string is specified
+          content:
+            application/json:
+              schema:
+                "$schema": https://json-schema.org/draft/2019-09/schema
+                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v2/results/volunteering-opportunity
+                type: object
+                properties:
+                  match_type:
+                    type: string
+                    enum:
+                    - all
+                    - exact
+                    - fuzzy
+                    - unknown
+                    - out_of_area_scotland
+                    - out_of_area_ni
+                    description: "\n                                * `all` means
+                      no search term was specified so all volunteering opportunities
+                      are returned.\n                                * `exact` means
+                      the search term matched an exact location, so volunteering opportunities
+                      are ordered around\n                                   this
+                      location\n                                * `fuzzy` means the
+                      search term matched a wider locality and not an individual point,
+                      so the results may\n                                   only
+                      include offices which match that location and not other nearby
+                      ones\n                                * `unknown` means the
+                      search term was unable to be interpreted or matched to a location\n
+                      \                                 (so there are no results).\n
+                      \                               * `out_of_area_scotland` and
+                      `out_of_area_ni` means the search term matched exactly, but
+                      to a location in\n                                  Scotland
+                      or Northern Ireland which is not in the network coverage area.\n
+                      \                               "
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        office:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            street:
+                              type:
+                              - string
+                              - 'null'
+                            city:
+                              type:
+                              - string
+                              - 'null'
+                            county:
+                              type:
+                              - string
+                              - 'null'
+                            postcode:
+                              type:
+                              - string
+                              - 'null'
+                            contact_methods:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - phone
+                                - email
+                                - drop_in
+                          required:
+                          - id
+                          - name
+                          - street
+                          - city
+                          - county
+                          - postcode
+                          - contact_methods
+                          additionalProperties: false
+                        distance:
+                          type:
+                          - number
+                          - 'null'
+                        roles:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - admin_and_customer_service
+                            - giving_information_advice_and_client
+                            - support
+                            - fundraising
+                            - volunteer_recruitment_and_support
+                            - trustee
+                            - researching_and_campaigning
+                            - media
+                            - volunteer
+                      required:
+                      - id
+                      - office
+                      - distance
+                      - roles
+                      additionalProperties: false
+                required:
+                - match_type
+                - results
+                additionalProperties: false
+        '400':
+          description: If query is not specified
+          content:
+            application/json:
+              schema:
+                "$schema": https://json-schema.org/draft/2019-09/schema
+                "$id": https://www.rfc-editor.org/rfc/rfc7807
+                type: object
+                properties:
+                  type:
+                    type: string
+                    format: uri
+                  title:
+                    type: string
+                  status:
+                    type: number
+                required:
+                - type
+                additionalProperties: false
+  "/api/v2/volunteering-opportunities/{id}":
+    get:
+      summary: Retrieves a single volunteering opportunity
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Shows the volunteering opportunities for the specified ID
+          content:
+            application/json:
+              schema:
+                "$schema": https://json-schema.org/draft/2019-09/schema
+                "$id": https://local-office-search.citizensadvice.org.uk/schemas/v2/volunteering-opportunity
+                type: object
+                properties:
+                  id:
+                    type: string
+                  office:
+                    "$id": https://local-office-search.citizensadvice.org.uk/schemas/v2/office
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - member
+                        - office
+                        - outreach
+                      name:
+                        type: string
+                      about_text:
+                        type:
+                        - string
+                        - 'null'
+                      accessibility_information:
+                        type: array
+                        items:
+                          type: string
+                      street:
+                        type:
+                        - string
+                        - 'null'
+                      city:
+                        type:
+                        - string
+                        - 'null'
+                      county:
+                        type:
+                        - string
+                        - 'null'
+                      postcode:
+                        type:
+                        - string
+                        - 'null'
+                      location:
+                        type:
+                        - 'null'
+                        - "$id": https://geojson.org/schema/Point.json
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - Point
+                            coordinates:
+                              type: array
+                              items:
+                                type: number
+                              minItems: 2
+                              maxItems: 2
+                          required:
+                          - type
+                          - coordinates
+                          additionalProperties: false
+                      email:
+                        type:
+                        - string
+                        - 'null'
+                      website:
+                        type:
+                        - string
+                        - 'null'
+                      phone:
+                        type:
+                        - string
+                        - 'null'
+                      allows_drop_ins:
+                        type: boolean
+                      opening_hours:
+                        type: object
+                        properties:
+                          information:
+                            type:
+                            - string
+                            - 'null'
+                          monday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          tuesday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          wednesday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          thursday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          friday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          saturday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          sunday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                        required:
+                        - information
+                        - monday
+                        - tuesday
+                        - wednesday
+                        - thursday
+                        - friday
+                        - saturday
+                        - sunday
+                        additionalProperties: false
+                      telephone_advice_hours:
+                        type: object
+                        properties:
+                          information:
+                            type:
+                            - string
+                            - 'null'
+                          monday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          tuesday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          wednesday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          thursday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          friday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          saturday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                          sunday:
+                            type:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                  closes:
+                                    type: string
+                                    pattern: "^\\d{2}:\\d{2}:\\d{2}$"
+                                required:
+                                - opens
+                                - closes
+                                additionalProperties: false
+                        required:
+                        - information
+                        - monday
+                        - tuesday
+                        - wednesday
+                        - thursday
+                        - friday
+                        - saturday
+                        - sunday
+                        additionalProperties: false
+                      relations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - member
+                              - office
+                              - outreach
+                            name:
+                              type: string
+                          requires:
+                          - id
+                          - type
+                          - name
+                          additionalProperties: false
+                    required:
+                    - id
+                    - name
+                    - about_text
+                    - accessibility_information
+                    - street
+                    - city
+                    - postcode
+                    - location
+                    - email
+                    - website
+                    - phone
+                    - allows_drop_ins
+                    - opening_hours
+                    - telephone_advice_hours
+                    - relations
+                    additionalProperties: false
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - admin_and_customer_service
+                      - giving_information_advice_and_client
+                      - support
+                      - fundraising
+                      - volunteer_recruitment_and_support
+                      - trustee
+                      - researching_and_campaigning
+                      - media
+                      - volunteer
+                  volunteer_recruitment_email:
+                    type: string
+                required:
+                - id
+                - office
+                - roles
+                - volunteer_recruitment_email
+                additionalProperties: false
+        '404':
+          description: No office with this ID
           content:
             application/json:
               schema:
