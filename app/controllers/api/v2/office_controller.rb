@@ -59,11 +59,14 @@ module Api
       end
 
       def fetch_and_render_office
-        office = Office.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        render status: :not_found, json: not_found_json
-      else
-        render json: office_as_json(office)
+        office = Office.find_by("lower(id) = ?", params[:id].downcase)
+        if office.nil?
+          render status: :not_found, json: not_found_json
+        elsif params[:id] == office.id
+          render json: office_as_json(office)
+        else
+          redirect_to api_v2_office_url(office)
+        end
       end
 
       def redirect_from_legacy_id_to_new

@@ -394,6 +394,13 @@ CREATE INDEX index_offices_on_legacy_id ON public.offices USING btree (legacy_id
 
 
 --
+-- Name: index_offices_on_lower_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_offices_on_lower_id ON public.offices USING btree (lower((id)::text));
+
+
+--
 -- Name: index_offices_on_membership_number_and_office_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -489,6 +496,7 @@ ALTER TABLE ONLY public.offices
 SET search_path TO "$user", public, topology, tiger;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241120112748'),
 ('20240904130334'),
 ('20240813152802'),
 ('20231120143230'),
