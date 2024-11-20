@@ -475,6 +475,22 @@ paths:
                           type: string
                         name:
                           type: string
+                        street:
+                          type:
+                          - string
+                          - 'null'
+                        city:
+                          type:
+                          - string
+                          - 'null'
+                        county:
+                          type:
+                          - string
+                          - 'null'
+                        postcode:
+                          type:
+                          - string
+                          - 'null'
                         contact_methods:
                           type: array
                           items:
@@ -486,6 +502,10 @@ paths:
                       required:
                       - id
                       - name
+                      - street
+                      - city
+                      - county
+                      - postcode
                       - contact_methods
                       additionalProperties: false
                 required:
@@ -544,9 +564,10 @@ paths:
                       no search term was specified so all volunteering opportunities
                       are returned.\n                                * `exact` means
                       the search term matched an exact location, so volunteering opportunities
-                      are ordered around this location\n                                *
-                      `fuzzy` means the search term matched a wider locality and not
-                      an individual point, so the results may\n                                   only
+                      are ordered around\n                                   this
+                      location\n                                * `fuzzy` means the
+                      search term matched a wider locality and not an individual point,
+                      so the results may\n                                   only
                       include offices which match that location and not other nearby
                       ones\n                                * `unknown` means the
                       search term was unable to be interpreted or matched to a location\n
@@ -570,6 +591,22 @@ paths:
                               type: string
                             name:
                               type: string
+                            street:
+                              type:
+                              - string
+                              - 'null'
+                            city:
+                              type:
+                              - string
+                              - 'null'
+                            county:
+                              type:
+                              - string
+                              - 'null'
+                            postcode:
+                              type:
+                              - string
+                              - 'null'
                             contact_methods:
                               type: array
                               items:
@@ -581,6 +618,10 @@ paths:
                           required:
                           - id
                           - name
+                          - street
+                          - city
+                          - county
+                          - postcode
                           - contact_methods
                           additionalProperties: false
                         distance:

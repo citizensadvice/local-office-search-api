@@ -128,9 +128,13 @@ module ApiV2Schema
     properties: {
       id: { type: :string },
       name: { type: :string },
+      street: { type: NULLABLE_STRING },
+      city: { type: NULLABLE_STRING },
+      county: { type: NULLABLE_STRING },
+      postcode: { type: NULLABLE_STRING },
       contact_methods: { type: :array, items: { type: :string, enum: %w[phone email drop_in] } }
     },
-    required: %i[id name contact_methods],
+    required: %i[id name street city county postcode contact_methods],
     additionalProperties: false
   }.freeze
 

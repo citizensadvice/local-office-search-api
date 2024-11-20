@@ -17,6 +17,10 @@ module Api
         {
           id: office.id,
           name: office.name,
+          street: office.street,
+          city: office.city,
+          county: office.county,
+          postcode: office.postcode,
           contact_methods: contact_methods(office)
         }
       end
