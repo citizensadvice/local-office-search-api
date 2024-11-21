@@ -120,14 +120,27 @@ RSpec.describe "Lookup Local Office API", swagger_doc: "v2/swagger.yaml" do
         # rubocop:enable RSpec/ExampleLength
       end
 
-      response "302", "Allows you to look up an office by its resource directory ID and redirect to canonical ID" do
-        let(:office) do
-          Office.create({ id: generate_salesforce_id, office_type: :office, name: "Testtown CAB", legacy_id: 1234 })
-        end
-        let(:id) { office.legacy_id }
+      response "302", "redirects you to the canonical ID" do
+        context "when the legacy resource directory ID is specified" do
+          let(:office) do
+            Office.create({ id: generate_salesforce_id, office_type: :office, name: "Testtown CAB", legacy_id: 1234 })
+          end
+          let(:id) { office.legacy_id }
 
-        run_test! do |response|
-          expect(response.location).to eq("http://www.example.com/api/v2/offices/#{office.id}")
+          run_test! do |response|
+            expect(response.location).to eq("http://www.example.com/api/v2/offices/#{office.id}")
+          end
+        end
+
+        context "when a case-insensitive string is specified" do
+          let(:office) do
+            Office.create({ id: "0014K000009EMPHQA4", office_type: :office, name: "Testtown CAB" })
+          end
+          let(:id) { office.id.downcase }
+
+          run_test! do |response|
+            expect(response.location).to eq("http://www.example.com/api/v2/offices/0014K000009EMPHQA4")
+          end
         end
       end
 
