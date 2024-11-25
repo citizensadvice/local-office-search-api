@@ -92,8 +92,8 @@ GEM
       ruby-next-core (~> 1.0)
     ast (2.4.2)
     aws-eventstream (1.3.0)
-    aws-partitions (1.1009.0)
-    aws-sdk-core (3.213.0)
+    aws-partitions (1.1013.0)
+    aws-sdk-core (3.214.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -101,7 +101,7 @@ GEM
     aws-sdk-kms (1.96.0)
       aws-sdk-core (~> 3, >= 3.210.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.172.0)
+    aws-sdk-s3 (1.174.0)
       aws-sdk-core (~> 3, >= 3.210.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -218,7 +218,7 @@ GEM
     psych (5.2.0)
       stringio
     public_suffix (6.0.1)
-    puma (6.4.3)
+    puma (6.5.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.8)
@@ -405,7 +405,7 @@ DEPENDENCIES
   dotenv-rails
   license_finder
   pg (~> 1.5)
-  puma (~> 6.4)
+  puma (~> 6.5)
   rails (~> 7.2.2)
   rails_semantic_logger (~> 4.17)
   rgeo-geojson
