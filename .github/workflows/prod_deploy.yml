@@ -1,10 +1,6 @@
 name: Prod Deployment
 
-on:
-  workflow_run:
-    workflows: ["Dev Deployment"]
-    types:
-      - completed
+on: workflow_dispatch
 
 jobs:
   deploy:
