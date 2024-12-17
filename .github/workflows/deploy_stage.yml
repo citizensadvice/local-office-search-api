@@ -20,6 +20,8 @@ jobs:
       contents: read
     environment:
       name: ${{ inputs.stage }}
+    concurrency:
+      group: ${{ inputs.stage }}-cdk-deploy
     steps:
       - name: Sleep for 1 minute
         run: echo "Waiting for 60 seconds to allow for abort of prod deployment" && sleep 60
