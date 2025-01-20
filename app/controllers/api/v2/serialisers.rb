@@ -7,9 +7,10 @@ module Api
         office.as_json(only: %i[id name about_text accessibility_information street city county postcode location email website phone
                                 allows_drop_ins]).tap do |json|
           json[:type] = office.office_type
+
           json[:relations] = build_relations_json(office)
-          json[:opening_hours] = opening_times_as_json(office.opening_hours_information, office.opening_hours)
-          json[:telephone_advice_hours] = opening_times_as_json(office.telephone_advice_hours_information, office.telephone_advice_hours)
+          json.update opening_time_fields(office)
+          json.update fields_for_members(office) if office.office_type == "member"
         end
       end
 
@@ -70,6 +71,17 @@ module Api
           end
         end
         opening_times
+      end
+
+      def opening_time_fields(office)
+        {
+          opening_hours: opening_times_as_json(office.opening_hours_information, office.opening_hours),
+          telephone_advice_hours: opening_times_as_json(office.telephone_advice_hours_information, office.telephone_advice_hours)
+        }
+      end
+
+      def fields_for_members(office)
+        office.slice(:charity_number, :company_number)
       end
 
       def contact_methods(office)

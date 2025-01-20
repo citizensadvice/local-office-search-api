@@ -93,7 +93,9 @@ module ApiV2Schema
       allows_drop_ins: { type: :boolean },
       opening_hours: OPENING_HOURS,
       telephone_advice_hours: OPENING_HOURS,
-      relations: { type: :array, items: RELATED_OBJECT }
+      relations: { type: :array, items: RELATED_OBJECT },
+      charity_number: { type: NULLABLE_STRING },
+      company_number: { type: NULLABLE_STRING }
     },
     required: %i[id name about_text accessibility_information street city postcode location email website phone
                  allows_drop_ins opening_hours telephone_advice_hours relations],

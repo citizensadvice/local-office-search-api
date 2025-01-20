@@ -375,6 +375,14 @@ paths:
                       - type
                       - name
                       additionalProperties: false
+                  charity_number:
+                    type:
+                    - string
+                    - 'null'
+                  company_number:
+                    type:
+                    - string
+                    - 'null'
                 required:
                 - id
                 - name
@@ -393,8 +401,7 @@ paths:
                 - relations
                 additionalProperties: false
         '302':
-          description: Allows you to look up an office by its resource directory ID
-            and redirect to canonical ID
+          description: redirects you to the canonical ID
         '404':
           description: No office with this ID
           content:
@@ -1042,6 +1049,14 @@ paths:
                           - type
                           - name
                           additionalProperties: false
+                      charity_number:
+                        type:
+                        - string
+                        - 'null'
+                      company_number:
+                        type:
+                        - string
+                        - 'null'
                     required:
                     - id
                     - name
