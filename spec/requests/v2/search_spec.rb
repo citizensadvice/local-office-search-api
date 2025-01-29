@@ -192,12 +192,20 @@ RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
       produces "application/json"
       parameter name: :q, in: :query, type: :string, required: true,
                 description: "the search terms to use"
+      parameter name: :query_type, in: :query, required: true,
+                enum: {
+                  location: "treat q as a location to search around",
+                  member: "treat q as a member ID to return all the opportunities for"
+                },
+                default: "location",
+                description: "the search terms to use"
 
       response "200", "a list of search results when a query string is specified" do
         schema ApiV2Schema::VOLUNTEERING_SEARCH_RESULTS
 
         context "when a fuzzy search is done" do
           let(:q) { "Testshire" }
+          let(:query_type) { "location" }
 
           let(:office) do
             Office.new id: generate_salesforce_id,
@@ -217,6 +225,7 @@ RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
 
         context "when there are offices with no volunteering opportunities" do
           let(:q) { "Testshire" }
+          let(:query_type) { "location" }
 
           let(:office) do
             Office.new id: generate_salesforce_id,
@@ -237,6 +246,7 @@ RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
 
         context "when an exact search is done" do
           let(:q) { "AA1 1AA" }
+          let(:query_type) { "location" }
 
           let(:nearest_office) do
             Office.new(id: generate_salesforce_id,
@@ -266,12 +276,60 @@ RSpec.describe "Search Local Office API", swagger_doc: "v2/swagger.yaml" do
             expect_result_ids_in_response response, "exact", [nearest_office.id, far_office.id]
           end
         end
+
+        context "when a search by member is done and results match" do
+          let(:q) { member.id }
+          let(:query_type) { "member" }
+
+          let(:member) do
+            Office.new(id: generate_salesforce_id,
+                       office_type: :member,
+                       name: "Testshire Citizens Advice")
+          end
+
+          let(:member_office) do
+            Office.new(id: generate_salesforce_id,
+                       parent_id: member.id,
+                       office_type: :office,
+                       name: "Testshire Citizens Advice",
+                       volunteer_roles: ["admin_and_customer_service"],
+                       location: "POINT(2.0 2.0)")
+          end
+
+          before do
+            member.save!
+            member_office.save!
+            other_member = Office.create(id: generate_salesforce_id,
+                                         office_type: :member,
+                                         name: "Othertown Citizens Advice")
+            Office.create(id: generate_salesforce_id,
+                          parent_id: other_member.id,
+                          office_type: :office,
+                          name: "Othertown Citizens Advice",
+                          volunteer_roles: ["admin_and_customer_service"],
+                          location: "POINT(3.0 3.0)")
+          end
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "member", [member_office.id]
+          end
+        end
+
+        context "when a search by member is done and there is no member with that ID" do
+          let(:q) { generate_salesforce_id }
+          let(:query_type) { "member" }
+
+          run_test! do |response|
+            expect_result_ids_in_response response, "unknown", []
+          end
+        end
       end
 
       response "400", "If query is not specified" do
         schema ApiV2Schema::JSON_PROBLEM
 
         let(:q) { "" }
+        let(:query_type) { "location" }
 
         run_test!
       end

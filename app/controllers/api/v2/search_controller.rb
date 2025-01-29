@@ -21,9 +21,10 @@ module Api
 
       def volunteering_opportunities
         if search_criteria_specified? && search_q_is_valid?
-          render json: volunteering_search_response(params[:q])
+          query_type = params[:query_type].presence || "location"
+          volunteering_search_by_query_type(query_type)
         else
-          render status: :bad_request, json: missing_search_param_json
+          render status: :bad_request, json: missing_search_type_json
         end
       end
 
@@ -54,7 +55,18 @@ module Api
         { match_type: normalised_location.nil? ? "fuzzy" : "exact", results: offices.map { |office| office_as_search_result_json(office) } }
       end
 
-      def volunteering_search_response(query)
+      def volunteering_search_by_query_type(query_type)
+        case query_type
+        when "location"
+          render json: volunteering_location_search_response(params[:q])
+        when "member"
+          render json: volunteering_member_search_response(params[:q])
+        else
+          render status: :bad_request, json: missing_search_param_json
+        end
+      end
+
+      def volunteering_location_search_response(query)
         offices, normalised_location = OfficeSearch.by_location query, only_with_vacancies: true
       rescue OfficeSearch::UnknownLocationError
         { match_type: "unknown", results: [] }
@@ -66,8 +78,20 @@ module Api
         end }
       end
 
+      def volunteering_member_search_response(member_id)
+        member = Office.find_by(id: member_id, office_type: "member")
+        return { match_type: "unknown", results: [] } if member.nil?
+
+        offices_with_vacancies = member.children.where.not(volunteer_roles: [])
+        { match_type: "member", results: offices_with_vacancies.map { |office| volunteering_opportunity_as_search_result_json(office) } }
+      end
+
       def missing_search_param_json
         { type: "https://local-office-search.citizensadvice.org.uk/schemas/v2/errors#missing-param", status: 400, title: "Required parameter (q) missing" }
+      end
+
+      def missing_search_type_json
+        { type: "https://local-office-search.citizensadvice.org.uk/schemas/v2/errors#missing-param", status: 400, title: "Required parameter (query_type) set to invalid value" }
       end
     end
   end
