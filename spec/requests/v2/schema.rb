@@ -171,7 +171,7 @@ module ApiV2Schema
       distance: { type: %i[number null] },
       roles: VOLUNTEER_ROLES
     },
-    required: %i[id office distance roles],
+    required: %i[id office roles],
     additionalProperties: false
   }.freeze
 
@@ -180,9 +180,10 @@ module ApiV2Schema
     "$id": "https://local-office-search.citizensadvice.org.uk/schemas/v2/results/volunteering-opportunity",
     type: :object,
     properties: {
-      match_type: { type: :string, enum: %w[all exact fuzzy unknown out_of_area_scotland out_of_area_ni],
+      match_type: { type: :string, enum: %w[member exact fuzzy unknown out_of_area_scotland out_of_area_ni],
                     description: %(
-                                * `all` means no search term was specified so all volunteering opportunities are returned.
+                                * `member` means the search terms matched a member ID and the results are all the results for this
+                                   member (might be none).
                                 * `exact` means the search term matched an exact location, so volunteering opportunities are ordered around
                                    this location
                                 * `fuzzy` means the search term matched a wider locality and not an individual point, so the results may

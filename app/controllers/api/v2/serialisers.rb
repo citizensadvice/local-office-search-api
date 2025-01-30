@@ -43,13 +43,14 @@ module Api
         }
       end
 
-      def volunteering_opportunity_as_search_result_json(office, distance_from)
-        {
+      def volunteering_opportunity_as_search_result_json(office, distance_from = nil)
+        result = {
           id: office.id,
           office: office_as_search_result_json(office),
-          roles: office.volunteer_roles,
-          distance: distance_in_miles(distance_from, office.location)
+          roles: office.volunteer_roles
         }
+        result[:distance] = distance_in_miles(distance_from, office.location) unless distance_from.nil?
+        result
       end
 
       private

@@ -548,6 +548,16 @@ paths:
         description: the search terms to use
         schema:
           type: string
+      - name: query_type
+        in: query
+        required: true
+        enum:
+          location: treat q as a location to search around
+          member: treat q as a member ID to return all the opportunities for
+        default: location
+        description: "the search terms to use:\n * `location` treat q as a location
+          to search around\n * `member` treat q as a member ID to return all the opportunities
+          for\n "
       responses:
         '200':
           description: a list of search results when a query string is specified
@@ -561,17 +571,17 @@ paths:
                   match_type:
                     type: string
                     enum:
-                    - all
+                    - member
                     - exact
                     - fuzzy
                     - unknown
                     - out_of_area_scotland
                     - out_of_area_ni
-                    description: "\n                                * `all` means
-                      no search term was specified so all volunteering opportunities
-                      are returned.\n                                * `exact` means
-                      the search term matched an exact location, so volunteering opportunities
-                      are ordered around\n                                   this
+                    description: "\n                                * `member` means
+                      the search terms matched a member ID and the results are all
+                      the results for this member (might be none).\n                                *
+                      `exact` means the search term matched an exact location, so
+                      volunteering opportunities are ordered around\n                                   this
                       location\n                                * `fuzzy` means the
                       search term matched a wider locality and not an individual point,
                       so the results may\n                                   only
@@ -652,7 +662,6 @@ paths:
                       required:
                       - id
                       - office
-                      - distance
                       - roles
                       additionalProperties: false
                 required:
