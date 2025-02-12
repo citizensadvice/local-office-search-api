@@ -60,7 +60,7 @@ jobs:
           slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           channel_id: "C02K26YCER1" #content-platform_builds
-          title: ":rocket: Deployed ${{ inputs.stage }}: Local Office Search API :rocket:"
+          title: ":green-tick: :office::mag: Local Office Search API ${{ inputs.stage }} deployment success"
           message: |
             The Local Office Search API on ${{ inputs.stage }} has been deployed!
 
@@ -77,6 +77,6 @@ jobs:
           slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           channel_id: "C02K26YCER1" #content-platform_builds
-          title: ":fire: Deploy failed (${{ inputs.stage }}): Local Office Search API :fire:"
+          title: ":x: :office::mag: Local Office Search API ${{ inputs.stage }} deployment failure"
           message: |
             The Local Office Search API on ${{ inputs.stage }} failed to deployed :pensive:
