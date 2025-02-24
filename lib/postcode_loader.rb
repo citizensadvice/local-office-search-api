@@ -26,7 +26,7 @@ class PostcodeLoader
 
   # rubocop:disable Metrics/AbcSize
   def create_postcodes_and_local_authorities!
-    # rubocop:disable Rails/SkipsModelValidations - we rely on database validations
+    # rubocop:disable Rails/SkipsModelValidations -- we rely on database validations
     local_authorities = {}
     # do this in chunks for performance reasons
     @postcode_csv.each_slice(10_000) do |rows|

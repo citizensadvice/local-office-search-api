@@ -5,7 +5,7 @@ require "postcode_loader"
 require "csv"
 
 RSpec.describe PostcodeLoader do
-  # rubocop:disable RSpec/MultipleExpectations - it makes sense to check all the fields together as it's a distinct piece of functionality
+  # rubocop:disable RSpec/MultipleExpectations -- it makes sense to check all the fields together as it's a distinct piece of functionality
   it "loads a single postcode" do
     load_from_fixture "single"
 
