@@ -109,12 +109,13 @@ class LocalOfficeSearchApiChart(Chart):
         self._allow_metrics_collection()
 
     def _create_deployment(self):
+        container_name = f"{self._APP_NAME}-server"
         deployment = Deployment(
             self,
             "Deployment",
             containers=[
                 self._server_container_props(
-                    f"{self._APP_NAME}-server",
+                    container_name,
                     command_line=[
                         "bin/rails",
                         "server",
@@ -132,9 +133,9 @@ class LocalOfficeSearchApiChart(Chart):
 
         self._add_labels(deployment.metadata)
         self._add_labels(deployment.pod_metadata)
-        deployment.pod_metadata.add_label("component", "local-office-search-api-server")
-        deployment.metadata.add_annotation(
-            "ad.datadoghq.com/local-office-search-api-server.logs",
+        deployment.pod_metadata.add_label("component", container_name)
+        deployment.pod_metadata.add_annotation(
+            f"ad.datadoghq.com/{container_name}.logs",
             json.dumps(
                 [
                     {
@@ -161,6 +162,7 @@ class LocalOfficeSearchApiChart(Chart):
         return deployment
 
     def _create_scheduled_import(self):
+        container_name = f"{self._APP_NAME}-scheduled-import"
         scheduled_job = CronJob(
             self,
             "ScheduledImport",
@@ -168,7 +170,7 @@ class LocalOfficeSearchApiChart(Chart):
             time_zone="Europe/London",
             containers=[
                 self._server_container_props(
-                    f"{self._APP_NAME}-scheduled-import",
+                    container_name,
                     command_line=["bin/rake", "sync_database"],
                 )
             ],
@@ -179,11 +181,11 @@ class LocalOfficeSearchApiChart(Chart):
         self._add_labels(scheduled_job.metadata)
         self._add_labels(scheduled_job.pod_metadata)
         scheduled_job.pod_metadata.add_label(
-            "component", "local-office-search-api-scheduled-import"
+            "component", container_name
         )
 
-        scheduled_job.metadata.add_annotation(
-            "ad.datadoghq.com/local-office-search-api-scheduled-import.logs",
+        scheduled_job.pod_metadata.add_annotation(
+            f"ad.datadoghq.com/{container_name}.logs",
             json.dumps(
                 [
                     {
