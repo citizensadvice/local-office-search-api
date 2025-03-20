@@ -5,7 +5,7 @@ from aws_cdk.aws_ecr import Repository
 from aws_cdk.aws_rds import Credentials, DatabaseCluster
 from aws_cdk.aws_s3 import Bucket
 from cdk8s import Chart, Cron, Duration, Size, ApiObjectMetadataDefinition
-from cdk8s_plus_30 import (
+from cdk8s_plus_32 import (
     Deployment,
     RestartPolicy,
     ServicePort,
