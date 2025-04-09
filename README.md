@@ -5,9 +5,7 @@ bureaux which serves their geographic area. It powers the Find Your Local Citize
 function on www.citizensadvice.org.uk.
 
 It loads a copy of the Citizens Advice network and geographic data into a PostgreSQL database
-to allow for fast searching. It also provides a partial implementation of the old Bureau
-Details API for our legacy CMS EPiServer, to support the functions which have not yet been
-migrated from EPiServer to the Content Platform.
+to allow for fast searching.
 
 ## Prerequisites
 
@@ -32,8 +30,6 @@ LOCAL_OFFICE_SEARCH_DB_PORT=5460
 LOCAL_OFFICE_SEARCH_DB_USER=local_office_search_api
 LOCAL_OFFICE_SEARCH_DB_PASSWORD=develop
 LOCAL_OFFICE_SEARCH_DB_NAME=local_office_search_api
-LOCAL_OFFICE_SEARCH_EPISERVER_USER=episerver
-LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD=development
 LSS_DATA_BUCKET=sandbox-advicelocationpipe-pipelinebucket263ac468-19wuk9oanxght
 GEO_DATA_BUCKET=uat-geo-data-postcodes-raw-eu-west-1
 EOF

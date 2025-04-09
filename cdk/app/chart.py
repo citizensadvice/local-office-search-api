@@ -35,9 +35,6 @@ from cdk8s_plus_32 import (
     Secret,
     ServiceAccount,
     ServiceType,
-    Service,
-    Ingress,
-    IngressBackend,
 )
 from constructs import Construct
 
@@ -63,8 +60,6 @@ class LocalOfficeSearchApiChart(Chart):
         service_account_name: str,
         rds_secret_name: str,
         app_secret_name: str,
-        api_v0_host: str,
-        api_v0_cert_arn: str,
     ):
         self._labels = {
             "app": self._APP_NAME,
@@ -100,8 +95,7 @@ class LocalOfficeSearchApiChart(Chart):
         self._geo_data_postcode_file = geo_data_postcode_file
 
         deployment = self._create_deployment()
-        app_service = self._expose_services(deployment)
-        self._expose_v0_api(api_v0_host, api_v0_cert_arn, app_service)
+        self._expose_services(deployment)
 
         self._create_scheduled_import()
         self._configure_autoscaler(deployment)
@@ -247,12 +241,6 @@ class LocalOfficeSearchApiChart(Chart):
             "LSS_DATA_BUCKET": EnvValue.from_value(self._lss_data_bucket_name),
             "GEO_DATA_BUCKET": EnvValue.from_value(self._geo_data_bucket_name),
             "GEO_DATA_POSTCODES_FILE": EnvValue.from_value(self._geo_data_postcode_file),
-            "LOCAL_OFFICE_SEARCH_EPISERVER_USER": self._app_secret.env_value(
-                "EPISERVER_USERNAME"
-            ),
-            "LOCAL_OFFICE_SEARCH_EPISERVER_PASSWORD": self._app_secret.env_value(
-                "EPISERVER_PASSWORD"
-            ),
             "LOCAL_OFFICE_SEARCH_DB_USER": EnvValue.from_value(self._db_username),
             "LOCAL_OFFICE_SEARCH_DB_PASSWORD": self._db_secret.env_value("DB_PASSWORD"),
             "LOCAL_OFFICE_SEARCH_DB_HOST": EnvValue.from_value(
@@ -278,44 +266,6 @@ class LocalOfficeSearchApiChart(Chart):
         metrics_service.metadata.add_label("custom-metrics-enabled", "true")
 
         return service
-
-    def _expose_v0_api(self, host: str, cert_arn: str, app_service: Service):
-        ingress = Ingress(self, "LocalOfficeSearchApiV0Ingress", class_name="alb")
-        ingress.add_host_rule(host, "/api/v0/", IngressBackend.from_service(app_service))
-
-        ingress.metadata.add_annotation("alb.ingress.kubernetes.io/scheme", "internet-facing")
-        ingress.metadata.add_annotation(
-            "alb.ingress.kubernetes.io/healthcheck-path", "/status"
-        )
-        ingress.metadata.add_annotation(
-            "alb.ingress.kubernetes.io/actions.ssl-redirect",
-            json.dumps(
-                {
-                    "Type": "redirect",
-                    "RedirectConfig": {
-                        "Protocol": "HTTPS",
-                        "Port": "443",
-                        "StatusCode": "HTTP_301",
-                    },
-                }
-            ),
-        )
-        ingress.metadata.add_annotation(
-            "alb.ingress.kubernetes.io/ssl-policy", "ELBSecurityPolicy-TLS-1-2-2017-01"
-        )
-        ingress.metadata.add_annotation("alb.ingress.kubernetes.io/certificate-arn", cert_arn)
-        ingress.metadata.add_annotation(
-            "alb.ingress.kubernetes.io/tags",
-            ",".join(
-                f"{key}={value}"
-                for key, value in {
-                    "Environment": self._labels["env"],
-                    "Product": "corporate_site",
-                    "Component": "local_office_search_api",
-                    "TechnicalOwner": "contentplatform@citizensadvice.org.uk",
-                }.items()
-            ),
-        )
 
     def _configure_autoscaler(self, deployment: Deployment):
         HorizontalPodAutoscaler(

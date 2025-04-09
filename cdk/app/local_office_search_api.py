@@ -28,8 +28,6 @@ class LocalOfficeSearchApiDeployment(Stack):
         lss_bucket_name: str,
         geo_data_bucket_name: str,
         geo_data_postcode_file: str,
-        api_v0_host: str,
-        api_v0_cert_arn: str,
         **kwargs,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -108,8 +106,6 @@ class LocalOfficeSearchApiDeployment(Stack):
             source_secret=app_secrets_secret.secret_name,
             secret_mappings={
                 "SECRET_KEY_BASE": "",
-                "EPISERVER_USERNAME": "",
-                "EPISERVER_PASSWORD": "",
             },
             k8s_secret_name="local-office-search-app",
         )
@@ -144,7 +140,5 @@ class LocalOfficeSearchApiDeployment(Stack):
                 service_account_name=self._service_account.service_account_name,
                 rds_secret_name=rds_secret_source.k8s_secret_name,
                 app_secret_name=app_secret_source.k8s_secret_name,
-                api_v0_host=api_v0_host,
-                api_v0_cert_arn=api_v0_cert_arn,
             ),
         )
