@@ -579,9 +579,10 @@ paths:
                     - out_of_area_ni
                     description: "\n                                * `member` means
                       the search terms matched a member ID and the results are all
-                      the results for this member (might be none).\n                                *
-                      `exact` means the search term matched an exact location, so
-                      volunteering opportunities are ordered around\n                                   this
+                      the results for this\n                                   member
+                      (might be none).\n                                * `exact`
+                      means the search term matched an exact location, so volunteering
+                      opportunities are ordered around\n                                   this
                       location\n                                * `fuzzy` means the
                       search term matched a wider locality and not an individual point,
                       so the results may\n                                   only

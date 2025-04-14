@@ -19,15 +19,11 @@ STAGE_VARS = {
         "lss_bucket_name": "sandbox-advicelocationpipe-pipelinebucket263ac468-19wuk9oanxght",
         "geo_data_bucket_name": "uat-geo-data-postcodes-raw-eu-west-1",
         "geo_data_postcode_file": "Geo_postcodes_csv_uat.csv",
-        "api_v0_host": "bureaudetails.qa.citizensadvice.org.uk",
-        "api_v0_cert_arn": "arn:aws:acm:eu-west-1:979633842206:certificate/53339880-7787-4488-aa6d-4d9854fa13dc",  # *.qa.citizensadvice.org.uk
     },
     "prod": {
         "lss_bucket_name": "prod-advicelocationprodbucket-buckete75ea64c-1oasp6hbbkp4j",
         "geo_data_bucket_name": "prod-onsgeodata-buckete75ea64c-phllx3dqnkmx",
         "geo_data_postcode_file": "geo_postcodes_prod.csv",
-        "api_v0_host": "bureaudetails.prod.content.citizensadvice.org.uk",
-        "api_v0_cert_arn": "arn:aws:acm:eu-west-1:912473634278:certificate/f2d8f90a-1d29-4b07-9a03-41e530a470d9",  # *.prod.content.citizensadvice.org.uk
     },
 }
 

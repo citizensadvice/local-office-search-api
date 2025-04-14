@@ -32,32 +32,6 @@ RSpec.configure do |config|
           }
         }
       ]
-    },
-    "v0/swagger.yaml" => {
-      openapi: "3.0.1",
-      info: {
-        title: "Bureau Details API (legacy)",
-        version: "v0"
-      },
-      paths: {},
-      servers: [
-        {
-          url: "https://{defaultHost}",
-          variables: {
-            defaultHost: {
-              default: "www.example.com"
-            }
-          }
-        }
-      ],
-      components: {
-        securitySchemes: {
-          basic_auth: {
-            type: :http,
-            scheme: :basic
-          }
-        }
-      }
     }
   }
 
