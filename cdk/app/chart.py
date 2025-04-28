@@ -36,6 +36,7 @@ from cdk8s_plus_32 import (
     ServiceAccount,
     ServiceType,
 )
+from ca_cdk8s_constructs.pod_disruption_budget import ca_pod_disruption_budget
 from constructs import Construct
 
 
@@ -96,6 +97,7 @@ class LocalOfficeSearchApiChart(Chart):
         self._geo_data_postcode_file = geo_data_postcode_file
 
         deployment = self._create_deployment()
+        ca_pod_disruption_budget(self, "LocalOfficeSearchApiPdb", deployment)
         self._expose_services(deployment)
 
         self._create_scheduled_import()
