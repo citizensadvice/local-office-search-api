@@ -126,7 +126,7 @@ class LocalOfficeSearchApiDeployment(Stack):
 
         Cdk8sHelmChart(
             self,
-            "LocalOfficeSearchApiHelmChart",
+            "LocalOfficeSearchApiChart",
             chart_name="local-office-search-api",
             app_version=app_image_version,
             cluster=eks_cluster,
