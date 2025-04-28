@@ -74,6 +74,7 @@ class LocalOfficeSearchApiChart(Chart):
             construct_id,
             namespace=namespace,
             labels=self._labels,
+            disable_resource_name_hashes=True, # this was needed to migrate from plain cdk8s to one wrapped in Helm, as this had name clashes
         )
 
         self._container_image = f"{image_repo.repository_uri}:{image_version}"
@@ -95,7 +96,7 @@ class LocalOfficeSearchApiChart(Chart):
         self._geo_data_postcode_file = geo_data_postcode_file
 
         deployment = self._create_deployment()
-        # self._expose_services(deployment)
+        self._expose_services(deployment)
 
         self._create_scheduled_import()
         self._configure_autoscaler(deployment)
