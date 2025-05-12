@@ -95,7 +95,7 @@ class LocalOfficeSearchApiChart(Chart):
         self._geo_data_postcode_file = geo_data_postcode_file
 
         deployment = self._create_deployment()
-        self._expose_services(deployment)
+        # self._expose_services(deployment)
 
         self._create_scheduled_import()
         self._configure_autoscaler(deployment)
