@@ -141,4 +141,5 @@ class LocalOfficeSearchApiDeployment(Stack):
                 rds_secret_name=rds_secret_source.k8s_secret_name,
                 app_secret_name=app_secret_source.k8s_secret_name,
             ),
+            prune=False
         )
