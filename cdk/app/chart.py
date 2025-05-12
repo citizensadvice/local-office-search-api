@@ -35,6 +35,8 @@ from cdk8s_plus_32 import (
     Secret,
     ServiceAccount,
     ServiceType,
+    ContainerLifecycle,
+    Handler,
 )
 from ca_cdk8s_constructs.pod_disruption_budget import ca_pod_disruption_budget
 from constructs import Construct
@@ -214,6 +216,7 @@ class LocalOfficeSearchApiChart(Chart):
                 failure_threshold=3,
                 timeout_seconds=Duration.seconds(5),
             ),
+            lifecycle=ContainerLifecycle(pre_stop=Handler.from_command(["sleep", "10"])),
             resources=ContainerResources(
                 cpu=CpuResources(request=Cpu.millis(400), limit=Cpu.millis(800)),
                 memory=MemoryResources(request=Size.mebibytes(512), limit=Size.gibibytes(1)),
