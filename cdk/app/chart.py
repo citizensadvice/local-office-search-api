@@ -35,7 +35,10 @@ from cdk8s_plus_32 import (
     Secret,
     ServiceAccount,
     ServiceType,
+    ContainerLifecycle,
+    Handler,
 )
+from ca_cdk8s_constructs.pod_disruption_budget import ca_pod_disruption_budget
 from constructs import Construct
 
 
@@ -74,6 +77,7 @@ class LocalOfficeSearchApiChart(Chart):
             construct_id,
             namespace=namespace,
             labels=self._labels,
+            disable_resource_name_hashes=True, # this was needed to migrate from plain cdk8s to one wrapped in Helm, as this had name clashes
         )
 
         self._container_image = f"{image_repo.repository_uri}:{image_version}"
@@ -95,7 +99,8 @@ class LocalOfficeSearchApiChart(Chart):
         self._geo_data_postcode_file = geo_data_postcode_file
 
         deployment = self._create_deployment()
-        # self._expose_services(deployment)
+        ca_pod_disruption_budget(self, "LocalOfficeSearchApiPdb", deployment)
+        self._expose_services(deployment)
 
         self._create_scheduled_import()
         self._configure_autoscaler(deployment)
@@ -211,6 +216,7 @@ class LocalOfficeSearchApiChart(Chart):
                 failure_threshold=3,
                 timeout_seconds=Duration.seconds(5),
             ),
+            lifecycle=ContainerLifecycle(pre_stop=Handler.from_command(["sleep", "10"])),
             resources=ContainerResources(
                 cpu=CpuResources(request=Cpu.millis(400), limit=Cpu.millis(800)),
                 memory=MemoryResources(request=Size.mebibytes(512), limit=Size.gibibytes(1)),

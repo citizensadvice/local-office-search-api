@@ -9,6 +9,7 @@ from ca_cdk_constructs.eks.external_secrets import (
     ExternalAwsSecretsChart,
     ExternalSecretSource,
 )
+from ca_cdk8s_constructs.cdk8s_helm_chart import Cdk8sHelmChart
 from constructs import Construct
 
 from cdk8s import App
@@ -123,9 +124,13 @@ class LocalOfficeSearchApiDeployment(Stack):
             ),
         )
 
-        eks_cluster.add_cdk8s_chart(
+        Cdk8sHelmChart(
+            self,
             "LocalOfficeSearchApiChart",
-            LocalOfficeSearchApiChart(
+            chart_name="local-office-search-api",
+            app_version=app_image_version,
+            cluster=eks_cluster,
+            cdk8s_chart=LocalOfficeSearchApiChart(
                 self._cdk8s_app,
                 "LocalOfficeSearchApiChart",
                 namespace=namespace,
@@ -141,5 +146,6 @@ class LocalOfficeSearchApiDeployment(Stack):
                 rds_secret_name=rds_secret_source.k8s_secret_name,
                 app_secret_name=app_secret_source.k8s_secret_name,
             ),
-            prune=False
+            atomic=True,
+            create_namespace=False,
         )
