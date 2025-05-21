@@ -1,4 +1,4 @@
-FROM ruby:3.3.5-alpine3.20
+FROM ruby:3.3.8-alpine3.21
 
 # bash is required for build scripts
 # tzdata is a runtime dependency for ActiveSupport
@@ -7,7 +7,7 @@ FROM ruby:3.3.5-alpine3.20
 
 RUN gem install bundler -v '~>2.3' && \
     bundle config --global frozen 1 && \
-    apk add --no-cache coreutils bash tzdata postgresql-libs postgresql14-client gcompat && \
+    apk add --no-cache coreutils bash tzdata postgresql-libs postgresql16-client gcompat && \
     truncate -s 0 /var/log/*log
 
 WORKDIR /app
@@ -15,7 +15,7 @@ WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 
 # Temporarily add the dev packages required for to install bundles (and remove the build cache afterwards )
-RUN apk add --no-cache --virtual .gem-installdeps build-base git postgresql-dev && \
+RUN apk add --no-cache --virtual .gem-installdeps build-base git postgresql-dev yaml-dev && \
       bundle install -j6 && \
       rm -rf $GEM_HOME/cache && \
       apk del .gem-installdeps
