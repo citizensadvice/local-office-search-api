@@ -1,4 +1,4 @@
-FROM ruby:3.3.5-alpine3.20
+FROM ruby:3.4.4-alpine3.20
 
 # bash is required for build scripts
 # tzdata is a runtime dependency for ActiveSupport
