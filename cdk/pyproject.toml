@@ -10,8 +10,8 @@ package-mode = false
 python = ">=3.10,<3.13"
 ca-cdk-constructs = {git = "https://github.com/citizensadvice/ca-cdk-constructs", rev = "v0.14.0"}
 ca-cdk8s-constructs = { git = "https://github.com/citizensadvice/ca-cdk8s-constructs", rev = "v2.3.0" }
-ruff = "^0.11.12"
-cdk8s-plus-32 = "^2.1.4"
+ruff = "^0.11.13"
+cdk8s-plus-32 = "^2.1.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.0"
