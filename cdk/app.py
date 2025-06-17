@@ -33,7 +33,11 @@ STAGES = [
 ]
 
 for stage in STAGES:
-    db_stack = LocalOfficeSearchDatabase(stage, "LocalOfficeSearchApiDb")
+    db_stack = LocalOfficeSearchDatabase(
+        stage,
+        "LocalOfficeSearchApiDb",
+        num_replicas=1 if stage.stage_name == "prod" else 0 # enable high availability mode in prod
+    )
     LocalOfficeSearchApiDeployment(
         stage,
         "LocalOfficeSearchApiDeployment",

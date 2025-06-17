@@ -23,12 +23,12 @@ from constructs import Construct
 
 
 class LocalOfficeSearchDatabase(Stack):
-    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, num_replicas: int, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        self.db = self._create_postgres_database()
+        self.db = self._create_postgres_database(num_replicas)
 
-    def _create_postgres_database(self):
+    def _create_postgres_database(self, num_replicas: int):
         sg = SecurityGroup(self, "ClusterSecurityGroup", vpc=self._vpc)
         self.db_credentials = Credentials.from_generated_secret(
             "local_office_search_api",
@@ -61,6 +61,14 @@ class LocalOfficeSearchDatabase(Stack):
                 preferred_maintenance_window="sat:06:00-sat:08:00",
                 publicly_accessible=False,
             ),
+            readers=[ClusterInstance.provisioned(
+                f"DbReplica{i}",
+                instance_type=InstanceType("t3.medium"),
+                allow_major_version_upgrade=True,
+                auto_minor_version_upgrade=True,
+                preferred_maintenance_window="sat:06:00-sat:08:00",
+                publicly_accessible=False,
+            ) for i in range(num_replicas)]
         )
 
         for private_subnet in self._vpc.private_subnets:
