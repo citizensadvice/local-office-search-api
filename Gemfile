@@ -10,7 +10,7 @@ gem "rails", "~> 8.0.2"
 
 # Use PostgreSQL as the database for Active Record
 gem "activerecord-postgis-adapter"
-gem "pg", "~> 1.5"
+gem "pg", "~> 1.6"
 gem "rgeo-geojson"
 
 # We load data from S3
@@ -24,7 +24,7 @@ gem "puma", "~> 6.6"
 
 # Monitoring
 gem "ddtrace", "~> 1.23.3"
-gem "rails_semantic_logger", "~> 4.17"
+gem "rails_semantic_logger", "~> 4.18"
 gem "yabeda-prometheus", "~> 0.9"
 gem "yabeda-puma-plugin", "~> 0.7"
 gem "yabeda-rails", "~> 0.9"
