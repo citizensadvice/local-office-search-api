@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.8"
+ruby "3.4.5"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.2"
@@ -23,7 +23,7 @@ gem "tod"
 gem "puma", "~> 6.6"
 
 # Monitoring
-gem "ddtrace", "~> 1.23.3"
+gem "datadog"
 gem "rails_semantic_logger", "~> 4.18"
 gem "yabeda-prometheus", "~> 0.9"
 gem "yabeda-puma-plugin", "~> 0.7"
