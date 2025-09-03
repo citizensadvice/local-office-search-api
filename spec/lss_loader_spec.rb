@@ -238,9 +238,9 @@ RSpec.describe LssLoader do
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
 
-  def load_from_fixtures_with_error(**opts)
+  def load_from_fixtures_with_error(**)
     expect do
-      load_from_fixtures(**opts)
+      load_from_fixtures(**)
     end.to raise_error LssLoader::LssLoadError
   end
 
