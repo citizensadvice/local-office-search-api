@@ -69,6 +69,16 @@ You will need to have [AWS set up and be authorised locally](https://github.com/
 If you are logged in as ContentPlatformDeveloper you should now be able to run `bin/docker/rake sync_database`,
 or `bin/rake sync_database` to load data in from the data science buckets.
 
+The sync_database task sense checks the files have the expected columns in before loading them. Sometimes the
+schema changes, and you need to alter the fixtures in `spec/fixtures/` (which contain subsets of the full data)
+to reflect the new schema to get failing tests you can use to fix the code.
+
+To update the postcode files, you can use these commands (assuming you've downloaded the new file)
+
+    head -n 2 < ~/Downloads/Geo_postcodes_csv_uat.csv > spec/fixtures/postcodes/single.csv
+    head -n 2 < ~/Downloads/Geo_postcodes_csv_uat.csv > spec/fixtures/postcodes/with_nil_la.csv
+    grep 'AB11 3AG' ~/Downloads/Geo_postcodes_csv_uat.csv >> spec/fixtures/postcodes/with_nil_la.csv
+
 ## API documentation
 
 This repo uses [RSwag](https://github.com/rswag/rswag) to produce Swagger API

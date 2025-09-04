@@ -12,7 +12,7 @@ RSpec.describe PostcodeLoader do
     postcode = Postcode.first
     expect(postcode.canonical).to eq("AB1 0AA")
     expect(postcode.local_authority_id).to eq("S12000033")
-    expect(postcode.location.to_s).to eq("POINT (-2.242851 57.101474)")
+    expect(postcode.location.to_s).to eq("POINT (-2.242858 57.101459)")
   end
   # rubocop:enable RSpec/MultipleExpectations
 
