@@ -79,7 +79,7 @@ class PostcodeLoader
       rural_urban_area_2011_code imd_rank primary_care_trust_code integrated_care_board_subdivision_code
       integrated_care_board_subdivision_name police_force_area_code police_force_area_name integrated_care_board_code
       integrated_care_board_name westminster_member_of_parliament_code westminster_member_of_parliament
-      westminster_political_party_code westminster_political_party
+      westminster_political_party_code westminster_political_party rural_urban_area_2021_code rural_urban_area_2021_name
     ]
   end
 
