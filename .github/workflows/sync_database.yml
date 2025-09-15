@@ -19,7 +19,7 @@ jobs:
       name: ${{ inputs.env }}
     steps:
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: "arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
           role-session-name: local-office-search-api-${{ inputs.env }}-sync-workflow
