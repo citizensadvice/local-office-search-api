@@ -243,7 +243,7 @@ GEM
       date
       stringio
     public_suffix (6.0.1)
-    puma (6.6.1)
+    puma (7.0.1)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.0)
@@ -442,7 +442,7 @@ DEPENDENCIES
   dotenv-rails
   license_finder
   pg (~> 1.6)
-  puma (~> 6.6)
+  puma (~> 7.0)
   rails (~> 8.0.2)
   rails_semantic_logger (~> 4.18)
   rgeo-geojson
