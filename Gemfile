@@ -70,6 +70,6 @@ group :test do
 
   gem "simplecov", require: false
 
-  gem "citizens-advice-style", github: "citizensadvice/citizens-advice-style-ruby", tag: "v12.0.0"
+  gem "citizens-advice-style", github: "citizensadvice/citizens-advice-style-ruby", tag: "v12.1.0"
   gem "rubocop", require: false
 end
