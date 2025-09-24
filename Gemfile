@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.4.5"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 8.0.3"
 
 # Use PostgreSQL as the database for Active Record
 gem "activerecord-postgis-adapter"
@@ -26,7 +26,7 @@ gem "puma", "~> 7.0"
 gem "datadog"
 gem "rails_semantic_logger", "~> 4.18"
 gem "yabeda-prometheus", "~> 0.9"
-gem "yabeda-puma-plugin", "~> 0.7"
+gem "yabeda-puma-plugin", "~> 0.8"
 gem "yabeda-rails", "~> 0.10"
 
 # Use Swagger to document our APIs
