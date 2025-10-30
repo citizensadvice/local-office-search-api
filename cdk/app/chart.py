@@ -38,6 +38,7 @@ from cdk8s_plus_32 import (
     ContainerLifecycle,
     Handler,
 )
+from ca_cdk8s_constructs.blackbox_probe import ca_blackbox_probe
 from ca_cdk8s_constructs.pod_disruption_budget import ca_pod_disruption_budget
 from constructs import Construct
 
@@ -106,6 +107,8 @@ class LocalOfficeSearchApiChart(Chart):
         self._configure_autoscaler(deployment)
         self._allow_external_traffic()
         self._allow_metrics_collection()
+
+        ca_blackbox_probe(self, "Probe", f"http://{self._APP_NAME}.{self.namespace}.svc.cluster.local:{self._HTTP_PORT}/api/v2/offices?q=WC1X+0DW")
 
     def _create_deployment(self):
         container_name = f"{self._APP_NAME}-server"
