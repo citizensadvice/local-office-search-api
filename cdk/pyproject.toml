@@ -14,7 +14,7 @@ ruff = "^0.14.4"
 cdk8s-plus-32 = "^2.5.5"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4.2"
+pytest = "^9.0.0"
 
 [tool.ruff]
 target-version = 'py312'
