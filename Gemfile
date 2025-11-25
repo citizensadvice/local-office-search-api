@@ -26,7 +26,7 @@ gem "puma", "~> 7.1"
 gem "datadog"
 gem "rails_semantic_logger", "~> 4.18"
 gem "yabeda-prometheus", "~> 0.9"
-gem "yabeda-puma-plugin", "~> 0.8"
+gem "yabeda-puma-plugin", "~> 0.9"
 gem "yabeda-rails", "~> 0.10"
 
 # Use Swagger to document our APIs
