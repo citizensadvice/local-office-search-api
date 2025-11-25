@@ -28,7 +28,7 @@ jobs:
         shell: bash
         if: inputs.stage == 'prod'
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: citizensadvice/python-poetry-setup-action@v1
         with:
