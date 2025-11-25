@@ -1,4 +1,3 @@
-version: "3.2"
 services:
   local-office-search-api:
     build:
@@ -10,17 +9,10 @@ services:
     image: local-office-search-api${SEARCH_API_VERSION_TAG}
     container_name: local-office-search-api.test
     command: rails server -b 0.0.0.0 -p 3060
-    labels:
-      traefik.port: 3060
-      traefik.backend: local-office-search-api
-      traefik.frontend.rule: 'Host: local-office-search-api.test'
-      traefik.enable: true
-    links:
-      - api-proxy
     tmpfs: /app/tmp
     user: root
     ports:
-      - 3060
+      - "3060:3060"
     environment:
       - LOCAL_OFFICE_SEARCH_DB_HOST=db
       - LOCAL_OFFICE_SEARCH_DB_PORT=5432
@@ -40,17 +32,6 @@ services:
     depends_on:
       - db
       - testdb
-
-  api-proxy:
-    image: traefik:alpine
-    command: --configFile=/traefik.toml
-    container_name: api-proxy.test
-    ports:
-      - "3060:3060"
-      - "8181:8181"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.toml:/traefik.toml
 
   db:
     image: "postgis/postgis:16-3.4"

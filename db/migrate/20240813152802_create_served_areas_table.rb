@@ -7,7 +7,7 @@ class CreateServedAreasTable < ActiveRecord::Migration[7.1]
       t.references :office, null: false, foreign_key: true, type: "char(18)"
       t.references :local_authority, null: false, index: true, type: "char(9)"
     end
-    add_foreign_key :served_areas, :local_authorities, deferrable: true
+    add_foreign_key :served_areas, :local_authorities, deferrable: :immediate
     # rubocop:enable Rails/CreateTableWithTimestamps
   end
 end
