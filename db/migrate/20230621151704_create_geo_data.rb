@@ -16,7 +16,7 @@ class CreateGeoData < ActiveRecord::Migration[7.0]
       t.column :location, :st_point, null: false
       t.references :local_authority, index: true, type: "char(9)", null: false
     end
-    add_foreign_key :postcodes, :local_authorities, deferrable: true
+    add_foreign_key :postcodes, :local_authorities, deferrable: :immediate
     add_index :postcodes, :normalised, unique: true
     # rubocop:enable Rails/CreateTableWithTimestamps
   end
