@@ -9,6 +9,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: '[dependabot:bundler] '
     groups:
@@ -24,6 +26,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: '[dependabot:actions] '
     groups:
@@ -36,6 +40,8 @@ updates:
     directory: '/cdk'
     schedule:
       interval: 'weekly'
+    cooldown:
+      default-days: 7
     groups:
       regular-updates: # Group everything except major version updates and security vulnerabilities
         update-types:
@@ -46,5 +52,7 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: '[dependabot:docker] '
