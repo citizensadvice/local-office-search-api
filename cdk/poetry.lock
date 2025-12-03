@@ -105,48 +105,40 @@ typeguard = ">=2.13.3,<4.3.0"
 
 [[package]]
 name = "ca-cdk-constructs"
-version = "0.17.0"
+version = "0.17.1"
 description = "Shared CDK constructs"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-files = []
-develop = false
+files = [
+    {file = "ca_cdk_constructs-0.17.1-py3-none-any.whl", hash = "sha256:60d0c64f17ba92c6d3d2677b6e2593ee139fe8eac2fed056ea0c09a42fef2edd"},
+    {file = "ca_cdk_constructs-0.17.1.tar.gz", hash = "sha256:69154aea751fbdcef4e2b022c79b3232ab744360cea0469587d26c6fef8a3427"},
+]
 
 [package.dependencies]
 aws-cdk-lambda-layer-kubectl-v34 = ">=2.0.0"
 aws-cdk-lib = ">=2.215"
-cdk_remote_stack = ">=2.1"
+cdk-remote-stack = ">=2.1"
 cdk8s = ">=2.70.15"
 constructs = ">=10.4"
 
-[package.source]
-type = "git"
-url = "https://github.com/citizensadvice/ca-cdk-constructs"
-reference = "v0.17.0"
-resolved_reference = "a6ccf27c9ed29f606e4438725a6844d7c93b6213"
-
 [[package]]
 name = "ca-cdk8s-constructs"
-version = "4.0.0"
+version = "4.0.3"
 description = "A collection of cdk8s constructs"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-files = []
-develop = false
+files = [
+    {file = "ca_cdk8s_constructs-4.0.3-py3-none-any.whl", hash = "sha256:addc15196ba2da6401a5e89566ccb8ab64a79c24466e1359e00c4b248ee733bd"},
+    {file = "ca_cdk8s_constructs-4.0.3.tar.gz", hash = "sha256:bdfc9fbbb0b8a271ebb0f4c9b8e2d19041a19ae830870605eff3fb259a9a42e2"},
+]
 
 [package.dependencies]
 aws-cdk-lib = ">=2.214.0"
 cdk8s = ">=2.70.11"
 cdk8s-plus-32 = ">=2.4.1"
 pyyaml = ">=6.0.2"
-
-[package.source]
-type = "git"
-url = "https://github.com/citizensadvice/ca-cdk8s-constructs"
-reference = "v4.0.1"
-resolved_reference = "16f67bae5a5ae88b67c5d804e97d43731cc103c4"
 
 [[package]]
 name = "cattrs"
@@ -636,4 +628,4 @@ markers = {dev = "python_version == \"3.10\""}
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "4322980aaa43c96997103975b3d7431d5dca76fcb8dc4f0f4978e9143f8c9c97"
+content-hash = "ff147da7e00ce2ca6a96a4585e913e058a0a9e4d6a8408b6c866dccb27a9cb00"
