@@ -10,11 +10,11 @@ package-mode = false
 python = ">=3.10,<3.13"
 ca-cdk-constructs = "^0.17.1"
 ca-cdk8s-constructs = "^4.0.3"
-ruff = "^0.14.6"
-cdk8s-plus-32 = "^2.5.7"
+ruff = "^0.14.8"
+cdk8s-plus-32 = "^2.5.8"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^9.0.1"
+pytest = "^9.0.2"
 
 [tool.ruff]
 target-version = 'py312'
