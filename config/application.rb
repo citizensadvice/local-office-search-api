@@ -14,7 +14,7 @@ module LocalOfficeSearchApi
     config.api_only = true
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 8.1
 
     # We use some Postgres features that Rails doesn't quite know about
     # so use the SQL dumping format
