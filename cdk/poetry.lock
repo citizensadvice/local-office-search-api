@@ -206,20 +206,20 @@ typeguard = ">=2.13.3,<4.3.0"
 
 [[package]]
 name = "cdk8s-plus-32"
-version = "2.5.16"
+version = "2.5.19"
 description = "cdk8s+ is a software development framework that provides high level abstractions for authoring Kubernetes applications. cdk8s-plus-32 synthesizes Kubernetes manifests for Kubernetes 1.32.0"
 optional = false
 python-versions = "~=3.9"
 groups = ["main"]
 files = [
-    {file = "cdk8s_plus_32-2.5.16-py3-none-any.whl", hash = "sha256:215236090fc312b6abbb5aa33d544c2b92744064afc9410319187f75ba76e41a"},
-    {file = "cdk8s_plus_32-2.5.16.tar.gz", hash = "sha256:0197fcf6be9bf8e98c30ad311c7eaf366688a8986a03aae01ae4bfd900e1ffb4"},
+    {file = "cdk8s_plus_32-2.5.19-py3-none-any.whl", hash = "sha256:bcd6294907a3e3c38ed92b2c3bf445473714e99f865f8ce920a962636276ca15"},
+    {file = "cdk8s_plus_32-2.5.19.tar.gz", hash = "sha256:682c3164811934d3dca0a6b67b8dbd53f4107a649e94cbd1188b2871bd096771"},
 ]
 
 [package.dependencies]
 cdk8s = ">=2.68.11,<3.0.0"
 constructs = ">=10.3.0,<11.0.0"
-jsii = ">=1.122.0,<2.0.0"
+jsii = ">=1.125.0,<2.0.0"
 publication = ">=0.0.3"
 typeguard = "2.13.3"
 
@@ -306,14 +306,14 @@ files = [
 
 [[package]]
 name = "jsii"
-version = "1.122.0"
+version = "1.125.0"
 description = "Python client for jsii runtime"
 optional = false
 python-versions = "~=3.9"
 groups = ["main"]
 files = [
-    {file = "jsii-1.122.0-py3-none-any.whl", hash = "sha256:e0bfa9ff5d512d6719c989684b42120ec8601aee2b183c803d240dabc96a3f14"},
-    {file = "jsii-1.122.0.tar.gz", hash = "sha256:f817d73a178532888c56e5dce1a4a9c87a015143d76b8e7067a5efd7a45c97cf"},
+    {file = "jsii-1.125.0-py3-none-any.whl", hash = "sha256:895b1f27f67e1fac3797abeeeb0ded0e1a64a155a32e1547174735d293eca0cb"},
+    {file = "jsii-1.125.0.tar.gz", hash = "sha256:37664c25ac8dfaf6c1bab214ff58eec62d515e70311c349240b43bdd733beccb"},
 ]
 
 [package.dependencies]
@@ -628,4 +628,4 @@ markers = {dev = "python_version == \"3.10\""}
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "e557058bedf411d910beead89dc9b4d4b5a851d4241bc7fee32f134ff7eb77bf"
+content-hash = "0ac3a2d3f38c85c7e6c16791d410ebf1d0f8d5d2a38868348eeb02433e6e3421"
