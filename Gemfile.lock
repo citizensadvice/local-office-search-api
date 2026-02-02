@@ -470,7 +470,7 @@ DEPENDENCIES
   yabeda-rails (~> 0.11)
 
 RUBY VERSION
-   ruby 3.4.7p58
+   ruby 3.4.8p72
 
 BUNDLED WITH
    2.5.9
