@@ -20,7 +20,7 @@ gem "aws-sdk-s3"
 gem "tod"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 7.1"
+gem "puma", "~> 7.2"
 
 # Monitoring
 gem "datadog"
