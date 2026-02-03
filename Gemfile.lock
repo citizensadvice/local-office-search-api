@@ -132,7 +132,7 @@ GEM
     connection_pool (3.0.2)
     crass (1.0.6)
     csv (3.3.0)
-    datadog (2.26.0)
+    datadog (2.27.0)
       cgi
       datadog-ruby_core_source (~> 3.5, >= 3.5.1)
       libdatadog (~> 25.0.0.1.0)
@@ -250,7 +250,7 @@ GEM
       date
       stringio
     public_suffix (6.0.2)
-    puma (7.1.0)
+    puma (7.2.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.4)
@@ -452,7 +452,7 @@ DEPENDENCIES
   dotenv-rails
   license_finder
   pg (~> 1.6)
-  puma (~> 7.1)
+  puma (~> 7.2)
   rails (~> 8.1.2)
   rails_semantic_logger (~> 4.19)
   rgeo-geojson
