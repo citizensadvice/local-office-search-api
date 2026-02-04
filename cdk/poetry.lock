@@ -124,14 +124,14 @@ constructs = ">=10.4"
 
 [[package]]
 name = "ca-cdk8s-constructs"
-version = "4.1.0"
+version = "5.0.0"
 description = "A collection of cdk8s constructs"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "ca_cdk8s_constructs-4.1.0-py3-none-any.whl", hash = "sha256:e64342eaca6cae714d88d6fdc8c8a9106c4b662321d4d791d88831ba2fd12da4"},
-    {file = "ca_cdk8s_constructs-4.1.0.tar.gz", hash = "sha256:59c13ba172f386ebd68352470229e4d3cfcd75384b1bfb2ccc76215d11f4f3f2"},
+    {file = "ca_cdk8s_constructs-5.0.0-py3-none-any.whl", hash = "sha256:9a6b7fe5e8892e48ee6cdcb9154cdfdec5b1d5d316406d56a932c60995674479"},
+    {file = "ca_cdk8s_constructs-5.0.0.tar.gz", hash = "sha256:d6dbacc48182c7e1ad8b50ef44d747cba7ac66ece8c4d4e98f4d9bb907777551"},
 ]
 
 [package.dependencies]
@@ -628,4 +628,4 @@ markers = {dev = "python_version == \"3.10\""}
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "a491d53d6c72aa0200416b2c2cf5372510eaca2f0975906202168ca15d173760"
+content-hash = "fb3274e7159973dba9c7ef9c8a50562811041e5a6cd52ad27ca41fbdb600e705"

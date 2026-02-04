@@ -9,7 +9,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 ca-cdk-constructs = "^0.17.2"
-ca-cdk8s-constructs = "^4.1.0"
+ca-cdk8s-constructs = "^5.0.0"
 ruff = "^0.14.14"
 cdk8s-plus-32 = "^2.5.22"
 
