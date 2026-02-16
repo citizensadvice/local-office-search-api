@@ -16,6 +16,7 @@ class Postcode < ApplicationRecord
     find_by normalised: postcode.delete(" ").downcase
   end
 
+  # rubocop:disable Layout/HeredocIndentation
   # this overrides the default Rails upsert because that doesn't know how to handle conflicts on
   # virtual columns
   def self.bulk_upsert(vals)
@@ -26,4 +27,5 @@ class Postcode < ApplicationRecord
       UPDATE SET location=EXCLUDED.location, local_authority_id=EXCLUDED.local_authority_id
     SQL
   end
+  # rubocop:enable Layout/HeredocIndentation
 end
