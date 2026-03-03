@@ -10,8 +10,8 @@ package-mode = false
 python = ">=3.10,<3.13"
 ca-cdk-constructs = "^0.17.2"
 ca-cdk8s-constructs = "^5.0.0"
-ruff = "^0.15.1"
-cdk8s-plus-32 = "^2.5.25"
+ruff = "^0.15.2"
+cdk8s-plus-32 = "^2.5.28"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.2"
