@@ -202,7 +202,7 @@ RSpec.describe LssLoader do
     id
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists, Style/FileOpen
   def load_from_fixtures(members_csv_filename: "empty",
                          locations_csv_filename: "empty",
                          opening_hours_csv_filename: "empty",
@@ -236,7 +236,7 @@ RSpec.describe LssLoader do
     volunteer_roles_csv&.close
     local_authorities_csv&.close
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists, Style/FileOpen
 
   def load_from_fixtures_with_error(**)
     expect do
