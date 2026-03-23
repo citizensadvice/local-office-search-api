@@ -66,7 +66,7 @@ group :test do
   gem "bundler-audit"
   gem "license_finder"
 
-  gem "rspec-rails", "~> 8.0.3"
+  gem "rspec-rails", "~> 8.0.4"
 
   gem "simplecov", require: false
 
