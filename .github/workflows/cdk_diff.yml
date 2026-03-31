@@ -13,16 +13,16 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
         with:
           role-to-assume: "arn:aws:iam::979633842206:role/LocalOfficeSearchApiDeployment"
           aws-region: eu-west-1
           role-session-name: local-office-search-api-actions-workflow
 
-      - uses: citizensadvice/python-poetry-setup-action@v1
+      - uses: citizensadvice/python-poetry-setup-action@238df99ffcab064c3054cbd39b461108e04882e3
         with:
           install_cdk: true
           project_root: "./cdk"
@@ -53,7 +53,7 @@ jobs:
           EOF
 
       - name: Find Comment
-        uses: peter-evans/find-comment@v4
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad
         id: find-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -61,14 +61,14 @@ jobs:
           direction: last
 
       - name: Add New Comment
-        uses: peter-evans/create-or-update-comment@v5
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9
         if: steps.find-comment.outputs.comment-id == 0
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-file: "comment.md"
 
       - name: Update Comment
-        uses: peter-evans/create-or-update-comment@v5
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9
         if: steps.find-comment.outputs.comment-id
         with:
           issue-number: ${{ github.event.pull_request.number }}
