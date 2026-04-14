@@ -13,9 +13,6 @@ ca-cdk8s-constructs = "^5.0.1"
 ruff = "^0.15.8"
 cdk8s-plus-32 = "^2.5.42"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^9.0.2"
-
 [tool.ruff]
 target-version = 'py312'
 line-length = 95
