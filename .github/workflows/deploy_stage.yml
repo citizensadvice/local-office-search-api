@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - uses: citizensadvice/python-poetry-setup-action@238df99ffcab064c3054cbd39b461108e04882e3
+      - uses: citizensadvice/python-poetry-setup-action@792f824e452775c9732aa54e590f516a55f79946
         with:
           install_cdk: true
           project_root: "./cdk"
