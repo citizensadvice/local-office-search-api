@@ -24,7 +24,7 @@ gem "puma", "~> 7.2"
 
 # Monitoring
 gem "datadog"
-gem "rails_semantic_logger", "~> 4.19"
+gem "rails_semantic_logger", "~> 4.20"
 gem "yabeda-prometheus", "~> 0.9"
 gem "yabeda-puma-plugin", "~> 0.9"
 gem "yabeda-rails", "~> 0.11"
