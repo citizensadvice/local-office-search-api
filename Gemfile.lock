@@ -152,7 +152,7 @@ GEM
       railties (>= 6.1)
     drb (2.2.3)
     dry-initializer (3.2.0)
-    erb (6.0.3)
+    erb (6.0.4)
     erubi (1.13.1)
     ffi (1.17.4)
     ffi (1.17.4-aarch64-linux-musl)
