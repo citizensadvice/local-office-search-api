@@ -22,7 +22,7 @@ jobs:
           aws-region: eu-west-1
           role-session-name: local-office-search-api-actions-workflow
 
-      - uses: citizensadvice/python-poetry-setup-action@792f824e452775c9732aa54e590f516a55f79946
+      - uses: citizensadvice/python-poetry-setup-action@a1b420d0c061560845532d7d1f80a81c8f39b6a5
         with:
           install_cdk: true
           project_root: "./cdk"
