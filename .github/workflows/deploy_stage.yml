@@ -28,7 +28,7 @@ jobs:
         shell: bash
         if: inputs.stage == 'prod'
 
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
 
       - uses: citizensadvice/python-poetry-setup-action@a1b420d0c061560845532d7d1f80a81c8f39b6a5
         with:
@@ -36,7 +36,7 @@ jobs:
           project_root: "./cdk"
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@d979d5b3a71173a29b74b5b88418bfda9437d885
+        uses: aws-actions/configure-aws-credentials@e7f100cf4c008499ea8adda475de1042d6975c7b
         with:
           role-to-assume: "arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/LocalOfficeSearchApiDeployment"
           role-session-name: local-office-search-api-deploy-${{ inputs.stage }}-workflow
