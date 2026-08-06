@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Build and push to ECR
-        uses: citizensadvice/build-and-private-ecr-push-action@ac3a0c4db0275ee5976e3cd41a9ab124a2f880ce
+        uses: citizensadvice/build-and-private-ecr-push-action@c371b653f4ecccfbec4e46e3580130da7c425918
         with:
           role_arn: "arn:aws:iam::979633842206:role/LocalOfficeSearchApiDeployment"
           dockerfile_context: "."
