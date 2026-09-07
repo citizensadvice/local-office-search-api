@@ -383,7 +383,7 @@ GEM
       rubocop-rspec (~> 3.5)
     ruby-next-core (1.1.2)
     ruby-progressbar (1.13.0)
-    rubyzip (2.3.2)
+    rubyzip (2.4.1)
     securerandom (0.4.1)
     semantic_logger (5.1.0)
       concurrent-ruby (~> 1.0)
