@@ -24,7 +24,7 @@ class PostcodeLoader
 
   private
 
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable-next Metrics/AbcSize
   def create_postcodes_and_local_authorities!
     # rubocop:disable Rails/SkipsModelValidations -- we rely on database validations
     local_authorities = {}
@@ -41,7 +41,6 @@ class PostcodeLoader
     # rubocop:enable Rails/SkipsModelValidations
     local_authorities.keys
   end
-  # rubocop:enable Metrics/AbcSize
 
   def postcode_attrs_from_row(row)
     { canonical: row["postcode"], local_authority_id: row["local_authority_code"], location: point_wkt_or_nil(row["lat"], row["lon"]) }
