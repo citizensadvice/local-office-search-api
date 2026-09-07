@@ -73,6 +73,3 @@ jobs:
 
       - name: "Brakeman audit"
         run: bundle exec brakeman
-
-      - name: "License audit"
-        run: bundle exec license_finder

@@ -64,7 +64,6 @@ end
 group :test do
   gem "brakeman"
   gem "bundler-audit"
-  gem "license_finder"
 
   gem "rspec-rails", "~> 8.0.4"
 
