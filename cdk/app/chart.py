@@ -222,7 +222,7 @@ class LocalOfficeSearchApiChart(Chart):
             lifecycle=ContainerLifecycle(pre_stop=Handler.from_command(["sleep", "10"])),
             resources=ContainerResources(
                 cpu=CpuResources(request=Cpu.millis(400), limit=Cpu.millis(800)),
-                memory=MemoryResources(request=Size.mebibytes(768), limit=Size.gibibytes(1)),
+                memory=MemoryResources(request=Size.gibibytes(1), limit=Size.gibibytes(2)),
             ),
             security_context=ContainerSecurityContextProps(
                 user=1000, read_only_root_filesystem=False
