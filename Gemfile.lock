@@ -453,7 +453,7 @@ DEPENDENCIES
   yabeda-rails (~> 0.11)
 
 RUBY VERSION
-   ruby 3.4.9p82
+   ruby 3.4.10p104
 
 BUNDLED WITH
    2.5.9
