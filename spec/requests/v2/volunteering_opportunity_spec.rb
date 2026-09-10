@@ -30,7 +30,7 @@ RSpec.describe "Volunteering Opportunity API", swagger_doc: "v2/swagger.yaml" do
           office.save
         end
 
-        # rubocop:disable RSpec/ExampleLength
+        # rubocop:disable-next RSpec/ExampleLength
         run_test! do |response|
           expect(JSON.parse(response.body)).to eq({
             id:,
@@ -59,7 +59,6 @@ RSpec.describe "Volunteering Opportunity API", swagger_doc: "v2/swagger.yaml" do
             }
           }.as_json)
         end
-        # rubocop:enable RSpec/ExampleLength
       end
 
       response "404", "Office has no volunteering opportunities" do

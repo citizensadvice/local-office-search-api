@@ -29,7 +29,7 @@ RSpec.describe LssLoader do
                          office_type: "office"
   end
 
-  # rubocop:disable RSpec/ExampleLength
+  # rubocop:disable-next RSpec/ExampleLength
   it "loads a single advice location record into the database with all text fields populated" do
     load_from_fixtures locations_csv_filename: "all_strings_populated"
 
@@ -50,7 +50,6 @@ RSpec.describe LssLoader do
                          opening_hours_information: "We are open for drop-ins",
                          telephone_advice_hours_information: "Please call to book an appointment"
   end
-  # rubocop:enable RSpec/ExampleLength
 
   it "handles multiline strings in the source file correctly" do
     load_from_fixtures locations_csv_filename: "multiline"
@@ -175,7 +174,7 @@ RSpec.describe LssLoader do
     expect(Office.find("0014K00000PcC94QAF").served_areas.first&.local_authority_id).to eq("E07000112")
   end
 
-  # rubocop:disable RSpec/ExampleLength
+  # rubocop:disable-next RSpec/ExampleLength
   it "loads in members from the members file" do
     LocalAuthority.create! id: "E07000112", name: "Folkestone and Hythe"
     load_from_fixtures members_csv_filename: "minimal"
@@ -194,7 +193,6 @@ RSpec.describe LssLoader do
                          email: "cab@example.com",
                          website: "www.shepwaycab.co.uk"
   end
-  # rubocop:enable RSpec/ExampleLength
 
   def create_a_single_office
     id = SecureRandom.hex(9)
@@ -202,7 +200,7 @@ RSpec.describe LssLoader do
     id
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists, Style/FileOpen
+  # rubocop:disable-next Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists, Style/FileOpen
   def load_from_fixtures(members_csv_filename: "empty",
                          locations_csv_filename: "empty",
                          opening_hours_csv_filename: "empty",
@@ -236,7 +234,6 @@ RSpec.describe LssLoader do
     volunteer_roles_csv&.close
     local_authorities_csv&.close
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists, Style/FileOpen
 
   def load_from_fixtures_with_error(**)
     expect do

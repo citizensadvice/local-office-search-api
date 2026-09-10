@@ -29,7 +29,7 @@ class CreateOffices < ActiveRecord::Migration[7.0]
     # or modified time of the actual record is, just when the importer was last run. Rather than have
     # the fields have surprising values, and given we don't have a use for them, we're going to skip
     # having timestamps in this model.
-    # rubocop:disable Rails/CreateTableWithTimestamps
+    # rubocop:disable-next Rails/CreateTableWithTimestamps
     create_table :offices, id: "char(18)" do |t|
       # this corresponds to the Resource Directory ID to maintain URLs from the old system
       t.column :legacy_id, :integer, null: true
@@ -62,6 +62,5 @@ class CreateOffices < ActiveRecord::Migration[7.0]
       t.column :telephone_advice_hours_saturday, :timerange, null: false, default: "empty"
       t.column :telephone_advice_hours_sunday, :timerange, null: false, default: "empty"
     end
-    # rubocop:enable Rails/CreateTableWithTimestamps
   end
 end
