@@ -35,20 +35,28 @@ module LssLoader
         validate_csv_headers!
         clear_existing_records!
 
-        offices, served_areas = OfficeBuilder.new(members_csv: @members_csv,
-                                                  advice_locations_csv: @advice_locations_csv,
-                                                  accessibility_info_csv: @accessibility_info_csv,
-                                                  volunteer_roles_csv: @volunteer_roles_csv,
-                                                  local_authorities_csv: @local_authorities_csv).build
-        opening_times = OpeningTimeBuilder.new(@opening_hours_csv, offices.map(&:id)).build
-
-        offices.map(&:save!)
-        served_areas.map(&:save!)
-        opening_times.map(&:save!)
+        office_ids = save_offices_and_served_areas!
+        save_opening_times!(office_ids)
       end
     end
 
     private
+
+    def save_offices_and_served_areas!
+      offices, served_areas = OfficeBuilder.new(members_csv: @members_csv,
+                                                advice_locations_csv: @advice_locations_csv,
+                                                accessibility_info_csv: @accessibility_info_csv,
+                                                volunteer_roles_csv: @volunteer_roles_csv,
+                                                local_authorities_csv: @local_authorities_csv).build
+      office_ids = offices.map(&:id)
+      offices.each(&:save!)
+      served_areas.each(&:save!)
+      office_ids
+    end
+
+    def save_opening_times!(office_ids)
+      OpeningTimeBuilder.new(@opening_hours_csv, office_ids).build.each(&:save!)
+    end
 
     def initialise_csv_headers!
       @members_csv.shift if @members_csv.headers == true

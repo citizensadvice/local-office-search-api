@@ -7,13 +7,13 @@ class S3Loader
 
   def object_as_io(bucket, key)
     read, write = IO.pipe
-    fork do
-      read.close
+    Thread.new do
       @s3_client.get_object(bucket:, key:) do |chunk|
         write << chunk.force_encoding("UTF-8")
       end
+    ensure
+      write.close
     end
-    write.close
     read
   end
 end
