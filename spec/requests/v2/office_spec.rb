@@ -71,7 +71,7 @@ RSpec.describe "Lookup Local Office API", swagger_doc: "v2/swagger.yaml" do
                               range: Tod::Shift.new(Tod::TimeOfDay.new(14), Tod::TimeOfDay.new(14, 30)))
         end
 
-        # rubocop:disable RSpec/ExampleLength
+        # rubocop:disable-next RSpec/ExampleLength
         run_test! do |response|
           expect(JSON.parse(response.body)).to eq({
             id:,
@@ -117,7 +117,6 @@ RSpec.describe "Lookup Local Office API", swagger_doc: "v2/swagger.yaml" do
             ]
           }.as_json)
         end
-        # rubocop:enable RSpec/ExampleLength
       end
 
       response "302", "redirects you to the canonical ID" do
