@@ -12,7 +12,7 @@ module LssLoader
     include LoaderHelpers
     include Validators
 
-    # rubocop:disable Metrics/ParameterLists
+    # rubocop:disable-next Metrics/ParameterLists
     def initialize(members_csv:,
                    advice_locations_csv:,
                    opening_hours_csv:,
@@ -27,7 +27,6 @@ module LssLoader
       @local_authorities_csv = CSV.new(local_authorities_csv, headers: true, return_headers: true)
       initialise_csv_headers!
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def load!
       ActiveRecord::Base.transaction do
