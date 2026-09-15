@@ -48,7 +48,9 @@ RSpec.describe LssLoader do
                          website: "https://www.example.com/",
                          phone: "0181 811 8181",
                          opening_hours_information: "We are open for drop-ins",
-                         telephone_advice_hours_information: "Please call to book an appointment"
+                         telephone_advice_hours_information: "Please call to book an appointment",
+                         remote_only_roles_available: true,
+                         rosterfy_microsite_url: "https://rosterfy.example.com/bristol"
   end
   # rubocop:enable RSpec/ExampleLength
 
@@ -265,7 +267,9 @@ RSpec.describe LssLoader do
       allows_drop_ins: false,
       telephone_advice_hours_information: nil,
       volunteer_recruitment_email: nil,
-      volunteer_roles: []
+      volunteer_roles: [],
+      remote_only_roles_available: false,
+      rosterfy_microsite_url: nil
     }.update(vals)
 
     expect(Office.first.serializable_hash.symbolize_keys).to eq vals
