@@ -33,6 +33,26 @@ module LocalOfficeSearchApi
     config.geo_data_bucket = ENV.fetch("GEO_DATA_BUCKET", nil)
     config.geo_data_postcodes_file = ENV.fetch("GEO_DATA_POSTCODES_FILE", nil)
 
+    # semantic-logger
+    config.rails_semantic_logger.semantic   = true
+    config.rails_semantic_logger.started    = false
+    config.rails_semantic_logger.processing = false
+    config.rails_semantic_logger.rendered   = false
+
+    config.colorize_logging = $stdout.tty?
+
+    unless Rails.env.test?
+      config.rails_semantic_logger.add_file_appender = false
+
+      config.rails_semantic_logger.appenders do |appenders|
+        appenders.add(
+          io: $stdout,
+          level: config.log_level,
+          formatter: $stdout.tty? ? :color : :json
+        )
+      end
+    end
+
     # Set tags for logs, including Datadog trace info
     # This needs to be set here because the logger is already initialized by the
     # time we get to the initializers
