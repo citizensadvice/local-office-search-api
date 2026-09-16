@@ -202,7 +202,9 @@ CREATE TABLE public.offices (
     volunteer_roles text[] DEFAULT '{}'::text[] NOT NULL,
     county text,
     volunteer_recruitment_email text,
-    allows_drop_ins boolean DEFAULT false NOT NULL
+    allows_drop_ins boolean DEFAULT false NOT NULL,
+    remote_only_roles_available boolean DEFAULT false NOT NULL,
+    rosterfy_microsite_url text
 );
 
 
@@ -493,9 +495,10 @@ ALTER TABLE ONLY public.offices
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public, topology, tiger;
+SET search_path TO "$user", public, tiger, topology;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260916143640'),
 ('20241120112748'),
 ('20240904130334'),
 ('20240813152802'),

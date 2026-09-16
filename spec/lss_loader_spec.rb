@@ -262,7 +262,9 @@ RSpec.describe LssLoader do
       allows_drop_ins: false,
       telephone_advice_hours_information: nil,
       volunteer_recruitment_email: nil,
-      volunteer_roles: []
+      volunteer_roles: [],
+      remote_only_roles_available: false,
+      rosterfy_microsite_url: nil
     }.update(vals)
 
     expect(Office.first.serializable_hash.symbolize_keys).to eq vals
