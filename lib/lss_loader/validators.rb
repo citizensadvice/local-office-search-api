@@ -30,7 +30,8 @@ module LssLoader
         service_notes is_location_closed membership_number advice_service_information charity_number company_number
         government_region currently_recruiting_volunteers short_name face_to_face_advice_hours_information
         telephone_advice_hours_information excluded_from_lss_reports closed_from reopened_from location_status
-        volunteer_recruitment_email local_authority_ons_name local_authority_ons_code location_type_id transformation_date
+        volunteer_recruitment_email local_authority_ons_name local_authority_ons_code location_type_id remote_only_roles_available
+        rosterfy_microsite_url transformation_date
       ]
     end
 
