@@ -39,7 +39,9 @@ module Api
           id: office.id,
           office: office_as_json(office),
           roles: office.volunteer_roles,
-          volunteer_recruitment_email: office.volunteer_recruitment_email
+          volunteer_recruitment_email: office.volunteer_recruitment_email,
+          remote_only_roles_available: office.remote_only_roles_available,
+          rosterfy_microsite_url: office.rosterfy_microsite_url
         }
       end
 

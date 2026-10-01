@@ -119,9 +119,11 @@ module ApiV2Schema
       id: { type: :string },
       office: OFFICE.except(:$schema),
       roles: VOLUNTEER_ROLES,
-      volunteer_recruitment_email: { type: :string }
+      volunteer_recruitment_email: { type: :string },
+      remote_only_roles_available: { type: :boolean },
+      rosterfy_microsite_url: { type: NULLABLE_STRING }
     },
-    required: %i[id office roles volunteer_recruitment_email],
+    required: %i[id office roles volunteer_recruitment_email remote_only_roles_available],
     additionalProperties: false
   }.freeze
 
