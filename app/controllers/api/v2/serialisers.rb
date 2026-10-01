@@ -47,9 +47,7 @@ module Api
         result = {
           id: office.id,
           office: office_as_search_result_json(office),
-          roles: office.volunteer_roles,
-          remote_only_roles_available: office.remote_only_roles_available,
-          rosterfy_microsite_url: office.rosterfy_microsite_url
+          roles: office.volunteer_roles
         }
         result[:distance] = distance_in_miles(distance_from, office.location) unless distance_from.nil?
         result
