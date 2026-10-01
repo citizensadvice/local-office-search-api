@@ -660,10 +660,17 @@ paths:
                             - researching_and_campaigning
                             - media
                             - volunteer
+                        remote_only_roles_available:
+                          type: boolean
+                        rosterfy_microsite_url:
+                          type:
+                          - string
+                          - 'null'
                       required:
                       - id
                       - office
                       - roles
+                      - remote_only_roles_available
                       additionalProperties: false
                 required:
                 - match_type
@@ -1100,11 +1107,18 @@ paths:
                       - volunteer
                   volunteer_recruitment_email:
                     type: string
+                  remote_only_roles_available:
+                    type: boolean
+                  rosterfy_microsite_url:
+                    type:
+                    - string
+                    - 'null'
                 required:
                 - id
                 - office
                 - roles
                 - volunteer_recruitment_email
+                - remote_only_roles_available
                 additionalProperties: false
         '404':
           description: No office with this ID
