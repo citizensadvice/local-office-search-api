@@ -21,7 +21,9 @@ RSpec.describe "Volunteering Opportunity API", swagger_doc: "v2/swagger.yaml" do
                      postcode: "WG1 1BH",
                      office_type: :office,
                      volunteer_roles: ["admin_and_customer_service"],
-                     volunteer_recruitment_email: "volunteer@example.com")
+                     volunteer_recruitment_email: "volunteer@example.com",
+                     remote_only_roles_available: true,
+                     rosterfy_microsite_url: "https://rosterfy.example.com/bristol")
         end
 
         let(:id) { office.id }
@@ -36,6 +38,8 @@ RSpec.describe "Volunteering Opportunity API", swagger_doc: "v2/swagger.yaml" do
             id:,
             roles: ["admin_and_customer_service"],
             volunteer_recruitment_email: "volunteer@example.com",
+            remote_only_roles_available: true,
+            rosterfy_microsite_url: "https://rosterfy.example.com/bristol",
             office: {
               id:,
               name: "Testtown Citizens Advice",
