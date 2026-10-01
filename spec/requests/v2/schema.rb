@@ -169,11 +169,9 @@ module ApiV2Schema
       id: { type: :string },
       office: OFFICE_SEARCH_RESULT,
       distance: { type: %i[number null] },
-      roles: VOLUNTEER_ROLES,
-      remote_only_roles_available: { type: :boolean },
-      rosterfy_microsite_url: { type: NULLABLE_STRING }
+      roles: VOLUNTEER_ROLES
     },
-    required: %i[id office roles remote_only_roles_available],
+    required: %i[id office roles],
     additionalProperties: false
   }.freeze
 
