@@ -48,7 +48,9 @@ RSpec.describe LssLoader do
                          website: "https://www.example.com/",
                          phone: "0181 811 8181",
                          opening_hours_information: "We are open for drop-ins",
-                         telephone_advice_hours_information: "Please call to book an appointment"
+                         telephone_advice_hours_information: "Please call to book an appointment",
+                         remote_only_roles_available: true,
+                         rosterfy_microsite_url: "https://rosterfy.example.com/bristol"
   end
 
   it "handles multiline strings in the source file correctly" do

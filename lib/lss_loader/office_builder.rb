@@ -103,6 +103,8 @@ module LssLoader
         location: point_wkt_or_nil(row["latitude"], row["longitude"]),
         email: str_or_nil(row["enquiries_email"]),
         volunteer_recruitment_email: str_or_nil(row["volunteer_recruitment_email"]),
+        remote_only_roles_available: bool_from_val(row["remote_only_roles_available"]),
+        rosterfy_microsite_url: str_or_nil(row["rosterfy_microsite_url"]),
         website: str_or_nil(row["public_website"]),
         phone: str_or_nil(row["phone"]),
         allows_drop_ins: bool_from_val(row["allows_drop_in_visits"]),
