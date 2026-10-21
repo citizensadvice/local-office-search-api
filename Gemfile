@@ -6,11 +6,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.4.10"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 
 # Use PostgreSQL as the database for Active Record
 gem "activerecord-postgis-adapter"
-gem "pg", "~> 1.6"
+gem "pg", "~> 1.7"
 gem "rgeo-geojson"
 
 # We load data from S3
