@@ -70,7 +70,7 @@ group :test do
   gem "brakeman"
   gem "bundler-audit"
 
-  gem "rspec-rails", "~> 8.0.4"
+  gem "rspec-rails", "~> 8.1.0"
 
   gem "simplecov", require: false
 
